@@ -3,17 +3,37 @@ import math
 import random
 import numpy as np
 
+import torch
+import torch.nn.functional as F
+from torch_geometric.nn import GCNConv
+from torch_geometric.data import Data
+
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 from sklearn.metrics.cluster import contingency_matrix
 from matplotlib import pyplot as plt
 
 
+class GNN(torch.nn.Module):
+    def __init__(self, num_features, num_classes):
+        super(GNN, self).__init__()
+        self.conv1 = GCNConv(num_features, 16)
+        self.conv2 = GCNConv(16, num_classes)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = F.relu(self.conv1(x, edge_index))
+        x = self.conv2(x, edge_index)
+        return F.log_softmax(
+            x, dim=1
+        )  # softmax is computed across the class scores for each node
+
+
 class TopClustering:
     """Topological clustering.
-    
+
     Attributes:
-        n_clusters: 
+        n_clusters:
           The number of clusters.
         top_relative_weight:
           Relative weight between the geometric and topological terms.
@@ -24,43 +44,63 @@ class TopClustering:
           Maximum number of iterations for the topological interpolation.
         learning_rate:
           Learning rate for the topological interpolation.
-        
+
     Reference:
-        Songdechakraiwut, Tananun, Bryan M. Krause, Matthew I. Banks, Kirill V. Nourski, and Barry D. Van Veen. 
-        "Fast topological clustering with Wasserstein distance." 
+        Songdechakraiwut, Tananun, Bryan M. Krause, Matthew I. Banks, Kirill V. Nourski, and Barry D. Van Veen.
+        "Fast topological clustering with Wasserstein distance."
         International Conference on Learning Representations (ICLR). 2022.
     """
 
-    def __init__(self, n_clusters, top_relative_weight, max_iter_alt,
-                 max_iter_interp, learning_rate):
+    def __init__(
+        self,
+        n_clusters,
+        top_relative_weight,
+        max_iter_alt,
+        max_iter_interp,
+        learning_rate,
+        num_features,
+    ):
         self.n_clusters = n_clusters
         self.top_relative_weight = top_relative_weight
         self.max_iter_alt = max_iter_alt
         self.max_iter_interp = max_iter_interp
         self.learning_rate = learning_rate
+        self.gnn = GNN(num_features, num_features)
 
     def fit_predict(self, data):
         """Computes topological clustering and predicts cluster index for each sample.
-        
-            Args:
-                data:
-                  Training instances to cluster.
-                  
-            Returns:
-                Cluster index each sample belongs to.
+
+        Args:
+            data:
+              Training instances to cluster.
+
+        Returns:
+            Cluster index each sample belongs to.
         """
         data = np.asarray(data)
         n_node = data.shape[1]
-        n_edges = math.factorial(n_node) // math.factorial(2) // math.factorial(
-            n_node - 2)  # n_edges = (n_node choose 2)
+
+        # Convert adjacency matrices to edge lists and node features for GNN input
+        graph_data = [
+            Data(x=torch.eye(n_node), edge_index=torch.tensor(np.nonzero(adj)).long())
+            for adj in data
+        ]
+
+        # Process each graph through the GNN
+        embeddings = [self.gnn(graph).detach().numpy() for graph in graph_data]
+
+        n_edges = (
+            math.factorial(n_node) // math.factorial(2) // math.factorial(n_node - 2)
+        )  # n_edges = (n_node choose 2)
         n_births = n_node - 1
         self.weight_array = np.append(
             np.repeat(1 - self.top_relative_weight, n_edges),
-            np.repeat(self.top_relative_weight, n_edges))
+            np.repeat(self.top_relative_weight, n_edges),
+        )
 
         # Networks represented as vectors concatenating geometric and topological info
         X = []
-        for adj in data:
+        for adj in embeddings:
             X.append(self._vectorize_geo_top_info(adj))
         X = np.asarray(X)
 
@@ -69,16 +109,17 @@ class TopClustering:
 
         # Assign the nearest centroid index to each data point
         assigned_centroids = self._get_nearest_centroid(
-            X[:, None, :], self.centroids[None, :, :])
+            X[:, None, :], self.centroids[None, :, :]
+        )
         prev_assigned_centroids = assigned_centroids
 
         for it in range(self.max_iter_alt):
             for cluster in range(self.n_clusters):
                 # Previous iteration centroid
                 prev_centroid = np.zeros((n_node, n_node))
-                prev_centroid[np.triu_indices(
-                    prev_centroid.shape[0],
-                    k=1)] = self.centroids[cluster][:n_edges]
+                prev_centroid[
+                    np.triu_indices(prev_centroid.shape[0], k=1)
+                ] = self.centroids[cluster][:n_edges]
 
                 # Determine data points belonging to each cluster
                 cluster_members = X[assigned_centroids == cluster]
@@ -86,8 +127,7 @@ class TopClustering:
                 # Compute the sample mean and top. centroid of the cluster
                 cc = cluster_members.mean(axis=0)
                 sample_mean = np.zeros((n_node, n_node))
-                sample_mean[np.triu_indices(sample_mean.shape[0],
-                                            k=1)] = cc[:n_edges]
+                sample_mean[np.triu_indices(sample_mean.shape[0], k=1)] = cc[:n_edges]
                 top_centroid = cc[n_edges:]
                 top_centroid_birth_set = top_centroid[:n_births]
                 top_centroid_death_set = top_centroid[n_births:]
@@ -95,24 +135,30 @@ class TopClustering:
                 # Update the centroid
                 try:
                     cluster_centroid = self._top_interpolation(
-                        prev_centroid, sample_mean, top_centroid_birth_set,
-                        top_centroid_death_set)
+                        prev_centroid,
+                        sample_mean,
+                        top_centroid_birth_set,
+                        top_centroid_death_set,
+                    )
                     self.centroids[cluster] = self._vectorize_geo_top_info(
-                        cluster_centroid)
+                        cluster_centroid
+                    )
                 except:
                     print(
-                        'Error: Possibly due to the learning rate is not within appropriate range.'
+                        "Error: Possibly due to the learning rate is not within appropriate range."
                     )
                     sys.exit(1)
 
             # Update the cluster membership
             assigned_centroids = self._get_nearest_centroid(
-                X[:, None, :], self.centroids[None, :, :])
+                X[:, None, :], self.centroids[None, :, :]
+            )
 
             # Compute and print loss as it is progressively decreasing
             loss = self._compute_top_dist(
-                X, self.centroids[assigned_centroids]).sum() / len(X)
-            print('Iteration: %d -> Loss: %f' % (it, loss))
+                X, self.centroids[assigned_centroids]
+            ).sum() / len(X)
+            print("Iteration: %d -> Loss: %f" % (it, loss))
 
             if (prev_assigned_centroids == assigned_centroids).all():
                 break
@@ -121,8 +167,7 @@ class TopClustering:
         return assigned_centroids
 
     def _vectorize_geo_top_info(self, adj):
-        birth_set, death_set = self._compute_birth_death_sets(
-            adj)  # topological info
+        birth_set, death_set = self._compute_birth_death_sets(adj)  # topological info
         vec = adj[np.triu_indices(adj.shape[0], k=1)]  # geometric info
         return np.concatenate((vec, birth_set, death_set), axis=0)
 
@@ -139,7 +184,7 @@ class TopClustering:
         adj[adj == 0] = eps
         adj = np.triu(adj, k=1)
         Xcsr = csr_matrix(-adj)
-        print("Shape of the graph being processed:", Xcsr.shape)
+        # print("Shape of the graph being processed:", Xcsr.shape)
         Tcsr = minimum_spanning_tree(Xcsr)
         mst = -Tcsr.toarray()  # reverse the negative sign
         nonmst = adj - mst
@@ -153,10 +198,11 @@ class TopClustering:
 
     def _compute_top_dist(self, X, centroid):
         """Computes the pairwise top. distances between networks and centroids."""
-        return np.dot((X - centroid)**2, self.weight_array)
+        return np.dot((X - centroid) ** 2, self.weight_array)
 
-    def _top_interpolation(self, init_centroid, sample_mean,
-                           top_centroid_birth_set, top_centroid_death_set):
+    def _top_interpolation(
+        self, init_centroid, sample_mean, top_centroid_birth_set, top_centroid_death_set
+    ):
         """Topological interpolation."""
         curr = init_centroid
         for _ in range(self.max_iter_interp):
@@ -164,8 +210,7 @@ class TopClustering:
             geo_gradient = 2 * (curr - sample_mean)
 
             # Topological term gradient
-            sorted_birth_ind, sorted_death_ind = self._compute_optimal_matching(
-                curr)
+            sorted_birth_ind, sorted_death_ind = self._compute_optimal_matching(curr)
             top_gradient = np.zeros_like(curr)
             top_gradient[sorted_birth_ind] = top_centroid_birth_set
             top_gradient[sorted_death_ind] = top_centroid_death_set
@@ -173,8 +218,9 @@ class TopClustering:
 
             # Gradient update
             curr -= self.learning_rate * (
-                (1 - self.top_relative_weight) * geo_gradient +
-                self.top_relative_weight * top_gradient)
+                (1 - self.top_relative_weight) * geo_gradient
+                + self.top_relative_weight * top_gradient
+            )
         return curr
 
     def _compute_optimal_matching(self, adj):
@@ -193,15 +239,15 @@ class TopClustering:
 #############################################
 def random_modular_graph(d, c, p, mu, sigma):
     """Simulated modular network.
-    
-        Args:
-            d: Number of nodes.
-            c: Number of clusters/modules.
-            p: Probability of attachment within module.
-            mu, sigma: Used for random edge weights.
-            
-        Returns:
-            Adjacency matrix.
+
+    Args:
+        d: Number of nodes.
+        c: Number of clusters/modules.
+        p: Probability of attachment within module.
+        mu, sigma: Used for random edge weights.
+
+    Returns:
+        Adjacency matrix.
     """
     adj = np.zeros((d, d))  # adjacency matrix
     for i in range(1, d + 1):
@@ -262,15 +308,21 @@ def main():
     max_iter_alt = 300
     max_iter_interp = 300
     learning_rate = 0.05
-    print('Topological clustering\n----------------------')
-    labels_pred = TopClustering(n_clusters, top_relative_weight, max_iter_alt,
-                                max_iter_interp,
-                                learning_rate).fit_predict(dataset)
-    print('\nResults\n-------')
-    print('True labels:', np.asarray(labels_true))
-    print('Pred indices:', labels_pred)
-    print('Purity score:', purity_score(labels_true, labels_pred))
+    num_features = 60
+    print("Topological clustering\n----------------------")
+    labels_pred = TopClustering(
+        n_clusters,
+        top_relative_weight,
+        max_iter_alt,
+        max_iter_interp,
+        learning_rate,
+        num_features,
+    ).fit_predict(dataset)
+    print("\nResults\n-------")
+    print("True labels:", np.asarray(labels_true))
+    print("Pred indices:", labels_pred)
+    print("Purity score:", purity_score(labels_true, labels_pred))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
