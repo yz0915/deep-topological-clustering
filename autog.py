@@ -74,7 +74,7 @@ class TopClustering:
         n_node = dataset[0].shape[0]  # Assuming all graphs have the same number of nodes
 
         encoder = GNN(n_node)
-        decoder = MLP(input_dim=60, output_dim=3600)  # Adjust dimensions as needed
+        decoder = MLP(input_dim=60, output_dim=3600)
         optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
         criterion = torch.nn.MSELoss()
 
@@ -89,14 +89,40 @@ class TopClustering:
             total_loss = 0
 
             for i, adj_matrix in enumerate(dataset):
+                ori_mst, ori_nonmst = self._compute_birth_death_sets(adj_matrix)
+                ori_mst = torch.tensor(ori_mst, dtype=torch.float32)
+                ori_nonmst = torch.tensor(ori_nonmst, dtype=torch.float32)
+
                 x = torch.tensor(adj_matrix, dtype=torch.float32)
                 
                 b = batch[i*60:(i+1)*60]
                 b = torch.tensor(b, dtype=torch.long)
                 encoded_graph = encoder(x, b)
                 decoded_adj = decoder(encoded_graph)
-                print(decoded_adj.shape, original_adj_matrices[i].shape)
-                loss = criterion(decoded_adj, original_adj_matrices[i])
+                # print(f"Shape of decoded_adj before reshape: {decoded_adj.shape}")
+
+                # Assuming decoded_adj is a tensor of shape [batch_size, 3600]
+                # Reshape decoded_adj to be a 60x60 matrix
+                batch_size = decoded_adj.shape[0]
+                decoded_adj = decoded_adj.view(batch_size, n_node, n_node)
+
+                # Ensure decoded_adj is always 2D before passing to _compute_birth_death_sets
+                if decoded_adj.dim() == 3:
+                    decoded_adj = decoded_adj.squeeze(0)  # Removes the singleton dimension
+
+                # Use detach() when converting to numpy for non-gradient requiring operations
+                decoded_adj = decoded_adj.detach().numpy()  # Detach before converting to numpy
+
+                new_mst, new_nonmst = self._compute_birth_death_sets(decoded_adj)
+                new_mst = torch.tensor(new_mst, dtype=torch.float32, requires_grad=True)
+                new_nonmst = torch.tensor(new_nonmst, dtype=torch.float32, requires_grad=True)
+
+                 # Compute MSE losses
+                loss_mst = criterion(new_mst, ori_mst)
+                loss_nonmst = criterion(new_nonmst, ori_nonmst)
+
+                # Sum the losses
+                loss = loss_mst + loss_nonmst
                 loss.backward()  # Backpropagate errors but do not update yet
                 total_loss += loss.item()
 
@@ -124,6 +150,7 @@ class TopClustering:
 
     def _bd_demomposition(self, adj):
         """Birth-death decomposition."""
+        print(f"Shape of adj before csr_matrix conversion: {adj.shape}")
         eps = np.nextafter(0, 1)
         adj[adj == 0] = eps
         adj = np.triu(adj, k=1)
