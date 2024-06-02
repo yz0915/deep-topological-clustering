@@ -30,15 +30,15 @@ class GNN(torch.nn.Module):
         )  # softmax is computed across the class scores for each node
 
 
-class MLP(nn.Module):
-    def __init__(self, input_dim, output_dim):
-        super(MLP, self).__init__()
-        self.layers = nn.Sequential(
-            nn.Linear(input_dim, 128), nn.ReLU(), nn.Linear(128, output_dim)
-        )
+# class MLP(nn.Module):
+#     def __init__(self, input_dim, output_dim):
+#         super(MLP, self).__init__()
+#         self.layers = nn.Sequential(
+#             nn.Linear(input_dim, 128), nn.ReLU(), nn.Linear(128, output_dim)
+#         )
 
-    def forward(self, x):
-        return self.layers(x)
+#     def forward(self, x):
+#         return self.layers(x)
 
 
 class TopClustering:
@@ -70,9 +70,9 @@ class TopClustering:
         max_iter_alt,
         max_iter_interp,
         learning_rate,
-        num_features,
-        input_dim,
-        output_dim,
+        num_features
+        # input_dim,
+        # output_dim,
     ):
         self.n_clusters = n_clusters
         self.top_relative_weight = top_relative_weight
@@ -80,7 +80,7 @@ class TopClustering:
         self.max_iter_interp = max_iter_interp
         self.learning_rate = learning_rate
         self.gnn = GNN(num_features, num_features)
-        self.mlp = MLP(input_dim, output_dim)
+        # self.mlp = MLP(input_dim, output_dim)
 
     def fit_predict(self, data):
         """Computes topological clustering and predicts cluster index for each sample.
@@ -169,14 +169,14 @@ class TopClustering:
                 X[:, None, :], self.centroids[None, :, :]
             )
 
-            # Decode or reconstruct features using MLP
-            centroids_tensor = torch.tensor(
-                self.centroids, dtype=torch.float32
-            )  # Convert centroids to tensor if not already
-            reconstructed_output = (
-                self.mlp(centroids_tensor).detach().numpy()
-            )  # Apply MLP and convert back to numpy if necessary
-            self.centroids = reconstructed_output
+            # # Decode or reconstruct features using MLP
+            # centroids_tensor = torch.tensor(
+            #     self.centroids, dtype=torch.float32
+            # )  # Convert centroids to tensor if not already
+            # reconstructed_output = (
+            #     self.mlp(centroids_tensor).detach().numpy()
+            # )  # Apply MLP and convert back to numpy if necessary
+            # self.centroids = reconstructed_output
 
             # Compute and print loss as it is progressively decreasing
             loss = self._compute_top_dist(
@@ -333,8 +333,8 @@ def main():
     max_iter_interp = 300
     learning_rate = 0.05
     num_features = 60
-    input_dim = 3540
-    out_dim = 3540
+    # input_dim = 3540
+    # out_dim = 3540
     print("Topological clustering\n----------------------")
     labels_pred = TopClustering(
         n_clusters,
@@ -342,9 +342,9 @@ def main():
         max_iter_alt,
         max_iter_interp,
         learning_rate,
-        num_features,
-        input_dim,
-        out_dim,
+        num_features
+        # input_dim,
+        # out_dim,
     ).fit_predict(dataset)
     print("\nResults\n-------")
     print("True labels:", np.asarray(labels_true))
