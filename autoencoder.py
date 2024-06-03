@@ -22,7 +22,7 @@ class GNN(torch.nn.Module):
 
     def forward(self, x, batch):
         edge_index = torch.nonzero(x, as_tuple=False).t()
-        # Apply graph convolutions
+        # print(f"Edge index shape: {edge_index.shape}")
         x = F.relu(self.conv1(x, edge_index))
         x = self.conv2(x, edge_index)
 
@@ -78,42 +78,35 @@ class TopClustering:
         optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
         criterion = torch.nn.MSELoss()
 
-        # Prepare the original adjacency matrices for loss computation
-        original_adj_matrices = torch.tensor(np.array(dataset), dtype=torch.float32).view(len(dataset), -1)
-
         for epoch in range(200):
             encoder.train()
             decoder.train()
-            optimizer.zero_grad()
-
             total_loss = 0
 
             for i, adj_matrix in enumerate(dataset):
+                # compute mst and nonmst for original graph
                 ori_mst, ori_nonmst = self._compute_birth_death_sets(adj_matrix)
                 ori_mst = torch.tensor(ori_mst, dtype=torch.float32)
                 ori_nonmst = torch.tensor(ori_nonmst, dtype=torch.float32)
 
                 x = torch.tensor(adj_matrix, dtype=torch.float32)
-                
                 b = batch[i*60:(i+1)*60]
                 b = torch.tensor(b, dtype=torch.long)
-                encoded_graph = encoder(x, b)
-                decoded_adj = decoder(encoded_graph)
-                # print(f"Shape of decoded_adj before reshape: {decoded_adj.shape}")
 
+                encoded = encoder(x, b)
+                decoded = decoder(encoded)
+                # print(f"Shape of decoded_adj before reshape: {decoded_adj.shape}")
+                
                 # Assuming decoded_adj is a tensor of shape [batch_size, 3600]
                 # Reshape decoded_adj to be a 60x60 matrix
-                batch_size = decoded_adj.shape[0]
-                decoded_adj = decoded_adj.view(batch_size, n_node, n_node)
+                # batch_size = decoded_adj.shape[0]
+                decoded = decoded[-1]
+                decoded = decoded.view(n_node, n_node)
 
-                # Ensure decoded_adj is always 2D before passing to _compute_birth_death_sets
-                if decoded_adj.dim() == 3:
-                    decoded_adj = decoded_adj.squeeze(0)  # Removes the singleton dimension
-
+                # compute mst and nonmst for new graph
                 # Use detach() when converting to numpy for non-gradient requiring operations
-                decoded_adj = decoded_adj.detach().numpy()  # Detach before converting to numpy
-
-                new_mst, new_nonmst = self._compute_birth_death_sets(decoded_adj)
+                decoded = decoded.detach().numpy()
+                new_mst, new_nonmst = self._compute_birth_death_sets(decoded)
                 new_mst = torch.tensor(new_mst, dtype=torch.float32, requires_grad=True)
                 new_nonmst = torch.tensor(new_nonmst, dtype=torch.float32, requires_grad=True)
 
@@ -123,16 +116,16 @@ class TopClustering:
 
                 # Sum the losses
                 loss = loss_mst + loss_nonmst
-                loss.backward()  # Backpropagate errors but do not update yet
+                loss.backward()  # Backpropagate errors immediately
                 total_loss += loss.item()
 
-            optimizer.step()  # Update parameters once for the entire batch
+            optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
+            optimizer.zero_grad() # Reset gradients after update
 
             if epoch % 10 == 0:
                 print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
-        return [decoded_adj.detach().cpu().numpy() for decoded_adj in decoder(encoder(torch.eye(n_node), torch.nonzero(adj_matrix, as_tuple=False).t()))]
-
+        return 
 
 
     def _vectorize_geo_top_info(self, adj):
@@ -150,7 +143,9 @@ class TopClustering:
 
     def _bd_demomposition(self, adj):
         """Birth-death decomposition."""
-        print(f"Shape of adj before csr_matrix conversion: {adj.shape}")
+        # print(f"Shape of adj before csr_matrix conversion: {adj.shape}")ß
+        # if adj.ndim == 3:
+        #     adj = adj.squeeze(0)  # Removes the singleton dimension
         eps = np.nextafter(0, 1)
         adj[adj == 0] = eps
         adj = np.triu(adj, k=1)
