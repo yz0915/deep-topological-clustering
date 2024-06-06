@@ -84,12 +84,15 @@ class TopClustering:
             total_loss = 0
 
             for i, adj_matrix in enumerate(dataset):
-                # compute mst and nonmst for original graph
-                ori_mst, ori_nonmst = self._compute_birth_death_sets(adj_matrix)
-                ori_mst = torch.tensor(ori_mst, dtype=torch.float32)
-                ori_nonmst = torch.tensor(ori_nonmst, dtype=torch.float32)
-
                 x = torch.tensor(adj_matrix, dtype=torch.float32)
+                # compute mst and nonmst for original graph
+                # ori_mst, ori_nonmst = self._compute_birth_death_sets(adj_matrix)
+                # ori_mst = torch.tensor(ori_mst, dtype=torch.float32)
+                # ori_nonmst = torch.tensor(ori_nonmst, dtype=torch.float32)
+                mst_index, nonmst_index = self._compute_birth_death_sets(adj_matrix)
+                ori_mst = torch.take(x, mst_index)
+                ori_nonmst = torch.take(x, nonmst_index)
+
                 b = batch[i*60:(i+1)*60]
                 b = torch.tensor(b, dtype=torch.long)
 
@@ -100,15 +103,20 @@ class TopClustering:
                 # Assuming decoded_adj is a tensor of shape [batch_size, 3600]
                 # Reshape decoded_adj to be a 60x60 matrix
                 # batch_size = decoded_adj.shape[0]
+                # print(decoded)
                 decoded = decoded[-1]
                 decoded = decoded.view(n_node, n_node)
 
                 # compute mst and nonmst for new graph
                 # Use detach() when converting to numpy for non-gradient requiring operations
-                decoded = decoded.detach().numpy()
-                new_mst, new_nonmst = self._compute_birth_death_sets(decoded)
-                new_mst = torch.tensor(new_mst, dtype=torch.float32, requires_grad=True)
-                new_nonmst = torch.tensor(new_nonmst, dtype=torch.float32, requires_grad=True)
+                # decoded = decoded.detach().numpy()
+                # new_mst, new_nonmst = self._compute_birth_death_sets(decoded)
+                # new_mst = torch.tensor(new_mst, dtype=torch.float32, requires_grad=True)
+                # new_nonmst = torch.tensor(new_nonmst, dtype=torch.float32, requires_grad=True)
+                # new_mst_index, new_nonmst_index = self._compute_birth_death_sets(decoded)
+                new_mst = torch.take(decoded, mst_index)
+                new_nonmst = torch.take(decoded, nonmst_index)
+
 
                  # Compute MSE losses
                 loss_mst = criterion(new_mst, ori_mst)
@@ -134,18 +142,15 @@ class TopClustering:
         vec = adj[np.triu_indices(adj.shape[0], k=1)]  # geometric info
         return np.concatenate((vec, birth_set, death_set), axis=0)
 
-    def _compute_birth_death_sets(self, adj):
-        """Computes birth and death sets of a network."""
-        mst, nonmst = self._bd_demomposition(adj)
-        birth_ind = np.nonzero(mst)
-        death_ind = np.nonzero(nonmst)
-        return np.sort(mst[birth_ind]), np.sort(nonmst[death_ind])
+    # def _compute_birth_death_sets(self, adj):
+    #     """Computes birth and death sets of a network."""
+    #     mst, nonmst = self._bd_demomposition(adj)
+    #     birth_ind = np.nonzero(mst)
+    #     death_ind = np.nonzero(nonmst)
+    #     return np.sort(mst[birth_ind]), np.sort(nonmst[death_ind])
 
     def _bd_demomposition(self, adj):
         """Birth-death decomposition."""
-        # print(f"Shape of adj before csr_matrix conversion: {adj.shape}")ß
-        # if adj.ndim == 3:
-        #     adj = adj.squeeze(0)  # Removes the singleton dimension
         eps = np.nextafter(0, 1)
         adj[adj == 0] = eps
         adj = np.triu(adj, k=1)
@@ -154,6 +159,27 @@ class TopClustering:
         mst = -Tcsr.toarray()  # reverse the negative sign
         nonmst = adj - mst
         return mst, nonmst
+
+    def _compute_birth_death_sets(self, adj):
+        mst, nonmst = self._bd_demomposition(adj)
+        n = adj.shape[0]
+        birth_ind = np.nonzero(mst)
+        death_ind = np.nonzero(nonmst)
+
+        # Convert 2D indices to 1D and get corresponding values
+        mst_flat_indices = np.ravel_multi_index(birth_ind, (n, n))
+        nonmst_flat_indices = np.ravel_multi_index(death_ind, (n, n))
+
+        # Get values from the original adjacency matrix using these flat indices
+        mst_values = adj.flatten()[mst_flat_indices]
+        nonmst_values = adj.flatten()[nonmst_flat_indices]
+
+        # Sort indices by these values
+        sorted_mst_indices = mst_flat_indices[np.argsort(mst_values)]
+        sorted_nonmst_indices = nonmst_flat_indices[np.argsort(nonmst_values)]
+
+        return torch.from_numpy(sorted_mst_indices), torch.from_numpy(sorted_nonmst_indices)
+        
 
     def _get_nearest_centroid(self, X, centroids):
         """Determines cluster membership of data points."""
