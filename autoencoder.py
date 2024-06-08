@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
+import matplotlib.pyplot as plt
 
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
@@ -78,6 +79,8 @@ class TopClustering:
         optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
         criterion = torch.nn.MSELoss()
 
+        gradient_norms = []  # List to store gradient norms
+
         for epoch in range(200):
             encoder.train()
             decoder.train()
@@ -127,14 +130,18 @@ class TopClustering:
                 loss.backward()  # Backpropagate errors immediately
                 total_loss += loss.item()
 
+            # Get the gradient norm
+            grad_norm = encoder.conv1.lin.weight.grad.norm().item()
+            gradient_norms.append(grad_norm)
+
             optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
             optimizer.zero_grad() # Reset gradients after update
+
 
             if epoch % 10 == 0:
                 print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
-        return 
-
+        return gradient_norms
 
     def _vectorize_geo_top_info(self, adj):
         birth_set, death_set = self._compute_birth_death_sets(
@@ -298,21 +305,17 @@ def main():
     max_iter_interp = 300
     learning_rate = 0.05
     print('Topological clustering\n----------------------')
-    r = TopClustering(n_clusters, top_relative_weight, max_iter_alt,
+    gradient_norms = TopClustering(n_clusters, top_relative_weight, max_iter_alt,
                                 max_iter_interp,
                                 learning_rate).fit_predict(dataset, batch)
     
-    # Flattening adjacency matrices for potential silhouette score calculation
-    flattened_dataset = np.array([np.ravel(adj) for adj in dataset])
+    plt.plot(gradient_norms)
+    plt.title('Gradient Norms of conv1 Weights Over Epochs')
+    plt.xlabel('Epoch')
+    plt.ylabel('Gradient Norm')
+    plt.grid(True)
+    plt.show()
 
-    # Performance Evaluation
-    ari = adjusted_rand_score(labels_true, r)
-    nmi = normalized_mutual_info_score(labels_true, r)
-    # silhouette = silhouette_score(flattened_dataset, r) if len(set(r)) > 1 else 0
-
-    print("Adjusted Rand Index (ARI):", ari)
-    print("Normalized Mutual Information (NMI):", nmi)
-    # print("Silhouette Score:", silhouette)
 
 
 if __name__ == '__main__':
