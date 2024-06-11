@@ -189,9 +189,6 @@ def train(dataset, num_clusters=3, epochs=100):
             loss_mst = criterion(new_mst, ori_mst)
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            # Compute MSE losses
-            loss_mst = criterion(new_mst, ori_mst)
-            loss_nonmst = criterion(new_nonmst, ori_nonmst)
             loss = loss + loss_mst + loss_nonmst
 
         loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
