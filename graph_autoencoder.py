@@ -120,7 +120,7 @@ def pretrain(dataset, epochs=100):
             encoded = encoder(x, b)
             
             if epoch == epochs-1:
-                final_embeddings.append(encoded)
+                final_embeddings.append(torch.squeeze(encoded).detach().numpy())
 
             decoded = decoder(encoded)
             decoded = decoded.view(num_nodes, num_nodes) # Reshape decoded_adj to be a 60x60 matrix
@@ -161,6 +161,8 @@ def train(dataset, num_clusters=3, epochs=100):
 
     for epoch in range(epochs):
 
+        loss = 0
+
         total_loss = 0
         deep_k_means.train()
 
@@ -192,7 +194,7 @@ def train(dataset, num_clusters=3, epochs=100):
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
             loss = loss + loss_mst + loss_nonmst
 
-        loss_k_means = deep_k_means(torch.stack(embeddings))
+        loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
         loss = loss + loss_k_means
         loss.backward()  # Backpropagate errors immediately
         total_loss += loss.item()
