@@ -13,6 +13,7 @@ from sklearn.metrics.cluster import contingency_matrix
 from matplotlib import pyplot as plt
 from torch_geometric.nn import GCNConv, global_mean_pool
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, silhouette_score
+from sklearn.cluster import KMeans
 
 
 class GNN(torch.nn.Module):
@@ -23,11 +24,9 @@ class GNN(torch.nn.Module):
 
     def forward(self, x, batch):
         edge_index = torch.nonzero(x, as_tuple=False).t()
-        # print(f"Edge index shape: {edge_index.shape}")
         x = F.relu(self.conv1(x, edge_index))
         x = self.conv2(x, edge_index)
 
-        # Global mean pooling
         x = global_mean_pool(x, batch)  # batch is the index of the batch to which the nodes belong
         return x
 
@@ -70,17 +69,82 @@ class TopClustering:
         self.max_iter_alt = max_iter_alt
         self.max_iter_interp = max_iter_interp
         self.learning_rate = learning_rate
+        self.kmeans = KMeans(n_clusters=self.n_clusters, n_init=1, max_iter=self.max_iter_alt)
 
-    def fit_predict(self, dataset, batch):
+    # def autoencoder(self, dataset, batch):
+    #     n_node = dataset[0].shape[0]  # Assuming all graphs have the same number of nodes
+    #     encoder = GNN(n_node)
+    #     decoder = MLP(input_dim=60, output_dim=3600)
+    #     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
+    #     criterion = torch.nn.MSELoss()
+
+    #     gradient_norms = []  # List to store gradient norms
+    #     embeddings = []  # List to store embeddings
+
+    #     # Pretraining Phase
+    #     for epoch in range(200):
+    #         encoder.train()
+    #         decoder.train()
+    #         total_loss = 0
+
+    #         for i, adj_matrix in enumerate(dataset):
+    #             x = torch.tensor(adj_matrix, dtype=torch.float32)
+    #             mst_index, nonmst_index = self._compute_birth_death_sets(adj_matrix)
+    #             ori_mst = torch.take(x, mst_index)
+    #             ori_nonmst = torch.take(x, nonmst_index)
+
+    #             # b = batch[i*60:(i+1)*60]
+    #             # b = torch.tensor(b, dtype=torch.long)
+    #             b = torch.zeros(60, dtype=torch.long)
+    #             encoded = encoder(x, b)
+    #             if epoch == 199:  # Only save embeddings in the last epoch
+    #                 embeddings.append(torch.squeeze(encoded).detach().numpy())  # Save the embeddings to the list
+
+    #             decoded = decoder(encoded)
+    #             decoded = decoded.view(n_node, n_node) # Reshape decoded_adj to be a 60x60 matrix
+
+    #             new_mst = torch.take(decoded, mst_index)
+    #             new_nonmst = torch.take(decoded, nonmst_index)
+
+    #              # Compute MSE losses
+    #             loss_mst = criterion(new_mst, ori_mst)
+    #             loss_nonmst = criterion(new_nonmst, ori_nonmst)
+
+    #             # Sum the losses
+    #             loss = loss_mst + loss_nonmst
+    #             loss.backward()  # Backpropagate errors immediately
+    #             total_loss += loss.item()
+
+    #         # Get the gradient norm
+    #         grad_norm = encoder.conv1.lin.weight.grad.norm().item()
+    #         gradient_norms.append(grad_norm)
+
+    #         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
+    #         optimizer.zero_grad() # Reset gradients after update
+
+    #         if epoch % 10 == 0:
+    #             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+
+    #     plt.plot(gradient_norms)
+    #     plt.title('Gradient Norms of conv1 Weights Over Epochs')
+    #     plt.xlabel('Epoch')
+    #     plt.ylabel('Gradient Norm')
+    #     plt.grid(True)
+    #     plt.show()
+    #     # return gradient_norms
+    #     return embeddings
+
+    def autoencoder(self, dataset, batch):
         n_node = dataset[0].shape[0]  # Assuming all graphs have the same number of nodes
-
         encoder = GNN(n_node)
         decoder = MLP(input_dim=60, output_dim=3600)
         optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
         criterion = torch.nn.MSELoss()
 
         gradient_norms = []  # List to store gradient norms
+        embeddings = []  # List to store embeddings
 
+        # Pretraining Phase
         for epoch in range(200):
             encoder.train()
             decoder.train()
@@ -88,38 +152,19 @@ class TopClustering:
 
             for i, adj_matrix in enumerate(dataset):
                 x = torch.tensor(adj_matrix, dtype=torch.float32)
-                # compute mst and nonmst for original graph
-                # ori_mst, ori_nonmst = self._compute_birth_death_sets(adj_matrix)
-                # ori_mst = torch.tensor(ori_mst, dtype=torch.float32)
-                # ori_nonmst = torch.tensor(ori_nonmst, dtype=torch.float32)
                 mst_index, nonmst_index = self._compute_birth_death_sets(adj_matrix)
                 ori_mst = torch.take(x, mst_index)
                 ori_nonmst = torch.take(x, nonmst_index)
 
-                b = batch[i*60:(i+1)*60]
-                b = torch.tensor(b, dtype=torch.long)
-
+                b = torch.zeros(60, dtype=torch.long)
                 encoded = encoder(x, b)
+                if epoch == 199:  # Only save embeddings in the last epoch
+                    embeddings.append(torch.squeeze(encoded).detach().numpy())  # Save the embeddings to the list
                 decoded = decoder(encoded)
-                # print(f"Shape of decoded_adj before reshape: {decoded_adj.shape}")
-                
-                # Assuming decoded_adj is a tensor of shape [batch_size, 3600]
-                # Reshape decoded_adj to be a 60x60 matrix
-                # batch_size = decoded_adj.shape[0]
-                # print(decoded)
-                decoded = decoded[-1]
-                decoded = decoded.view(n_node, n_node)
+                decoded = decoded.view(n_node, n_node) # Reshape decoded_adj to be a 60x60 matrix
 
-                # compute mst and nonmst for new graph
-                # Use detach() when converting to numpy for non-gradient requiring operations
-                # decoded = decoded.detach().numpy()
-                # new_mst, new_nonmst = self._compute_birth_death_sets(decoded)
-                # new_mst = torch.tensor(new_mst, dtype=torch.float32, requires_grad=True)
-                # new_nonmst = torch.tensor(new_nonmst, dtype=torch.float32, requires_grad=True)
-                # new_mst_index, new_nonmst_index = self._compute_birth_death_sets(decoded)
                 new_mst = torch.take(decoded, mst_index)
                 new_nonmst = torch.take(decoded, nonmst_index)
-
 
                  # Compute MSE losses
                 loss_mst = criterion(new_mst, ori_mst)
@@ -130,31 +175,144 @@ class TopClustering:
                 loss.backward()  # Backpropagate errors immediately
                 total_loss += loss.item()
 
-            # Get the gradient norm
-            grad_norm = encoder.conv1.lin.weight.grad.norm().item()
-            gradient_norms.append(grad_norm)
-
             optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
             optimizer.zero_grad() # Reset gradients after update
-
 
             if epoch % 10 == 0:
                 print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
-        return gradient_norms
+        # Initialize KMeans centroids
+        self.kmeans.fit(embeddings)
+        for epoch in range(100): 
+            total_loss = 0
+            for i, adj_matrix in enumerate(dataset):
+                x = torch.tensor(adj_matrix, dtype=torch.float32)
+                mst_index, nonmst_index = self._compute_birth_death_sets(adj_matrix)
+                ori_mst = torch.take(x, mst_index)
+                ori_nonmst = torch.take(x, nonmst_index)
+
+                b = torch.zeros(60, dtype=torch.long)
+                encoded = encoder(x, b)
+                decoded = decoder(encoded)
+                decoded = decoded.view(n_node, n_node) # Reshape decoded_adj to be a 60x60 matrix
+
+                new_mst = torch.take(decoded, mst_index)
+                new_nonmst = torch.take(decoded, nonmst_index)
+
+                # Compute MSE losses
+                loss_mst = criterion(new_mst, ori_mst)
+                loss_nonmst = criterion(new_nonmst, ori_nonmst)
+
+                # Calculate KMeans loss
+                closest_centers = self.kmeans.predict(embeddings)
+                loss_kmeans = criterion(embeddings, closest_centers)
+                # loss_kmeans = np.mean(np.sum((embeddings - closest_centers) ** 2, axis=1))
+                # loss_kmeans = torch.tensor(loss_kmeans, requires_grad=True)
+
+                total_loss = loss_mst + loss_nonmst + loss_kmeans
+                total_loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+
+            if epoch % 10 == 0:
+                print(f"Epoch {epoch}, Loss: {total_loss.item()}")
+
+
+    def dkm(self, embeddings):
+        # Fit the KMeans model only if centroids are not already determined.
+        if self.kmeans.cluster_centers_ is None:
+            self.kmeans.fit(embeddings)  # Fit KMeans to obtain initial centroids.
+        
+        # Predict using the existing centroids, without refitting.
+        return self.kmeans.predict(embeddings) # return the array of the cluster labels for each embedding
+    
+    # def fit_predict(self, data):
+    #     """Computes topological clustering and predicts cluster index for each sample.
+        
+    #         Args:
+    #             data:
+    #               Training instances to cluster.
+                  
+    #         Returns:
+    #             Cluster index each sample belongs to.
+    #     """
+    #     data = np.asarray(data)
+    #     print(data.shape)
+    #     n_node = data.shape[-1]
+    #     n_edges = math.factorial(n_node) // math.factorial(2) // math.factorial(
+    #         n_node - 2)  # n_edges = (n_node choose 2)
+    #     n_births = n_node - 1
+    #     self.weight_array = np.append(
+    #         np.repeat(1 - self.top_relative_weight, n_edges),
+    #         np.repeat(self.top_relative_weight, n_edges))
+
+    #     # Networks represented as vectors concatenating geometric and topological info
+    #     X = data
+    #     # for adj in data:
+    #     #     X.append(self._vectorize_geo_top_info(adj))
+    #     # X = np.asarray(X)
+
+    #     # Random initial condition
+    #     self.centroids = X[random.sample(range(X.shape[0]), self.n_clusters)]
+
+    #     # Assign the nearest centroid index to each data point
+    #     assigned_centroids = self._get_nearest_centroid(
+    #         X[:, None, :], self.centroids[None, :, :])
+    #     prev_assigned_centroids = assigned_centroids
+
+    #     for it in range(self.max_iter_alt):
+    #         for cluster in range(self.n_clusters):
+    #             # Previous iteration centroid
+    #             prev_centroid = np.zeros((n_node, n_node))
+    #             prev_centroid[np.triu_indices(
+    #                 prev_centroid.shape[0],
+    #                 k=1)] = self.centroids[cluster][:n_edges]
+
+    #             # Determine data points belonging to each cluster
+    #             cluster_members = X[assigned_centroids == cluster]
+
+    #             # Compute the sample mean and top. centroid of the cluster
+    #             cc = cluster_members.mean(axis=0)
+    #             sample_mean = np.zeros((n_node, n_node))
+    #             sample_mean[np.triu_indices(sample_mean.shape[0],
+    #                                         k=1)] = cc[:n_edges]
+    #             top_centroid = cc[n_edges:]
+    #             top_centroid_birth_set = top_centroid[:n_births]
+    #             top_centroid_death_set = top_centroid[n_births:]
+
+    #             # Update the centroid
+    #             try:
+    #                 cluster_centroid = self._top_interpolation(
+    #                     prev_centroid, sample_mean, top_centroid_birth_set,
+    #                     top_centroid_death_set)
+    #                 self.centroids[cluster] = self._vectorize_geo_top_info(
+    #                     cluster_centroid)
+    #             except:
+    #                 print(
+    #                     'Error: Possibly due to the learning rate is not within appropriate range.'
+    #                 )
+    #                 sys.exit(1)
+
+    #         # Update the cluster membership
+    #         assigned_centroids = self._get_nearest_centroid(
+    #             X[:, None, :], self.centroids[None, :, :])
+
+    #         # Compute and print loss as it is progressively decreasing
+    #         loss = self._compute_top_dist(
+    #             X, self.centroids[assigned_centroids]).sum() / len(X)
+    #         print('Iteration: %d -> Loss: %f' % (it, loss))
+
+    #         if (prev_assigned_centroids == assigned_centroids).all():
+    #             break
+    #         else:
+    #             prev_assigned_centroids = assigned_centroids
+    #     return assigned_centroids
 
     def _vectorize_geo_top_info(self, adj):
         birth_set, death_set = self._compute_birth_death_sets(
             adj)  # topological info
         vec = adj[np.triu_indices(adj.shape[0], k=1)]  # geometric info
         return np.concatenate((vec, birth_set, death_set), axis=0)
-
-    # def _compute_birth_death_sets(self, adj):
-    #     """Computes birth and death sets of a network."""
-    #     mst, nonmst = self._bd_demomposition(adj)
-    #     birth_ind = np.nonzero(mst)
-    #     death_ind = np.nonzero(nonmst)
-    #     return np.sort(mst[birth_ind]), np.sort(nonmst[death_ind])
 
     def _bd_demomposition(self, adj):
         """Birth-death decomposition."""
@@ -304,18 +462,19 @@ def main():
     max_iter_alt = 300
     max_iter_interp = 300
     learning_rate = 0.05
-    print('Topological clustering\n----------------------')
-    gradient_norms = TopClustering(n_clusters, top_relative_weight, max_iter_alt,
-                                max_iter_interp,
-                                learning_rate).fit_predict(dataset, batch)
-    
-    plt.plot(gradient_norms)
-    plt.title('Gradient Norms of conv1 Weights Over Epochs')
-    plt.xlabel('Epoch')
-    plt.ylabel('Gradient Norm')
-    plt.grid(True)
-    plt.show()
 
+    embeddings = TopClustering(n_clusters, top_relative_weight, max_iter_alt,
+                            max_iter_interp,
+                            learning_rate).autoencoder(dataset, batch)
+    
+    print('Topological clustering\n----------------------')
+    labels_pred = TopClustering(n_clusters, top_relative_weight, max_iter_alt,
+                                max_iter_interp,
+                                learning_rate).dkm(embeddings)
+    print('\nResults\n-------')
+    print('True labels:', np.asarray(labels_true))
+    print('Pred indices:', labels_pred)
+    print('Purity score:', purity_score(labels_true, labels_pred))
 
 
 if __name__ == '__main__':
