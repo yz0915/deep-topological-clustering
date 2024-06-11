@@ -43,7 +43,7 @@ class MLP(nn.Module):
 class GraphKMeans(nn.Module):
 
     # Note that we expect num_nodes = d_embed
-    def __init__(self, num_nodes, d_embed, n_clusters, lambd, pretrain=True, encoder=None, decoder=None):
+    def __init__(self, num_nodes, d_embed, n_clusters, lambd, initial_clusters):
 
         super(GraphKMeans, self).__init__()
 
@@ -53,34 +53,14 @@ class GraphKMeans(nn.Module):
         self.lambd = lambd
         
         self.pretrain = pretrain
+        self.centroids = nn.Parameter(torch.FloatTensor(initial_clusters))
 
-        if not pretrain:
-            self.encoder = GNN(num_nodes)
-            self.decoder = MLP(d_embed, num_nodes**2)
-        else:
-            self.encoder = encoder
-            self.decoder = decoder
-
-        self.centroids = nn.Parameter(torch.FloatTensor(n_clusters, d_embed).uniform_(-1, 1))
-
-    def forward(self, x, adj_matrix, alpha):
-
-        mst_index, nonmst_index = self._compute_birth_death_sets(adj_matrix)
-        ori_mst = torch.take(x, mst_index)
-        ori_nonmst = torch.take(x, nonmst_index)
-
-        b = torch.zeros(60, dtype=torch.long)
-        encoded = self.encoder(x, b)
-        decoded = self.decoder(encoded)
-        decoded = decoded.view(self.num_nodes, self.num_nodes) # Reshape decoded_adj to be a 60x60 matrix
-
-        new_mst = torch.take(decoded, mst_index)
-        new_nonmst = torch.take(decoded, nonmst_index)
+    def forward(self, embeddings, alpha):
         
         # Note that x is the graph embedding from some autoencoder
         list_dist = []
         for i in range(self.centroids.size(0)):
-            dist = self.get_dist(x, self.centroids[i].unsqueeze(0))
+            dist = self.f_dist(embeddings, self.centroids[i].unsqueeze(0))
             list_dist.append(dist)
         stack_dist = torch.stack(list_dist)
 
@@ -103,43 +83,11 @@ class GraphKMeans(nn.Module):
         stack_weighted_dist = torch.stack(list_weighted_dist)
 
         k_means_loss = self.lambd * torch.mean(torch.sum(stack_weighted_dist, dim=0))
+        return k_means_loss
 
-        return decoded, (ori_mst, ori_nonmst, new_mst, new_nonmst), k_means_loss
-
-    def get_dist(self, x, y):
+    def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
-    
-    def _bd_demomposition(self, adj):
-        """Birth-death decomposition."""
-        eps = np.nextafter(0, 1)
-        adj[adj == 0] = eps
-        adj = np.triu(adj, k=1)
-        Xcsr = csr_matrix(-adj)
-        Tcsr = minimum_spanning_tree(Xcsr)
-        mst = -Tcsr.toarray()  # reverse the negative sign
-        nonmst = adj - mst
-        return mst, nonmst
 
-    def _compute_birth_death_sets(self, adj):
-        mst, nonmst = self._bd_demomposition(adj)
-        n = adj.shape[0]
-        birth_ind = np.nonzero(mst)
-        death_ind = np.nonzero(nonmst)
-
-        # Convert 2D indices to 1D and get corresponding values
-        mst_flat_indices = np.ravel_multi_index(birth_ind, (n, n))
-        nonmst_flat_indices = np.ravel_multi_index(death_ind, (n, n))
-
-        # Get values from the original adjacency matrix using these flat indices
-        mst_values = adj.flatten()[mst_flat_indices]
-        nonmst_values = adj.flatten()[nonmst_flat_indices]
-
-        # Sort indices by these values
-        sorted_mst_indices = mst_flat_indices[np.argsort(mst_values)]
-        sorted_nonmst_indices = nonmst_flat_indices[np.argsort(nonmst_values)]
-
-        return torch.from_numpy(sorted_mst_indices), torch.from_numpy(sorted_nonmst_indices)
-    
 def pretrain(dataset, epochs=100):
 
     print("PRETRAINING")
@@ -152,6 +100,8 @@ def pretrain(dataset, epochs=100):
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
+
+    final_embeddings = []
 
     for epoch in range(epochs):
 
@@ -166,11 +116,12 @@ def pretrain(dataset, epochs=100):
             ori_mst = torch.take(x, mst_index)
             ori_nonmst = torch.take(x, nonmst_index)
 
-            # b = batch[i*60:(i+1)*60]
-            # b = torch.tensor(b, dtype=torch.long)
             b = torch.zeros(60, dtype=torch.long)
             encoded = encoder(x, b)
             
+            if epoch == epochs-1:
+                final_embeddings.append(encoded)
+
             decoded = decoder(encoded)
             decoded = decoded.view(num_nodes, num_nodes) # Reshape decoded_adj to be a 60x60 matrix
 
@@ -192,41 +143,59 @@ def pretrain(dataset, epochs=100):
         if epoch % 10 == 0:
             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
-    return encoder, decoder
+    return encoder, decoder, final_embeddings
 
-def train(dataset, epochs=100):
+def train(dataset, num_clusters=3, epochs=100):
 
     num_nodes = dataset[0].shape[0]
-    encoder, decoder = pretrain(dataset)
+    encoder, decoder, pretrained_embeddings = pretrain(dataset)
 
-    model = GraphKMeans(num_nodes, num_nodes, 3, 0.1, pretrain=True, encoder=encoder, decoder=decoder)
+    # Run k-means++ to get initial cluster distribution
+    kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
+    deep_k_means = GraphKMeans(num_nodes, num_nodes, num_clusters, 0.1, kmeans_model.cluster_centers_)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+    optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
-    
-    embeddings = []  # List to store embeddings
 
     print("TRAINING")
 
     for epoch in range(epochs):
 
         total_loss = 0
-        model.train()
+        deep_k_means.train()
+
+        embeddings = []  # List to store embeddings
 
         for i, adj_matrix in enumerate(dataset):
 
-            # TODO: Add encoder and decoder to GraphKMeans as parameters to enable pretraining
             x = torch.tensor(adj_matrix, dtype=torch.float32)
-            decoded, (ori_mst, ori_nonmst, new_mst, new_nonmst), loss_k_means = model(x, adj_matrix, 0.5)
+            mst_index, nonmst_index = _compute_birth_death_sets(adj_matrix)
+            ori_mst = torch.take(x, mst_index)
+            ori_nonmst = torch.take(x, nonmst_index)
+
+            b = torch.zeros(60, dtype=torch.long)
+            encoded = encoder(x, b)
+            embeddings.append(encoded)
+            
+            decoded = decoder(encoded)
+            decoded = decoded.view(num_nodes, num_nodes) # Reshape decoded_adj to be a 60x60 matrix
+
+            new_mst = torch.take(decoded, mst_index)
+            new_nonmst = torch.take(decoded, nonmst_index)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            # Sum the losses
-            loss = loss_mst + loss_nonmst + loss_k_means
-            loss.backward()  # Backpropagate errors immediately
-            total_loss += loss.item()
+            # Compute MSE losses
+            loss_mst = criterion(new_mst, ori_mst)
+            loss_nonmst = criterion(new_nonmst, ori_nonmst)
+            loss = loss + loss_mst + loss_nonmst
+
+        loss_k_means = deep_k_means(torch.stack(embeddings))
+        loss = loss + loss_k_means
+        loss.backward()  # Backpropagate errors immediately
+        total_loss += loss.item()
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
         optimizer.zero_grad() # Reset gradients after update
