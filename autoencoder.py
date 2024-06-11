@@ -40,6 +40,51 @@ class MLP(nn.Module):
     def forward(self, x):
         return self.layers(x)
 
+class DeepKMeans(nn.Module):
+    def __init__(self, d_embed, n_clusters, lambd):
+
+        super(DeepKMeans, self).__init__()
+
+        self.d_embed = d_embed
+        self.k = n_clusters
+        self.lambd = lambd
+
+        self.centroids = nn.Parameter(torch.FloatTensor(n_clusters, d_embed).uniform_(-1, 1))
+
+    def forward(self, x, alpha):
+        # Note that x is the graph embedding from some autoencoder
+        list_dist = []
+        for i in range(self.centroids.size(0)):
+            dist = self.get_dist(x, self.centroids[i].unsqueeze(0))
+            list_dist.append(dist)
+        stack_dist = torch.stack(list_dist)
+
+        min_dist = torch.min(stack_dist, dim=0)[0]
+
+        list_exp = []
+        for i in range(self.centroids.size(0)):
+            exp = torch.exp(-alpha * (stack_dist[i] - min_dist))
+            list_exp.append(exp)
+        stack_exp = torch.stack(list_exp)
+        sum_exponentials = torch.sum(stack_exp, dim=0)
+
+        list_softmax = []
+        list_weighted_dist = []
+        for i in range(self.centroids.size(0)):
+            softmax = stack_exp[i] / sum_exponentials
+            weighted_dist = stack_dist[i] * softmax
+            list_softmax.append(softmax)
+            list_weighted_dist.append(weighted_dist)
+        stack_weighted_dist = torch.stack(list_weighted_dist)
+
+        # kmeans_loss = torch.mean(torch.sum(stack_weighted_dist, dim=0))
+        # loss = self.lambd * kmeans_loss
+
+        return stack_weighted_dist
+
+    def get_dist(self, x, y):
+        return torch.sum((x - y) ** 2, dim=1)
+
 class TopClustering:
     """Topological clustering.
     
