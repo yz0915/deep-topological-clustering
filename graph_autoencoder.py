@@ -16,16 +16,20 @@ from torch_geometric.nn import GCNConv, global_mean_pool
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, silhouette_score
 from sklearn.cluster import KMeans
 
-class GNN(torch.nn.Module):
-    def __init__(self, num_nodes):
-        super(GNN, self).__init__()
-        self.conv1 = GCNConv(num_nodes, num_nodes // 2)
-        self.conv2 = GCNConv(num_nodes // 2, num_nodes)
+from torch_geometric.datasets import TUDataset
+from torch_geometric.utils import to_dense_adj
 
-    def forward(self, x, batch):
-        edge_index = torch.nonzero(x, as_tuple=False).t()
-        x = F.relu(self.conv1(x, edge_index))
-        x = self.conv2(x, edge_index)
+class GNN(torch.nn.Module):
+    def __init__(self):
+        super(GNN, self).__init__()
+        self.conv_1 = GCNConv(7, 64)
+        self.activ_1 = nn.ReLU()
+        self.linear = nn.Linear(64, 5)
+
+    def forward(self, x, edge_index, batch):
+        x = self.conv_1(x, edge_index)
+        x = self.activ_1(x)
+        x = self.linear(x)
 
         x = global_mean_pool(x, batch)  # batch is the index of the batch to which the nodes belong
         return x
@@ -93,10 +97,17 @@ def pretrain(dataset, epochs=100):
     print("PRETRAINING")
 
     # Pretrain an encoder via autoencoder reconstruction loss
-    num_nodes = dataset[0].shape[0]
+    # num_nodes = dataset[0].shape[0]
 
-    encoder = GNN(num_nodes)
-    decoder = MLP(num_nodes, num_nodes**2)
+    # encoder = GNN(num_nodes)
+    # decoder = MLP(num_nodes, num_nodes**2)
+
+    train_loader, adj_matrices = dataset
+
+    max_nodes = max(data.num_nodes for data in train_loader)
+
+    encoder = GNN()
+    decoder = MLP(5, max_nodes**2)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
@@ -109,21 +120,22 @@ def pretrain(dataset, epochs=100):
         decoder.train()
         total_loss = 0
 
-        for i, adj_matrix in enumerate(dataset):
+        for data, adj_matrix in zip(train_loader, adj_matrices):
 
             x = torch.tensor(adj_matrix, dtype=torch.float32)
             mst_index, nonmst_index = _compute_birth_death_sets(adj_matrix)
             ori_mst = torch.take(x, mst_index)
             ori_nonmst = torch.take(x, nonmst_index)
 
-            b = torch.zeros(60, dtype=torch.long)
-            encoded = encoder(x, b)
+            encoded = encoder(data.x, data.edge_index, data.batch)
             
             if epoch == epochs-1:
                 final_embeddings.append(torch.squeeze(encoded).detach().numpy())
 
             decoded = decoder(encoded)
-            decoded = decoded.view(num_nodes, num_nodes) # Reshape decoded_adj to be a 60x60 matrix
+            num_nodes = data.num_nodes
+            decoded = decoded.squeeze(0)[:num_nodes**2]
+            decoded = decoded.view(num_nodes, num_nodes)
 
             new_mst = torch.take(decoded, mst_index)
             new_nonmst = torch.take(decoded, nonmst_index)
@@ -147,12 +159,13 @@ def pretrain(dataset, epochs=100):
 
 def train(dataset, num_clusters=3, epochs=100):
 
-    num_nodes = dataset[0].shape[0]
+    train_loader, adj_matrices = dataset
+
     encoder, decoder, pretrained_embeddings = pretrain(dataset)
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
-    deep_k_means = GraphKMeans(num_nodes, num_nodes, num_clusters, 0.1, kmeans_model.cluster_centers_)
+    deep_k_means = GraphKMeans(60, 60, num_clusters, 0.1, kmeans_model.cluster_centers_)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
@@ -160,7 +173,6 @@ def train(dataset, num_clusters=3, epochs=100):
     print("TRAINING")
 
     for epoch in range(epochs):
-
         loss = 0
 
         total_loss = 0
@@ -168,19 +180,20 @@ def train(dataset, num_clusters=3, epochs=100):
 
         embeddings = []  # List to store embeddings
 
-        for i, adj_matrix in enumerate(dataset):
+        for data, adj_matrix in zip(train_loader, adj_matrices):
 
             x = torch.tensor(adj_matrix, dtype=torch.float32)
             mst_index, nonmst_index = _compute_birth_death_sets(adj_matrix)
             ori_mst = torch.take(x, mst_index)
             ori_nonmst = torch.take(x, nonmst_index)
 
-            b = torch.zeros(60, dtype=torch.long)
-            encoded = encoder(x, b)
+            encoded = encoder(data.x, data.edge_index, data.batch)
             embeddings.append(encoded)
             
             decoded = decoder(encoded)
-            decoded = decoded.view(num_nodes, num_nodes) # Reshape decoded_adj to be a 60x60 matrix
+            num_nodes = data.num_nodes
+            decoded = decoded.squeeze(0)[:num_nodes**2]
+            decoded = decoded.view(num_nodes, num_nodes)
 
             new_mst = torch.take(decoded, mst_index)
             new_nonmst = torch.take(decoded, nonmst_index)
@@ -279,36 +292,54 @@ def _compute_birth_death_sets(adj):
 
     return torch.from_numpy(sorted_mst_indices), torch.from_numpy(sorted_nonmst_indices)
 
+def load_mutag_data():
+    dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
+    adjacency_matrices = []
+    labels = []
+    
+    for data in dataset:
+        # Convert to dense adjacency matrix
+        adj = to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0]
+        adjacency_matrices.append(adj.numpy())
+        labels.append(data.y.item())
+    
+    return dataset, adjacency_matrices, labels
+
 def main():
 
     np.random.seed(0)
     random.seed(0)
 
-    # Generate a dataset comprising simulated modular networks
-    dataset = []
-    labels_true = []
-    n_network = 20
-    n_node = 60
-    p = 0.7
-    mu = 1
-    sigma = 0.5
-    batch = []
+    # # Generate a dataset comprising simulated modular networks
+    # dataset = []
+    # labels_true = []
+    # n_network = 20
+    # n_node = 60
+    # p = 0.7
+    # mu = 1
+    # sigma = 0.5
+    # batch = []
 
-    for module_index, module in enumerate([2, 3, 5]):
-        for graph_index in range(n_network):
-            adj = random_modular_graph(n_node, module, p, mu, sigma)
-            dataset.append(adj)
-            labels_true.append(module)
-            batch.extend([module_index * n_network + graph_index] * n_node)
+    # for module_index, module in enumerate([2, 3, 5]):
+    #     for graph_index in range(n_network):
+    #         adj = random_modular_graph(n_node, module, p, mu, sigma)
+    #         dataset.append(adj)
+    #         labels_true.append(module)
+    #         batch.extend([module_index * n_network + graph_index] * n_node)
 
-    # Topological clustering
-    n_clusters = 3
-    top_relative_weight = 0.99  # 'top_relative_weight' between 0 and 1
-    max_iter_alt = 300
-    max_iter_interp = 300
-    learning_rate = 0.05
+    # # Topological clustering
+    # n_clusters = 3
+    # top_relative_weight = 0.99  # 'top_relative_weight' between 0 and 1
+    # max_iter_alt = 300
+    # max_iter_interp = 300
+    # learning_rate = 0.05
+    
+    torch.manual_seed(0)
 
-    train(dataset)
+    # Load the MUTAG dataset
+    train_loader, adj_matrices, labels_true = load_mutag_data()
+
+    train((train_loader, adj_matrices))
 
 if __name__ == '__main__':
     main()
