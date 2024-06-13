@@ -1,4 +1,3 @@
-
 import sys
 import math
 import random
@@ -165,12 +164,14 @@ def train(dataset, num_clusters=3, epochs=100):
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
+    pre_cluster_labels = kmeans_model.labels_
     deep_k_means = GraphKMeans(60, 60, num_clusters, 0.1, kmeans_model.cluster_centers_)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
 
     print("TRAINING")
+    embeddings = []
 
     for epoch in range(epochs):
         loss = 0
@@ -214,6 +215,13 @@ def train(dataset, num_clusters=3, epochs=100):
 
         if epoch % 10 == 0:
             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+    
+    # Stack tensors vertically
+    embeddings = torch.cat([e.detach() for e in embeddings], dim=0)
+    kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(embeddings.numpy())
+    cluster_labels = kmeans_model.labels_
+
+    return pre_cluster_labels, cluster_labels
 
 
 #############################################
@@ -339,7 +347,14 @@ def main():
     # Load the MUTAG dataset
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
-    train((train_loader, adj_matrices))
+    # Pretraining
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices))
+    pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
+    print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
+
+    # Fine-tuning
+    train_ari = adjusted_rand_score(labels_true, train_labels_pred)
+    print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")
 
 if __name__ == '__main__':
     main()
