@@ -105,7 +105,7 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, new_adj_dim, epochs=80):
+def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
 
     print("PRETRAINING")
 
@@ -134,7 +134,7 @@ def pretrain(dataset, new_adj_dim, epochs=80):
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
             x = torch.tensor(adj_matrix, dtype=torch.float32)
-            ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix)
+            ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
             ori_mst = torch.take(x, ori_mst_index)
             ori_nonmst = torch.take(x, ori_nonmst_index)
 
@@ -146,8 +146,11 @@ def pretrain(dataset, new_adj_dim, epochs=80):
             decoded = decoder(encoded)
             decoded = decoded.view(new_adj_dim, new_adj_dim)
             
-            new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
-            new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
+            # new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
+            # new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
+
+            decoded_adj = decoded.detach().numpy()
+            new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
 
             new_mst = torch.take(decoded, new_mst_index)
             new_nonmst = torch.take(decoded, new_nonmst_index)
@@ -173,11 +176,13 @@ def train(config, dataset, num_clusters=2, epochs=80):
     epochs = config["epochs"]
     new_adj_dim = config["new_adj_dim"]
     learning_rate = config["lr"]
+    numSampledCCs = config["numSampledCCs"]
+    numSampledCycles = config["numSampledCycles"]
 
     # train_loader, adj_matrices = dataset
     train_loader, adj_matrices, labels_true = ray.get(dataset)
 
-    encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, epochs=config["pretrain_epochs"])
+    encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, epochs=config["pretrain_epochs"])
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
@@ -200,7 +205,7 @@ def train(config, dataset, num_clusters=2, epochs=80):
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
             x = torch.tensor(adj_matrix, dtype=torch.float32)
-            ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix)
+            ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
             ori_mst = torch.take(x, ori_mst_index)
             ori_nonmst = torch.take(x, ori_nonmst_index)
 
@@ -210,8 +215,11 @@ def train(config, dataset, num_clusters=2, epochs=80):
             decoded = decoder(encoded)
             decoded = decoded.view(new_adj_dim, new_adj_dim)
 
-            new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
-            new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
+            # new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
+            # new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
+
+            decoded_adj = decoded.detach().numpy()
+            new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
 
             new_mst = torch.take(decoded, new_mst_index)
             new_nonmst = torch.take(decoded, new_nonmst_index)
@@ -391,39 +399,55 @@ def load_mutag_data():
 
     return dataset, adjacency_matrices, labels
 
-def main(num_samples=10, max_num_epochs=10, gpus_per_trial=0):
+def main(num_samples=50, max_num_epochs=200, gpus_per_trial=0):
     np.random.seed(0)
     random.seed(0)
     torch.manual_seed(0)
 
     config = {
-        "epochs": tune.choice([50, 60, 70, 80, 90, 100, 150]),
-        "new_adj_dim": tune.choice([4, 6, 8, 10, 12, 14, 16, 18]),
+        # "epochs": tune.choice([50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]),
+        "epochs": tune.qrandint(50, 200, 10),
+        # "new_adj_dim": tune.choice([4, 5, 6, 7, 8, 10, 12, 14, 16, 18]), 
+        "new_adj_dim": tune.randint(5, 15),
         "lr": tune.loguniform(1e-4, 1e-1),
-        "pretrain_epochs": tune.choice([10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+        # "pretrain_epochs": tune.choice([10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
+        "pretrain_epochs": tune.qrandint(30, 100, 10),
+        # "numSampledCCs": tune.choice([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
+        "numSampledCCs": tune.randint(4, 18),
+        # "numSampledCycles": tune.choice([6, 10, 15, 21, 28, 36, 45, 50, 60, 70, 75, 80])
+        "numSampledCycles": tune.randint(6, 60)
     }
 
     # Load the MUTAG dataset
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
-    scheduler = tune.schedulers.AsyncHyperBandScheduler(
-        metric="ari",   # Specify the metric to optimize
-        mode="max",      # Specify the mode, 'min' for minimizing, 'max' for maximizing
-        max_t=max_num_epochs,
-        grace_period=1
-    )
+    # scheduler = tune.schedulers.AsyncHyperBandScheduler(
+    #     metric="ari",   # Specify the metric to optimize
+    #     mode="max",      # Specify the mode, 'min' for minimizing, 'max' for maximizing
+    #     max_t=max_num_epochs,
+    #     grace_period=1
+    # )
 
     data = (train_loader, adj_matrices, labels_true)
     data_ref = ray.put(data)
-    # Setup Ray Tune
+
     analysis = tune.run(
         lambda config: train(config, dataset=data_ref),
         resources_per_trial={"cpu": 1, "gpu": gpus_per_trial},
         config=config,
         num_samples=num_samples,
-        scheduler=scheduler,
         progress_reporter=tune.CLIReporter(parameter_columns=list(config.keys()))
     )
+
+    # # Setup Ray Tune
+    # analysis = tune.run(
+    #     lambda config: train(config, dataset=data_ref),
+    #     resources_per_trial={"cpu": 1, "gpu": gpus_per_trial},
+    #     config=config,
+    #     num_samples=num_samples,
+    #     scheduler=scheduler,
+    #     progress_reporter=tune.CLIReporter(parameter_columns=list(config.keys()))
+    # )
     
 
     best_config = analysis.get_best_config(metric="ari", mode="max")
