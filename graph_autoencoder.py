@@ -8,6 +8,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 import networkx as nx
 import ray
+import wandb
 
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
@@ -20,7 +21,7 @@ from sklearn.cluster import KMeans
 from torch_geometric.datasets import TUDataset
 from torch_geometric.utils import to_dense_adj
 
-from ray import tune
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class GNN(torch.nn.Module):
     def __init__(self):
@@ -105,23 +106,16 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
+def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, lr=1e-4):
 
     print("PRETRAINING")
 
-    # Pretrain an encoder via autoencoder reconstruction loss
-    # num_nodes = dataset[0].shape[0]
+    train_loader, adj_matrices, labels_true = dataset
 
-    # encoder = GNN(num_nodes)
-    # decoder = MLP(num_nodes, num_nodes**2)
+    encoder = GNN().to(device)
+    decoder = MLP(5, new_adj_dim**2).to(device)
 
-    # train_loader, adj_matrices = dataset
-    train_loader, adj_matrices, _ = ray.get(dataset)
-
-    encoder = GNN()
-    decoder = MLP(5, new_adj_dim**2)
-
-    optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
+    optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
     criterion = torch.nn.MSELoss()
 
     final_embeddings = []
@@ -133,10 +127,13 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
         total_loss = 0
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
-            x = torch.tensor(adj_matrix, dtype=torch.float32)
+
+            data = data.to(device)
+
+            x = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
-            ori_mst = torch.take(x, ori_mst_index)
-            ori_nonmst = torch.take(x, ori_nonmst_index)
+            ori_mst = torch.take(x, ori_mst_index).to(device)
+            ori_nonmst = torch.take(x, ori_nonmst_index).to(device)
 
             encoded = encoder(data.x, data.edge_index, data.batch)
             
@@ -152,8 +149,8 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
             decoded_adj = decoded.detach().numpy()
             new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
 
-            new_mst = torch.take(decoded, new_mst_index)
-            new_nonmst = torch.take(decoded, new_nonmst_index)
+            new_mst = torch.take(decoded, new_mst_index).to(device)
+            new_nonmst = torch.take(decoded, new_nonmst_index).to(device)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -172,22 +169,18 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
 
     return encoder, decoder, final_embeddings
 
-def train(config, dataset, num_clusters=2, epochs=80):
-    epochs = config["epochs"]
-    new_adj_dim = config["new_adj_dim"]
-    learning_rate = config["lr"]
-    numSampledCCs = config["numSampledCCs"]
-    numSampledCycles = config["numSampledCycles"]
+def train(dataset, hyperparameters, num_clusters=2):
 
     # train_loader, adj_matrices = dataset
-    train_loader, adj_matrices, labels_true = ray.get(dataset)
+    train_loader, adj_matrices, labels_true = dataset
+    epochs, pretrain_epochs, new_adj_dim, learning_rate, numSampledCCs, numSampledCycles = hyperparameters
 
-    encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, epochs=config["pretrain_epochs"])
+    encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, epochs=pretrain_epochs, lr=learning_rate)
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
     pre_cluster_labels = kmeans_model.labels_
-    deep_k_means = GraphKMeans(60, 60, num_clusters, 0.1, kmeans_model.cluster_centers_)
+    deep_k_means = GraphKMeans(60, 60, num_clusters, 0.1, kmeans_model.cluster_centers_).to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=learning_rate)
     criterion = torch.nn.MSELoss()
@@ -204,10 +197,13 @@ def train(config, dataset, num_clusters=2, epochs=80):
         embeddings = []  # List to store embeddings
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
-            x = torch.tensor(adj_matrix, dtype=torch.float32)
+
+            data = data.to(device)
+
+            x = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
-            ori_mst = torch.take(x, ori_mst_index)
-            ori_nonmst = torch.take(x, ori_nonmst_index)
+            ori_mst = torch.take(x, ori_mst_index).to(device)
+            ori_nonmst = torch.take(x, ori_nonmst_index).to(device)
 
             encoded = encoder(data.x, data.edge_index, data.batch)
             embeddings.append(encoded)
@@ -221,8 +217,8 @@ def train(config, dataset, num_clusters=2, epochs=80):
             decoded_adj = decoded.detach().numpy()
             new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
 
-            new_mst = torch.take(decoded, new_mst_index)
-            new_nonmst = torch.take(decoded, new_nonmst_index)
+            new_mst = torch.take(decoded, new_mst_index).to(device)
+            new_nonmst = torch.take(decoded, new_nonmst_index).to(device)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -247,7 +243,7 @@ def train(config, dataset, num_clusters=2, epochs=80):
     cluster_labels = kmeans_model.labels_
 
     train_ari = adjusted_rand_score(labels_true, cluster_labels)
-    ray.train.report({"ari": train_ari})
+    wandb.log({"train_ari": train_ari})
 
     # return pre_cluster_labels, cluster_labels
     return {"ari": train_ari}
@@ -297,39 +293,6 @@ def random_modular_graph(d, c, p, mu, sigma):
 def purity_score(labels_true, labels_pred):
     mtx = contingency_matrix(labels_true, labels_pred)
     return np.sum(np.amax(mtx, axis=0)) / np.sum(mtx)
-
-# def _bd_demomposition(adj):
-#     """Birth-death decomposition."""
-#     eps = np.nextafter(0, 1)
-#     adj[adj == 0] = eps
-#     adj = np.triu(adj, k=1)
-#     Xcsr = csr_matrix(-adj)
-#     Tcsr = minimum_spanning_tree(Xcsr)
-#     mst = -Tcsr.toarray()  # reverse the negative sign
-#     nonmst = adj - mst
-#     return mst, nonmst
-
-# def _compute_birth_death_sets(adj):
-#     mst, nonmst = _bd_demomposition(adj)
-#     print("mst: ", mst)
-#     print("nonmst: ", nonmst)
-#     n = adj.shape[0]
-#     birth_ind = np.nonzero(mst)
-#     death_ind = np.nonzero(nonmst)
-
-#     # Convert 2D indices to 1D and get corresponding values
-#     mst_flat_indices = np.ravel_multi_index(birth_ind, (n, n))
-#     nonmst_flat_indices = np.ravel_multi_index(death_ind, (n, n))
-
-#     # Get values from the original adjacency matrix using these flat indices
-#     mst_values = adj.flatten()[mst_flat_indices]
-#     nonmst_values = adj.flatten()[nonmst_flat_indices]
-
-#     # Sort indices by these values
-#     sorted_mst_indices = mst_flat_indices[np.argsort(mst_values)]
-#     sorted_nonmst_indices = nonmst_flat_indices[np.argsort(nonmst_values)]
-
-#     return torch.from_numpy(sorted_mst_indices), torch.from_numpy(sorted_nonmst_indices)
 
 def adj2pers(adj):
     n = len(adj)
@@ -399,60 +362,79 @@ def load_mutag_data():
 
     return dataset, adjacency_matrices, labels
 
-def main(num_samples=50, max_num_epochs=200, gpus_per_trial=0):
+def one_tune_instance():
+
+    wandb.init(project="hyperparameter-sweep")
+    
+    epochs = wandb.config.epochs
+    pretrain_epochs = wandb.config.pretrain_epochs
+    new_adj_dim = wandb.config.new_adj_dim
+    learning_rate = wandb.config.lr
+    numSampledCCs = wandb.config.numSampledCCs
+    numSampledCycles = wandb.config.numSampledCycles
+
+    hyperparameters = (epochs, pretrain_epochs, new_adj_dim, learning_rate, numSampledCCs, numSampledCycles)
+
     np.random.seed(0)
     random.seed(0)
     torch.manual_seed(0)
 
-    config = {
-        # "epochs": tune.choice([50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]),
-        "epochs": tune.qrandint(50, 200, 10),
-        # "new_adj_dim": tune.choice([4, 5, 6, 7, 8, 10, 12, 14, 16, 18]), 
-        "new_adj_dim": tune.randint(5, 15),
-        "lr": tune.loguniform(1e-4, 1e-1),
-        # "pretrain_epochs": tune.choice([10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        "pretrain_epochs": tune.qrandint(30, 100, 10),
-        # "numSampledCCs": tune.choice([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
-        "numSampledCCs": tune.randint(4, 18),
-        # "numSampledCycles": tune.choice([6, 10, 15, 21, 28, 36, 45, 50, 60, 70, 75, 80])
-        "numSampledCycles": tune.randint(6, 60)
-    }
-
-    # Load the MUTAG dataset
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
-    # scheduler = tune.schedulers.AsyncHyperBandScheduler(
-    #     metric="ari",   # Specify the metric to optimize
-    #     mode="max",      # Specify the mode, 'min' for minimizing, 'max' for maximizing
-    #     max_t=max_num_epochs,
-    #     grace_period=1
-    # )
+    # Pretraining
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+    pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
 
-    data = (train_loader, adj_matrices, labels_true)
-    data_ref = ray.put(data)
+    wandb.log({"pretrain_ari": pretrain_ari})
+    print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
 
-    analysis = tune.run(
-        lambda config: train(config, dataset=data_ref),
-        resources_per_trial={"cpu": 1, "gpu": gpus_per_trial},
-        config=config,
-        num_samples=num_samples,
-        progress_reporter=tune.CLIReporter(parameter_columns=list(config.keys()))
-    )
+    # # Fine-tuning
+    # train_ari = adjusted_rand_score(labels_true, train_labels_pred)
+    # print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")  
 
-    # # Setup Ray Tune
-    # analysis = tune.run(
-    #     lambda config: train(config, dataset=data_ref),
-    #     resources_per_trial={"cpu": 1, "gpu": gpus_per_trial},
-    #     config=config,
-    #     num_samples=num_samples,
-    #     scheduler=scheduler,
-    #     progress_reporter=tune.CLIReporter(parameter_columns=list(config.keys()))
-    # )
-    
+    # wandb.log({"train_ari": train_ari})
 
-    best_config = analysis.get_best_config(metric="ari", mode="max")
 
-    print("Best hyperparameters found were: ", best_config)
+def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
+    # np.random.seed(0)
+    # random.seed(0)
+    # torch.manual_seed(0)
+
+    sweep_config = {
+        'method': 'random',  # or 'grid' or 'bayes'
+        'metric': {
+            'name': 'train_ari',
+            'goal': 'maximize'
+        },
+        'parameters': {
+            'lr': {
+                'max': 1e-1, 'min': 1e-5, 'distribution': 'log_uniform_values'
+            },
+            'epochs': {
+                'values': list(range(50, 200, 10))
+            },
+            'new_adj_dim': {
+                'values': list(range(5, 15))
+            },
+            'pretrain_epochs': {
+                'values': list(range(30, 100, 10))
+            },
+            'numSampledCCs': {
+                'values': list(range(4, 18))
+            },
+            'numSampledCycles': {
+                'values': list(range(6, 60))
+            }
+        }
+    }
+
+    sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
+    wandb.agent(sweep_id, function=one_tune_instance, count=100)
+
+    # Load the MUTAG dataset
+    # train_loader, adj_matrices, labels_true = load_mutag_data()
+
+    # data = (train_loader, adj_matrices, labels_true)
 
     # # Pretraining
     # pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices), new_adj_dim = 10)
@@ -461,7 +443,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=0):
 
     # # Fine-tuning
     # train_ari = adjusted_rand_score(labels_true, train_labels_pred)
-    # print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")
+    # print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")  
 
 if __name__ == '__main__':
     main()

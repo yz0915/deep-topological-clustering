@@ -1,0 +1,783 @@
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+/home/users/yz705/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: Currently logged in as: ricozhu (icl-learning). Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_224938-9gieiza9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run rich-river-1
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/9gieiza9
+wandb: WARNING Malformed sweep config detected! This may cause your sweep to behave in unexpected ways.
+wandb: WARNING To avoid this, please fix the sweep config schema violations below:
+wandb: WARNING   Violation 1. lr uses log_uniform, where min/max specify base-e exponents. Use log_uniform_values to specify limit values.
+wandb: WARNING Calling wandb.login() after wandb.init() has no effect.
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.004 MB uploadedwandb: | 0.011 MB of 0.020 MB uploadedwandb: 🚀 View run rich-river-1 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/9gieiza9
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240620_224938-9gieiza9/logs
+wandb: Agent Starting Run: 8gq04lug with config:
+wandb: 	epochs: 110
+wandb: 	lr: 1.0780407916663943
+wandb: 	new_adj_dim: 13
+wandb: 	numSampledCCs: 11
+wandb: 	numSampledCycles: 10
+wandb: 	pretrain_epochs: 60
+Downloading https://www.chrsmrrs.com/graphkerneldatasets/MUTAG.zip
+Processing...
+Done!
+Exception in thread Thread-4 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Agent Starting Run: ulj7xcv8 with config:
+wandb: 	epochs: 160
+wandb: 	lr: 1.06868789111666
+wandb: 	new_adj_dim: 7
+wandb: 	numSampledCCs: 10
+wandb: 	numSampledCycles: 13
+wandb: 	pretrain_epochs: 30
+Exception in thread Thread-5 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: lfw1z3er with config:
+wandb: 	epochs: 50
+wandb: 	lr: 1.0769037773184595
+wandb: 	new_adj_dim: 9
+wandb: 	numSampledCCs: 12
+wandb: 	numSampledCycles: 22
+wandb: 	pretrain_epochs: 50
+Exception in thread Thread-6 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Agent Starting Run: p7vrgfgt with config:
+wandb: 	epochs: 140
+wandb: 	lr: 1.002252183615684
+wandb: 	new_adj_dim: 9
+wandb: 	numSampledCCs: 7
+wandb: 	numSampledCycles: 54
+wandb: 	pretrain_epochs: 80
+Exception in thread Thread-7 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: dztvf94d with config:
+wandb: 	epochs: 150
+wandb: 	lr: 1.042281267279463
+wandb: 	new_adj_dim: 9
+wandb: 	numSampledCCs: 5
+wandb: 	numSampledCycles: 18
+wandb: 	pretrain_epochs: 40
+Exception in thread Thread-8 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Agent Starting Run: lv4rovly with config:
+wandb: 	epochs: 150
+wandb: 	lr: 1.0226548955836308
+wandb: 	new_adj_dim: 13
+wandb: 	numSampledCCs: 11
+wandb: 	numSampledCycles: 18
+wandb: 	pretrain_epochs: 30
+Exception in thread Thread-9 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: p89ygc4c with config:
+wandb: 	epochs: 90
+wandb: 	lr: 1.012887077819166
+wandb: 	new_adj_dim: 8
+wandb: 	numSampledCCs: 16
+wandb: 	numSampledCycles: 58
+wandb: 	pretrain_epochs: 70
+Exception in thread Thread-10 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: as2o2whd with config:
+wandb: 	epochs: 50
+wandb: 	lr: 1.0413375838796333
+wandb: 	new_adj_dim: 10
+wandb: 	numSampledCCs: 10
+wandb: 	numSampledCycles: 23
+wandb: 	pretrain_epochs: 70
+Exception in thread Thread-11 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Agent Starting Run: lcruq41t with config:
+wandb: 	epochs: 60
+wandb: 	lr: 1.0378067704657847
+wandb: 	new_adj_dim: 9
+wandb: 	numSampledCCs: 10
+wandb: 	numSampledCycles: 36
+wandb: 	pretrain_epochs: 50
+Exception in thread Thread-12 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: 0lvmx5ah with config:
+wandb: 	epochs: 110
+wandb: 	lr: 1.052876334507479
+wandb: 	new_adj_dim: 8
+wandb: 	numSampledCCs: 4
+wandb: 	numSampledCycles: 58
+wandb: 	pretrain_epochs: 80
+Exception in thread Thread-13 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Agent Starting Run: mx1r6xzz with config:
+wandb: 	epochs: 120
+wandb: 	lr: 1.0638021204924908
+wandb: 	new_adj_dim: 7
+wandb: 	numSampledCCs: 13
+wandb: 	numSampledCycles: 23
+wandb: 	pretrain_epochs: 30
+Exception in thread Thread-14 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: lvnyv018 with config:
+wandb: 	epochs: 180
+wandb: 	lr: 1.0615695802230192
+wandb: 	new_adj_dim: 7
+wandb: 	numSampledCCs: 11
+wandb: 	numSampledCycles: 38
+wandb: 	pretrain_epochs: 50
+Exception in thread Thread-15 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Sweep Agent: Waiting for job.
+wandb: Job received.
+wandb: Agent Starting Run: 3dx7orxg with config:
+wandb: 	epochs: 110
+wandb: 	lr: 1.0332022026894234
+wandb: 	new_adj_dim: 5
+wandb: 	numSampledCCs: 11
+wandb: 	numSampledCycles: 59
+wandb: 	pretrain_epochs: 90
+Exception in thread Thread-16 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+wandb: Agent Starting Run: k96d47ei with config:
+wandb: 	epochs: 140
+wandb: 	lr: 1.0132953991175953
+wandb: 	new_adj_dim: 9
+wandb: 	numSampledCCs: 17
+wandb: 	numSampledCycles: 27
+wandb: 	pretrain_epochs: 50
+Exception in thread Thread-17 (_run_job):
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 409, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), new_adj_dim = 10)
+TypeError: train() got an unexpected keyword argument 'new_adj_dim'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 312, in _run_job
+    wandb.finish(exit_code=1)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 4247, in finish
+    wandb.run.finish(exit_code=exit_code, quiet=quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 449, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 390, in wrapper
+    return func(self, *args, **kwargs)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2094, in finish
+    return self._finish(exit_code, quiet)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 2101, in _finish
+    with telemetry.context(run=self) as tel:
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/telemetry.py", line 42, in __exit__
+    self._run._telemetry_callback(self._obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 792, in _telemetry_callback
+    self._telemetry_flush()
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 803, in _telemetry_flush
+    self._backend.interface._publish_telemetry(self._telemetry_obj)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 101, in _publish_telemetry
+    self._publish(rec)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+slurmstepd: error: *** JOB 2459993 ON linux55 CANCELLED AT 2024-06-20T22:51:07 ***

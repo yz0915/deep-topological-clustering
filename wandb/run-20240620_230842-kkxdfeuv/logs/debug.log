@@ -1,0 +1,31 @@
+2024-06-20 23:08:42,979 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Current SDK version is 0.17.0
+2024-06-20 23:08:42,979 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Configure stats pid to 4134426
+2024-06-20 23:08:42,979 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Loading settings from /home/users/yz705/.config/wandb/settings
+2024-06-20 23:08:42,979 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Loading settings from /usr/project/xtmp/yz705/deep-topological-clustering/wandb/settings
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-06-20 23:08:42,980 WARNING MainThread:4134426 [wandb_setup.py:_flush():76] Could not save program above cwd: /usr/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': None, 'program_abspath': '/usr/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py', 'program': '/usr/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py'}
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_init.py:_log_setup():520] Logging user logs to /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_230842-kkxdfeuv/logs/debug.log
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_init.py:_log_setup():521] Logging internal logs to /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_230842-kkxdfeuv/logs/debug-internal.log
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_init.py:init():560] calling init triggers
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_init.py:init():567] wandb.init called with sweep_config: {}
+config: {}
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_init.py:init():610] starting backend
+2024-06-20 23:08:42,980 INFO    MainThread:4134426 [wandb_init.py:init():614] setting up manager
+2024-06-20 23:08:42,989 INFO    MainThread:4134426 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-06-20 23:08:42,993 INFO    MainThread:4134426 [wandb_init.py:init():622] backend started and connected
+2024-06-20 23:08:42,998 INFO    MainThread:4134426 [wandb_init.py:init():711] updated telemetry
+2024-06-20 23:08:43,013 INFO    MainThread:4134426 [wandb_init.py:init():744] communicating run to backend with 90.0 second timeout
+2024-06-20 23:08:43,347 INFO    MainThread:4134426 [wandb_run.py:_on_init():2396] communicating current version
+2024-06-20 23:08:43,509 INFO    MainThread:4134426 [wandb_run.py:_on_init():2405] got version response upgrade_message: "wandb version 0.17.2 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-06-20 23:08:43,510 INFO    MainThread:4134426 [wandb_init.py:init():795] starting run threads in backend
+2024-06-20 23:08:44,048 INFO    MainThread:4134426 [wandb_run.py:_console_start():2374] atexit reg
+2024-06-20 23:08:44,048 INFO    MainThread:4134426 [wandb_run.py:_redirect():2229] redirect: wrap_raw
+2024-06-20 23:08:44,049 INFO    MainThread:4134426 [wandb_run.py:_redirect():2294] Wrapping output streams.
+2024-06-20 23:08:44,049 INFO    MainThread:4134426 [wandb_run.py:_redirect():2319] Redirects installed.
+2024-06-20 23:08:44,051 INFO    MainThread:4134426 [wandb_init.py:init():838] run started, returning control to user process
+2024-06-20 23:08:44,414 INFO    MainThread:4134426 [pyagent.py:run():323] Starting sweep agent: entity=None, project=None, count=100
+2024-06-20 23:08:51,291 WARNING MsgRouterThr:4134426 [router.py:message_loop():77] message_loop has been closed

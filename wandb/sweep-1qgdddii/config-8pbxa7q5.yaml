@@ -1,0 +1,14 @@
+wandb_version: 1
+
+epochs:
+  value: 100
+lr:
+  value: 1.001834268431035
+new_adj_dim:
+  value: 8
+numSampledCCs:
+  value: 13
+numSampledCycles:
+  value: 56
+pretrain_epochs:
+  value: 70

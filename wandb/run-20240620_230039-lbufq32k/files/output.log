@@ -1,0 +1,6 @@
+Create sweep with ID: 000k8qdh
+Sweep URL: https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/000k8qdh
+[34m[1mwandb[39m[22m: [33mWARNING[39m Malformed sweep config detected! This may cause your sweep to behave in unexpected ways.
+[34m[1mwandb[39m[22m: [33mWARNING[39m To avoid this, please fix the sweep config schema violations below:
+[34m[1mwandb[39m[22m: [33mWARNING[39m   Violation 1. lr uses log_uniform, where min/max specify base-e exponents. Use log_uniform_values to specify limit values.
+[34m[1mwandb[39m[22m: [33mWARNING[39m Calling wandb.login() after wandb.init() has no effect.

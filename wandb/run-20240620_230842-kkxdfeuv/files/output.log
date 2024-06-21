@@ -1,0 +1,4 @@
+
+[34m[1mwandb[39m[22m: [33mWARNING[39m Calling wandb.login() after wandb.init() has no effect.
+Create sweep with ID: u9njilxy
+Sweep URL: https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/u9njilxy
