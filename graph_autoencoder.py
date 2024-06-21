@@ -141,16 +141,20 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, l
                 final_embeddings.append(torch.squeeze(encoded).detach().numpy())
 
             decoded = decoder(encoded)
-            decoded = decoded.view(new_adj_dim, new_adj_dim)
-            
-            # new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
-            # new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
 
-            decoded_adj = decoded.detach().numpy()
-            new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
+            # Reconstruct the adjacency matrix from the top triangle
+            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32)
+            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1)
+            adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
+            adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
+
+            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().numpy()
+            new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
 
             new_mst = torch.take(decoded, new_mst_index).to(device)
             new_nonmst = torch.take(decoded, new_nonmst_index).to(device)
+            new_mst = torch.take(adj_matrix_reconstructed, new_mst_index)
+            new_nonmst = torch.take(adj_matrix_reconstructed, new_nonmst_index)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -164,8 +168,8 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, l
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
         optimizer.zero_grad() # Reset gradients after update
 
-        # if epoch % 10 == 0:
-        #     print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+        if epoch % 10 == 0:
+            print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
     return encoder, decoder, final_embeddings
 
@@ -209,22 +213,26 @@ def train(dataset, hyperparameters, num_clusters=2):
             embeddings.append(encoded)
             
             decoded = decoder(encoded)
-            decoded = decoded.view(new_adj_dim, new_adj_dim)
 
-            # new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
-            # new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
+            # Reconstruct the adjacency matrix from the top triangle
+            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32)
+            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1)
+            adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
+            adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
 
-            decoded_adj = decoded.detach().numpy()
-            new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
+            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().numpy()
+            new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
 
             new_mst = torch.take(decoded, new_mst_index).to(device)
             new_nonmst = torch.take(decoded, new_nonmst_index).to(device)
+            new_mst = torch.take(adj_matrix_reconstructed, new_mst_index)
+            new_nonmst = torch.take(adj_matrix_reconstructed, new_nonmst_index)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            loss = loss + loss_mst + loss_nonmst
+            loss = loss + 0.25*loss_mst + 0.25*loss_nonmst
 
         loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
         loss = loss + loss_k_means
@@ -234,8 +242,8 @@ def train(dataset, hyperparameters, num_clusters=2):
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
         optimizer.zero_grad() # Reset gradients after update
 
-        # if epoch % 10 == 0:
-        #     print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+        if epoch % 10 == 0:
+            print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
     
     # Stack tensors vertically
     embeddings = torch.cat([e.detach() for e in embeddings], dim=0)
@@ -252,6 +260,8 @@ def train(dataset, hyperparameters, num_clusters=2):
 #############################################
 ################### Demo ####################
 #############################################
+    return pre_cluster_labels, cluster_labels
+
 def random_modular_graph(d, c, p, mu, sigma):
     """Simulated modular network.
     
@@ -350,14 +360,31 @@ def load_mutag_data():
         # Convert to dense adjacency matrix
         adj = to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0]
         
-        # Retrieve node features and compute the dot product matrix
+        # Compute the degree of each node
+        degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+
+        # Compute the average weight of connected edges for each node
+        # Assuming initially all weights are 1 (as in a binary adjacency matrix), the sum of weights is the degree
+        # We can avoid division by zero by setting the average to zero where degree is zero
+        avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
+
+       # Retrieve and update node features
         node_features = data.x
+        node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
+
+        # print(node_features)
+
+        # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
-        # # ensures only connected nodes have their dot products as weights
-        # weighted_adj = adj * dot_product_matrix
+        # # Compute the square of the difference between node features
+        # node_features_squared = torch.sum(node_features ** 2, dim=1, keepdim=True)
+        # diff_matrix = node_features_squared + node_features_squared.t() - 2 * torch.mm(node_features, node_features.t())
 
-        adjacency_matrices.append(dot_product_matrix.numpy())
+        # # ensures only connected nodes have their dot products as weights
+        weighted_adj = adj * dot_product_matrix
+
+        adjacency_matrices.append(weighted_adj.numpy())
         labels.append(data.y.item())
 
     return dataset, adjacency_matrices, labels
