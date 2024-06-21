@@ -105,21 +105,12 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
-
+def pretrain(dataset, numSampledCCs, numSampledCycles, epochs=80):
     print("PRETRAINING")
-
-    # Pretrain an encoder via autoencoder reconstruction loss
-    # num_nodes = dataset[0].shape[0]
-
-    # encoder = GNN(num_nodes)
-    # decoder = MLP(num_nodes, num_nodes**2)
-
-    # train_loader, adj_matrices = dataset
-    train_loader, adj_matrices, _ = ray.get(dataset)
+    train_loader, adj_matrices = dataset
 
     encoder = GNN()
-    decoder = MLP(5, new_adj_dim**2)
+    decoder = MLP(5, numSampledCCs+numSampledCycles)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
@@ -127,14 +118,13 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
     final_embeddings = []
 
     for epoch in range(epochs):
-
         encoder.train()
         decoder.train()
         total_loss = 0
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
-            x = torch.tensor(adj_matrix, dtype=torch.float32)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
+            x = torch.tensor(adj_matrix, dtype=torch.float32)
             ori_mst = torch.take(x, ori_mst_index)
             ori_nonmst = torch.take(x, ori_nonmst_index)
 
@@ -144,16 +134,18 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
                 final_embeddings.append(torch.squeeze(encoded).detach().numpy())
 
             decoded = decoder(encoded)
-            decoded = decoded.view(new_adj_dim, new_adj_dim)
-            
-            # new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
-            # new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
 
-            decoded_adj = decoded.detach().numpy()
-            new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
+            # Reconstruct the adjacency matrix from the top triangle
+            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32)
+            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1)
+            adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
+            adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
 
-            new_mst = torch.take(decoded, new_mst_index)
-            new_nonmst = torch.take(decoded, new_nonmst_index)
+            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().numpy()
+            new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
+
+            new_mst = torch.take(adj_matrix_reconstructed, new_mst_index)
+            new_nonmst = torch.take(adj_matrix_reconstructed, new_nonmst_index)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -167,29 +159,22 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80):
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
         optimizer.zero_grad() # Reset gradients after update
 
-        # if epoch % 10 == 0:
-        #     print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+        if epoch % 10 == 0:
+            print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
     return encoder, decoder, final_embeddings
 
-def train(config, dataset, num_clusters=2, epochs=80):
-    epochs = config["epochs"]
-    new_adj_dim = config["new_adj_dim"]
-    learning_rate = config["lr"]
-    numSampledCCs = config["numSampledCCs"]
-    numSampledCycles = config["numSampledCycles"]
+def train(dataset, num_clusters, numSampledCCs, numSampledCycles, epochs):
+    train_loader, adj_matrices = dataset
 
-    # train_loader, adj_matrices = dataset
-    train_loader, adj_matrices, labels_true = ray.get(dataset)
-
-    encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, epochs=config["pretrain_epochs"])
+    encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles)
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
     pre_cluster_labels = kmeans_model.labels_
-    deep_k_means = GraphKMeans(60, 60, num_clusters, 0.1, kmeans_model.cluster_centers_)
+    deep_k_means = GraphKMeans(60, 60, num_clusters, 1, kmeans_model.cluster_centers_)
 
-    optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=learning_rate)
+    optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=0.01)
     criterion = torch.nn.MSELoss()
 
     print("TRAINING")
@@ -204,8 +189,8 @@ def train(config, dataset, num_clusters=2, epochs=80):
         embeddings = []  # List to store embeddings
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
-            x = torch.tensor(adj_matrix, dtype=torch.float32)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
+            x = torch.tensor(adj_matrix, dtype=torch.float32)
             ori_mst = torch.take(x, ori_mst_index)
             ori_nonmst = torch.take(x, ori_nonmst_index)
 
@@ -213,22 +198,24 @@ def train(config, dataset, num_clusters=2, epochs=80):
             embeddings.append(encoded)
             
             decoded = decoder(encoded)
-            decoded = decoded.view(new_adj_dim, new_adj_dim)
 
-            # new_mst_index = convert_index(ori_mst_index, data.num_nodes, new_adj_dim)
-            # new_nonmst_index = convert_index(ori_nonmst_index, data.num_nodes, new_adj_dim)
+            # Reconstruct the adjacency matrix from the top triangle
+            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32)
+            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1)
+            adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
+            adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
 
-            decoded_adj = decoded.detach().numpy()
-            new_mst_index, new_nonmst_index = _compute_birth_death_sets(decoded_adj, numSampledCCs, numSampledCycles)
+            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().numpy()
+            new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
 
-            new_mst = torch.take(decoded, new_mst_index)
-            new_nonmst = torch.take(decoded, new_nonmst_index)
+            new_mst = torch.take(adj_matrix_reconstructed, new_mst_index)
+            new_nonmst = torch.take(adj_matrix_reconstructed, new_nonmst_index)
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            loss = loss + loss_mst + loss_nonmst
+            loss = loss + 0.25*loss_mst + 0.25*loss_nonmst
 
         loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
         loss = loss + loss_k_means
@@ -238,24 +225,16 @@ def train(config, dataset, num_clusters=2, epochs=80):
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
         optimizer.zero_grad() # Reset gradients after update
 
-        # if epoch % 10 == 0:
-        #     print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+        if epoch % 10 == 0:
+            print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
     
     # Stack tensors vertically
     embeddings = torch.cat([e.detach() for e in embeddings], dim=0)
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(embeddings.numpy())
     cluster_labels = kmeans_model.labels_
 
-    train_ari = adjusted_rand_score(labels_true, cluster_labels)
-    ray.train.report({"ari": train_ari})
+    return pre_cluster_labels, cluster_labels
 
-    # return pre_cluster_labels, cluster_labels
-    return {"ari": train_ari}
-
-
-#############################################
-################### Demo ####################
-#############################################
 def random_modular_graph(d, c, p, mu, sigma):
     """Simulated modular network.
     
@@ -293,43 +272,9 @@ def random_modular_graph(d, c, p, mu, sigma):
                     adj[i - 1][j - 1] = max(w, 0)
     return adj
 
-
 def purity_score(labels_true, labels_pred):
     mtx = contingency_matrix(labels_true, labels_pred)
     return np.sum(np.amax(mtx, axis=0)) / np.sum(mtx)
-
-# def _bd_demomposition(adj):
-#     """Birth-death decomposition."""
-#     eps = np.nextafter(0, 1)
-#     adj[adj == 0] = eps
-#     adj = np.triu(adj, k=1)
-#     Xcsr = csr_matrix(-adj)
-#     Tcsr = minimum_spanning_tree(Xcsr)
-#     mst = -Tcsr.toarray()  # reverse the negative sign
-#     nonmst = adj - mst
-#     return mst, nonmst
-
-# def _compute_birth_death_sets(adj):
-#     mst, nonmst = _bd_demomposition(adj)
-#     print("mst: ", mst)
-#     print("nonmst: ", nonmst)
-#     n = adj.shape[0]
-#     birth_ind = np.nonzero(mst)
-#     death_ind = np.nonzero(nonmst)
-
-#     # Convert 2D indices to 1D and get corresponding values
-#     mst_flat_indices = np.ravel_multi_index(birth_ind, (n, n))
-#     nonmst_flat_indices = np.ravel_multi_index(death_ind, (n, n))
-
-#     # Get values from the original adjacency matrix using these flat indices
-#     mst_values = adj.flatten()[mst_flat_indices]
-#     nonmst_values = adj.flatten()[nonmst_flat_indices]
-
-#     # Sort indices by these values
-#     sorted_mst_indices = mst_flat_indices[np.argsort(mst_values)]
-#     sorted_nonmst_indices = nonmst_flat_indices[np.argsort(nonmst_values)]
-
-#     return torch.from_numpy(sorted_mst_indices), torch.from_numpy(sorted_nonmst_indices)
 
 def adj2pers(adj):
     n = len(adj)
@@ -355,7 +300,7 @@ def adj2pers(adj):
         nonMSTindices.extend(int(numZeroEdges) * [0]) # extend 0-valued edges
     return MSTindices, nonMSTindices
 
-def _compute_birth_death_sets(adj, numSampledCCs=9, numSampledCycles=36):
+def _compute_birth_death_sets(adj, numSampledCCs, numSampledCycles):
     ccs, cycles = adj2pers(adj)
 
     # sorted births of ccs as a feature vector
@@ -370,14 +315,6 @@ def _compute_birth_death_sets(adj, numSampledCCs=9, numSampledCycles=36):
     npCycles = np.array(cycles)
     return torch.from_numpy(npCCs[ccVec]), torch.from_numpy(npCycles[cycleVec])
 
-def convert_index(indices, old_dim, new_dim):
-    new_total_elements = new_dim ** 2
-
-    # Map each index in the larger dimension to the smaller dimension
-    # Using modulo to ensure all indices fit within the new dimension
-    new_indices = indices % new_total_elements
-    return new_indices
-
 def load_mutag_data():
     dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
     adjacency_matrices = []
@@ -387,81 +324,51 @@ def load_mutag_data():
         # Convert to dense adjacency matrix
         adj = to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0]
         
-        # Retrieve node features and compute the dot product matrix
+        # Compute the degree of each node
+        degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+
+        # Compute the average weight of connected edges for each node
+        # Assuming initially all weights are 1 (as in a binary adjacency matrix), the sum of weights is the degree
+        # We can avoid division by zero by setting the average to zero where degree is zero
+        avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
+
+       # Retrieve and update node features
         node_features = data.x
+        node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
+
+        # print(node_features)
+
+        # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
-        # # ensures only connected nodes have their dot products as weights
-        # weighted_adj = adj * dot_product_matrix
+        # # Compute the square of the difference between node features
+        # node_features_squared = torch.sum(node_features ** 2, dim=1, keepdim=True)
+        # diff_matrix = node_features_squared + node_features_squared.t() - 2 * torch.mm(node_features, node_features.t())
 
-        adjacency_matrices.append(dot_product_matrix.numpy())
+        # # ensures only connected nodes have their dot products as weights
+        weighted_adj = adj * dot_product_matrix
+
+        adjacency_matrices.append(weighted_adj.numpy())
         labels.append(data.y.item())
 
     return dataset, adjacency_matrices, labels
 
-def main(num_samples=50, max_num_epochs=200, gpus_per_trial=0):
+def main(num_samples=10, max_num_epochs=200):
     np.random.seed(0)
     random.seed(0)
     torch.manual_seed(0)
 
-    config = {
-        # "epochs": tune.choice([50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]),
-        "epochs": tune.qrandint(50, 200, 10),
-        # "new_adj_dim": tune.choice([4, 5, 6, 7, 8, 10, 12, 14, 16, 18]), 
-        "new_adj_dim": tune.randint(5, 15),
-        "lr": tune.loguniform(1e-4, 1e-1),
-        # "pretrain_epochs": tune.choice([10, 20, 30, 40, 50, 60, 70, 80, 90, 100]),
-        "pretrain_epochs": tune.qrandint(30, 100, 10),
-        # "numSampledCCs": tune.choice([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
-        "numSampledCCs": tune.randint(4, 18),
-        # "numSampledCycles": tune.choice([6, 10, 15, 21, 28, 36, 45, 50, 60, 70, 75, 80])
-        "numSampledCycles": tune.randint(6, 60)
-    }
-
     # Load the MUTAG dataset
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
-    # scheduler = tune.schedulers.AsyncHyperBandScheduler(
-    #     metric="ari",   # Specify the metric to optimize
-    #     mode="max",      # Specify the mode, 'min' for minimizing, 'max' for maximizing
-    #     max_t=max_num_epochs,
-    #     grace_period=1
-    # )
+    # Pretraining
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices), num_clusters=2, numSampledCCs=10, numSampledCycles=45, epochs=90)
+    pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
+    print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
 
-    data = (train_loader, adj_matrices, labels_true)
-    data_ref = ray.put(data)
-
-    analysis = tune.run(
-        lambda config: train(config, dataset=data_ref),
-        resources_per_trial={"cpu": 1, "gpu": gpus_per_trial},
-        config=config,
-        num_samples=num_samples,
-        progress_reporter=tune.CLIReporter(parameter_columns=list(config.keys()))
-    )
-
-    # # Setup Ray Tune
-    # analysis = tune.run(
-    #     lambda config: train(config, dataset=data_ref),
-    #     resources_per_trial={"cpu": 1, "gpu": gpus_per_trial},
-    #     config=config,
-    #     num_samples=num_samples,
-    #     scheduler=scheduler,
-    #     progress_reporter=tune.CLIReporter(parameter_columns=list(config.keys()))
-    # )
-    
-
-    best_config = analysis.get_best_config(metric="ari", mode="max")
-
-    print("Best hyperparameters found were: ", best_config)
-
-    # # Pretraining
-    # pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices), new_adj_dim = 10)
-    # pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
-    # print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
-
-    # # Fine-tuning
-    # train_ari = adjusted_rand_score(labels_true, train_labels_pred)
-    # print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")
+    # Fine-tuning
+    train_ari = adjusted_rand_score(labels_true, train_labels_pred)
+    print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")
 
 if __name__ == '__main__':
     main()
