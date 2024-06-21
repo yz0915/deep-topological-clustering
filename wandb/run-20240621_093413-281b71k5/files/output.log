@@ -1,0 +1,22 @@
+PRETRAINING
+Epoch 0, Average Loss: 4226.97505569458
+Epoch 10, Average Loss: 356.45331565539044
+Epoch 20, Average Loss: 168.60913141568503
+Epoch 30, Average Loss: 153.3227199713389
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+TRAINING
+Epoch 0, Average Loss: 32.361368815104164
+Epoch 10, Average Loss: 34.04693857828776
+Epoch 20, Average Loss: 30.8996098836263
+Epoch 30, Average Loss: 28.808090209960938
+Epoch 40, Average Loss: 27.89198048909505
+Epoch 50, Average Loss: 27.33436330159505
+Epoch 60, Average Loss: 26.52380625406901
+Epoch 70, Average Loss: 26.512405395507812
+Epoch 80, Average Loss: 25.60461934407552
+Epoch 90, Average Loss: 24.355723063151043
+Epoch 100, Average Loss: 23.21032460530599
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+Adjusted Rand Index after Pretraining: 0.14086927035327004

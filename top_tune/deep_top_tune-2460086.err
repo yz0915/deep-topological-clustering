@@ -1,0 +1,319 @@
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+/home/users/yz705/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: Agent Starting Run: fkp1a6cs with config:
+wandb: 	epochs: 50
+wandb: 	lr: 0.05072200873621532
+wandb: 	numSampledCCs: 13
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: Currently logged in as: ricozhu (icl-learning). Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fiery-sweep-1
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/fkp1a6cs
+Downloading https://www.chrsmrrs.com/graphkerneldatasets/MUTAG.zip
+Processing...
+Done!
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.013 MB uploadedwandb: | 0.004 MB of 0.013 MB uploadedwandb: / 0.013 MB of 0.013 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:  train_ari ▁
+wandb: train_loss █▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:  train_ari -0.00526
+wandb: train_loss 111.70982
+wandb: 
+wandb: 🚀 View run fiery-sweep-1 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/fkp1a6cs
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240620_235508-fkp1a6cs/logs
+Run fkp1a6cs errored:
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+ValueError: not enough values to unpack (expected 2, got 1)
+
+wandb: ERROR Run fkp1a6cs errored:
+wandb: ERROR Traceback (most recent call last):
+wandb: ERROR   File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+wandb: ERROR     self._function()
+wandb: ERROR   File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+wandb: ERROR     pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+wandb: ERROR ValueError: not enough values to unpack (expected 2, got 1)
+wandb: ERROR 
+wandb: Agent Starting Run: 09qnzi7m with config:
+wandb: 	epochs: 80
+wandb: 	lr: 0.027401699621868662
+wandb: 	numSampledCCs: 10
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235640-09qnzi7m
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run earnest-sweep-2
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/09qnzi7m
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.013 MB uploadedwandb: | 0.004 MB of 0.013 MB uploadedwandb: / 0.013 MB of 0.013 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:  train_ari ▁
+wandb: train_loss █▃▁
+wandb: 
+wandb: Run summary:
+wandb:  train_ari 0.09515
+wandb: train_loss 512.69513
+wandb: 
+wandb: 🚀 View run earnest-sweep-2 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/09qnzi7m
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240620_235640-09qnzi7m/logs
+Run 09qnzi7m errored:
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+ValueError: not enough values to unpack (expected 2, got 1)
+
+wandb: ERROR Run 09qnzi7m errored:
+wandb: ERROR Traceback (most recent call last):
+wandb: ERROR   File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+wandb: ERROR     self._function()
+wandb: ERROR   File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+wandb: ERROR     pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+wandb: ERROR ValueError: not enough values to unpack (expected 2, got 1)
+wandb: ERROR 
+wandb: Agent Starting Run: ixlcp0su with config:
+wandb: 	epochs: 80
+wandb: 	lr: 0.027247919633233197
+wandb: 	numSampledCCs: 16
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235812-ixlcp0su
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run eternal-sweep-3
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/ixlcp0su
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.004 MB uploadedwandb: | 0.013 MB of 0.013 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:  train_ari ▁
+wandb: train_loss █▄▂▁
+wandb: 
+wandb: Run summary:
+wandb:  train_ari 0.10929
+wandb: train_loss 169.12651
+wandb: 
+wandb: 🚀 View run eternal-sweep-3 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/ixlcp0su
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240620_235812-ixlcp0su/logs
+Run ixlcp0su errored:
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+ValueError: not enough values to unpack (expected 2, got 1)
+
+wandb: ERROR Run ixlcp0su errored:
+wandb: ERROR Traceback (most recent call last):
+wandb: ERROR   File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+wandb: ERROR     self._function()
+wandb: ERROR   File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+wandb: ERROR     pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+wandb: ERROR ValueError: not enough values to unpack (expected 2, got 1)
+wandb: ERROR 
+wandb: Agent Starting Run: lq1j689r with config:
+wandb: 	epochs: 90
+wandb: 	lr: 0.0409448262241106
+wandb: 	numSampledCCs: 11
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_000003-lq1j689r
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run dry-sweep-4
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/lq1j689r
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.004 MB uploadedwandb: | 0.013 MB of 0.013 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:  train_ari ▁
+wandb: train_loss █▂▂▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:  train_ari 0.14988
+wandb: train_loss 117.47791
+wandb: 
+wandb: 🚀 View run dry-sweep-4 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/lq1j689r
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_000003-lq1j689r/logs
+Run lq1j689r errored:
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+ValueError: not enough values to unpack (expected 2, got 1)
+
+wandb: ERROR Run lq1j689r errored:
+wandb: ERROR Traceback (most recent call last):
+wandb: ERROR   File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+wandb: ERROR     self._function()
+wandb: ERROR   File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+wandb: ERROR     pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+wandb: ERROR ValueError: not enough values to unpack (expected 2, got 1)
+wandb: ERROR 
+wandb: Agent Starting Run: 6e0nivkq with config:
+wandb: 	epochs: 150
+wandb: 	lr: 0.008752255270352604
+wandb: 	numSampledCCs: 8
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_000205-6e0nivkq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run elated-sweep-5
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/6e0nivkq
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.004 MB uploadedwandb: | 0.013 MB of 0.013 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:  train_ari ▁
+wandb: train_loss █▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:  train_ari 0.1304
+wandb: train_loss 114.51733
+wandb: 
+wandb: 🚀 View run elated-sweep-5 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/6e0nivkq
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_000205-6e0nivkq/logs
+Run 6e0nivkq errored:
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+ValueError: not enough values to unpack (expected 2, got 1)
+
+wandb: ERROR Run 6e0nivkq errored:
+wandb: ERROR Traceback (most recent call last):
+wandb: ERROR   File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+wandb: ERROR     self._function()
+wandb: ERROR   File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+wandb: ERROR     pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+wandb: ERROR ValueError: not enough values to unpack (expected 2, got 1)
+wandb: ERROR 
+wandb: Agent Starting Run: y6ypfbe9 with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.0017328382656204833
+wandb: 	numSampledCCs: 12
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_000427-y6ypfbe9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run balmy-sweep-6
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/y6ypfbe9
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.004 MB of 0.004 MB uploadedwandb: \ 0.004 MB of 0.004 MB uploadedwandb: | 0.013 MB of 0.013 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:  train_ari ▁
+wandb: train_loss █▆▁
+wandb: 
+wandb: Run summary:
+wandb:  train_ari 0.16719
+wandb: train_loss 1861.72212
+wandb: 
+wandb: 🚀 View run balmy-sweep-6 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/y6ypfbe9
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_000427-y6ypfbe9/logs
+Run y6ypfbe9 errored:
+Traceback (most recent call last):
+  File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+    self._function()
+  File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+ValueError: not enough values to unpack (expected 2, got 1)
+
+wandb: ERROR Run y6ypfbe9 errored:
+wandb: ERROR Traceback (most recent call last):
+wandb: ERROR   File "/home/users/yz705/.local/lib/python3.10/site-packages/wandb/agents/pyagent.py", line 307, in _run_job
+wandb: ERROR     self._function()
+wandb: ERROR   File "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py", line 418, in one_tune_instance
+wandb: ERROR     pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+wandb: ERROR ValueError: not enough values to unpack (expected 2, got 1)
+wandb: ERROR 
+Detected 5 failed runs in a row at start, killing sweep.
+wandb: ERROR Detected 5 failed runs in a row at start, killing sweep.
+wandb: To change this value set WANDB_AGENT_MAX_INITIAL_FAILURES=val

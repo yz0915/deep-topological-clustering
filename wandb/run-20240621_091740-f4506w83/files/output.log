@@ -1,0 +1,27 @@
+Downloading https://www.chrsmrrs.com/graphkerneldatasets/MUTAG.zip
+Processing...
+Done!
+PRETRAINING
+Epoch 0, Average Loss: 4647.965613047282
+Epoch 10, Average Loss: 4540.716621398926
+Epoch 20, Average Loss: 4420.95086034139
+TRAINING
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+Epoch 0, Average Loss: 1068.8472493489583
+Epoch 10, Average Loss: 1029.5109049479167
+Epoch 20, Average Loss: 980.5638834635416
+Epoch 30, Average Loss: 916.3826497395834
+Epoch 40, Average Loss: 831.273681640625
+Epoch 50, Average Loss: 718.3475748697916
+Epoch 60, Average Loss: 570.6903483072916
+Epoch 70, Average Loss: 388.2268880208333
+Epoch 80, Average Loss: 194.76261393229166
+Epoch 90, Average Loss: 54.994913736979164
+Epoch 100, Average Loss: 24.279032389322918
+Epoch 110, Average Loss: 24.96349334716797
+Epoch 120, Average Loss: 17.08680470784505
+Epoch 130, Average Loss: 16.71070098876953
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+Adjusted Rand Index after Pretraining: 0.17197580453801425

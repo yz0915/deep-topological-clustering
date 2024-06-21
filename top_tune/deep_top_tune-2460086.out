@@ -1,0 +1,102 @@
+Create sweep with ID: oycirxev
+Sweep URL: https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/oycirxev
+PRETRAINING
+Epoch 0, Average Loss: 4264.514100392659
+Epoch 10, Average Loss: 169.62284549077353
+Epoch 20, Average Loss: 132.91926209131876
+Epoch 30, Average Loss: 114.08764704068501
+Epoch 40, Average Loss: 111.70982285340627
+TRAINING
+Epoch 0, Average Loss: 27.70941416422526
+Epoch 10, Average Loss: 136.08293660481772
+Epoch 20, Average Loss: 48.941162109375
+Epoch 30, Average Loss: 29.92040252685547
+Epoch 40, Average Loss: 28.843167622884113
+PRETRAINING
+Epoch 0, Average Loss: 4300.742159525554
+Epoch 10, Average Loss: 1716.5348777770996
+Epoch 20, Average Loss: 512.6951271692911
+TRAINING
+Epoch 0, Average Loss: 36.919909159342446
+Epoch 10, Average Loss: 65.55970764160156
+Epoch 20, Average Loss: 36.85449727376302
+Epoch 30, Average Loss: 31.482027689615887
+Epoch 40, Average Loss: 27.181793212890625
+Epoch 50, Average Loss: 27.82672119140625
+Epoch 60, Average Loss: 25.739969889322918
+Epoch 70, Average Loss: 26.811907450358074
+PRETRAINING
+Epoch 0, Average Loss: 4180.732035319011
+Epoch 10, Average Loss: 1658.514341990153
+Epoch 20, Average Loss: 511.0405840873718
+Epoch 30, Average Loss: 169.12651435534158
+TRAINING
+Epoch 0, Average Loss: 39.63988240559896
+Epoch 10, Average Loss: 66.3355000813802
+Epoch 20, Average Loss: 43.87151082356771
+Epoch 30, Average Loss: 33.7610117594401
+Epoch 40, Average Loss: 31.799151102701824
+Epoch 50, Average Loss: 30.914283752441406
+Epoch 60, Average Loss: 30.383412679036457
+Epoch 70, Average Loss: 29.9551518758138
+PRETRAINING
+Epoch 0, Average Loss: 4279.4394124348955
+Epoch 10, Average Loss: 924.0509271621704
+Epoch 20, Average Loss: 452.7556316057841
+Epoch 30, Average Loss: 240.2940503358841
+Epoch 40, Average Loss: 119.64496320486069
+Epoch 50, Average Loss: 117.47790916760762
+TRAINING
+Epoch 0, Average Loss: 30.383509318033855
+Epoch 10, Average Loss: 77.30208841959636
+Epoch 20, Average Loss: 40.29612477620443
+Epoch 30, Average Loss: 31.016845703125
+Epoch 40, Average Loss: 31.716835021972656
+Epoch 50, Average Loss: 29.61815134684245
+Epoch 60, Average Loss: 27.816485087076824
+Epoch 70, Average Loss: 28.496444702148438
+Epoch 80, Average Loss: 28.9286371866862
+PRETRAINING
+Epoch 0, Average Loss: 4384.914666493733
+Epoch 10, Average Loss: 184.24357644716898
+Epoch 20, Average Loss: 151.35221928358078
+Epoch 30, Average Loss: 114.51732574899991
+TRAINING
+Epoch 0, Average Loss: 16.275838216145832
+Epoch 10, Average Loss: 19.3833491007487
+Epoch 20, Average Loss: 18.825088500976562
+Epoch 30, Average Loss: 17.249303181966145
+Epoch 40, Average Loss: 15.91839853922526
+Epoch 50, Average Loss: 14.90316645304362
+Epoch 60, Average Loss: 14.386082967122396
+Epoch 70, Average Loss: 14.193028767903646
+Epoch 80, Average Loss: 13.914695739746094
+Epoch 90, Average Loss: 13.098599751790365
+Epoch 100, Average Loss: 11.423421223958334
+Epoch 110, Average Loss: 11.031627655029297
+Epoch 120, Average Loss: 10.712210337320963
+Epoch 130, Average Loss: 10.298029581705729
+Epoch 140, Average Loss: 10.085919062296549
+PRETRAINING
+Epoch 0, Average Loss: 4250.816716512044
+Epoch 10, Average Loss: 3636.2436459859214
+Epoch 20, Average Loss: 1861.7221209208171
+TRAINING
+Epoch 0, Average Loss: 114.8271484375
+Epoch 10, Average Loss: 26.448944091796875
+Epoch 20, Average Loss: 26.802103678385418
+Epoch 30, Average Loss: 25.50482686360677
+Epoch 40, Average Loss: 25.483009338378906
+Epoch 50, Average Loss: 24.827407836914062
+Epoch 60, Average Loss: 24.4840087890625
+Epoch 70, Average Loss: 24.4976323445638
+Epoch 80, Average Loss: 24.321932474772137
+Epoch 90, Average Loss: 24.214813232421875
+Epoch 100, Average Loss: 24.526519775390625
+Epoch 110, Average Loss: 24.319478352864582
+Epoch 120, Average Loss: 24.115753173828125
+Epoch 130, Average Loss: 24.43286641438802
+Epoch 140, Average Loss: 24.440684000651043
+Epoch 150, Average Loss: 24.49615224202474
+Epoch 160, Average Loss: 24.205904642740887
+Epoch 170, Average Loss: 24.43273162841797

@@ -1,0 +1,168 @@
+{
+    "os": "Linux-5.15.0-112-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "heartbeatAt": "2024-06-21T03:55:09.304438",
+    "startedAt": "2024-06-21T03:55:08.718444",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py",
+    "codePathLocal": "graph_autoencoder.py",
+    "codePath": "graph_autoencoder.py",
+    "git": {
+        "remote": "git@github.com:Yanzheng0915/deep-topological-clustering.git",
+        "commit": "3d4a77696ea9ef907a1fbdc661514451aff9bda7"
+    },
+    "email": "ricozhu2003@gmail.com",
+    "root": "/usr/project/xtmp/yz705/deep-topological-clustering",
+    "host": "linux58",
+    "username": "yz705",
+    "executable": "/bin/python3",
+    "cpu_count": 24,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 2.7271250000000014,
+        "min": 1200.0,
+        "max": 3700.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3.116,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3.116,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3.116,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 3.116,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 1.687,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        },
+        {
+            "current": 2.7,
+            "min": 1200.0,
+            "max": 3700.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 878.6589317321777,
+            "used": 70.86316299438477
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 2080 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11811160064
+        }
+    ],
+    "memory": {
+        "total": 754.529224395752
+    }
+}

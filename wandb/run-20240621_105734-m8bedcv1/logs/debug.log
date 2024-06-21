@@ -1,0 +1,36 @@
+2024-06-21 10:57:34,856 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Current SDK version is 0.17.0
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Configure stats pid to 2922882
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Loading settings from /home/users/yz705/.config/wandb/settings
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Loading settings from /usr/project/xtmp/yz705/deep-topological-clustering/wandb/settings
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Loading settings from environment variables: {'project': 'hyperparameter-sweep', 'entity': 'icl-learning', 'root_dir': '/usr/project/xtmp/yz705/deep-topological-clustering', 'run_id': 'm8bedcv1', 'sweep_param_path': '/usr/project/xtmp/yz705/deep-topological-clustering/wandb/sweep-z7ltz4lg/config-m8bedcv1.yaml', 'sweep_id': 'z7ltz4lg'}
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'graph_autoencoder.py', 'program_abspath': '/usr/project/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py', 'program': '/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py'}
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:_log_setup():520] Logging user logs to /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_105734-m8bedcv1/logs/debug.log
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:_log_setup():521] Logging internal logs to /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_105734-m8bedcv1/logs/debug-internal.log
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():560] calling init triggers
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():567] wandb.init called with sweep_config: {'epochs': 180, 'lr': 0.00013833888865770786, 'numSampledCCs': 13, 'pretrain_epochs': 60}
+config: {}
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():610] starting backend
+2024-06-21 10:57:34,857 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():614] setting up manager
+2024-06-21 10:57:34,866 INFO    Thread-95 (_run_job):2922882 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-06-21 10:57:34,866 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():622] backend started and connected
+2024-06-21 10:57:34,884 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_config_callback():1376] config_cb None None {'epochs': 180, 'lr': 0.00013833888865770786, 'numSampledCCs': 13, 'pretrain_epochs': 60}
+2024-06-21 10:57:34,887 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():711] updated telemetry
+2024-06-21 10:57:34,902 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():744] communicating run to backend with 90.0 second timeout
+2024-06-21 10:57:35,178 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_on_init():2396] communicating current version
+2024-06-21 10:57:35,342 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_on_init():2405] got version response upgrade_message: "wandb version 0.17.2 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-06-21 10:57:35,342 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():795] starting run threads in backend
+2024-06-21 10:57:35,994 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_console_start():2374] atexit reg
+2024-06-21 10:57:35,994 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_redirect():2229] redirect: wrap_raw
+2024-06-21 10:57:35,994 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_redirect():2294] Wrapping output streams.
+2024-06-21 10:57:35,994 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_redirect():2319] Redirects installed.
+2024-06-21 10:57:35,995 INFO    Thread-95 (_run_job):2922882 [wandb_init.py:init():838] run started, returning control to user process
+2024-06-21 11:01:58,470 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_finish():2103] finishing run icl-learning/hyperparameter-sweep/m8bedcv1
+2024-06-21 11:01:58,471 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_atexit_cleanup():2343] got exitcode: 0
+2024-06-21 11:01:58,471 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_restore():2326] restore
+2024-06-21 11:01:58,472 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_restore():2332] restore done
+2024-06-21 11:02:04,430 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_footer_history_summary_info():3994] rendering history
+2024-06-21 11:02:04,431 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_footer_history_summary_info():4026] rendering summary
+2024-06-21 11:02:04,447 INFO    Thread-95 (_run_job):2922882 [wandb_run.py:_footer_sync_info():3953] logging synced files

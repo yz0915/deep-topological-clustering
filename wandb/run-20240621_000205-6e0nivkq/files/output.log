@@ -1,0 +1,25 @@
+PRETRAINING
+Epoch 0, Average Loss: 4384.914666493733
+Epoch 10, Average Loss: 184.24357644716898
+Epoch 20, Average Loss: 151.35221928358078
+Epoch 30, Average Loss: 114.51732574899991
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+TRAINING
+Epoch 0, Average Loss: 16.275838216145832
+Epoch 10, Average Loss: 19.3833491007487
+Epoch 20, Average Loss: 18.825088500976562
+Epoch 30, Average Loss: 17.249303181966145
+Epoch 40, Average Loss: 15.91839853922526
+Epoch 50, Average Loss: 14.90316645304362
+Epoch 60, Average Loss: 14.386082967122396
+Epoch 70, Average Loss: 14.193028767903646
+Epoch 80, Average Loss: 13.914695739746094
+Epoch 90, Average Loss: 13.098599751790365
+Epoch 100, Average Loss: 11.423421223958334
+Epoch 110, Average Loss: 11.031627655029297
+Epoch 120, Average Loss: 10.712210337320963
+Epoch 130, Average Loss: 10.298029581705729
+Epoch 140, Average Loss: 10.085919062296549
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)

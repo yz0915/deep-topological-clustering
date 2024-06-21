@@ -1,0 +1,10 @@
+wandb_version: 1
+
+epochs:
+  value: 180
+lr:
+  value: 0.00013833888865770786
+numSampledCCs:
+  value: 13
+pretrain_epochs:
+  value: 60

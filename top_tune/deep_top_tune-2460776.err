@@ -1,0 +1,1509 @@
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+/home/users/yz705/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: Agent Starting Run: f4506w83 with config:
+wandb: 	epochs: 140
+wandb: 	lr: 0.0003092010048415234
+wandb: 	numSampledCCs: 5
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: Currently logged in as: ricozhu (icl-learning). Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_091740-f4506w83
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run proud-sweep-1
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/f4506w83
+Downloading https://www.chrsmrrs.com/graphkerneldatasets/MUTAG.zip
+Processing...
+Done!
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▅▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.15821
+wandb:   train_loss 4420.95086
+wandb: 
+wandb: 🚀 View run proud-sweep-1 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/f4506w83
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_091740-f4506w83/logs
+wandb: Agent Starting Run: vmlrhees with config:
+wandb: 	epochs: 110
+wandb: 	lr: 0.0006226210021042972
+wandb: 	numSampledCCs: 12
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_092033-vmlrhees
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fast-sweep-2
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/vmlrhees
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss ██▇▆▄▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14988
+wandb:    train_ari 0.16719
+wandb:   train_loss 1504.46698
+wandb: 
+wandb: 🚀 View run fast-sweep-2 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/vmlrhees
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_092033-vmlrhees/logs
+wandb: Agent Starting Run: pzbef99p with config:
+wandb: 	epochs: 50
+wandb: 	lr: 0.013698255328030016
+wandb: 	numSampledCCs: 4
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_092347-pzbef99p
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prime-sweep-3
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/pzbef99p
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.014 MB of 0.014 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15821
+wandb:    train_ari 0.22251
+wandb:   train_loss 75.2072
+wandb: 
+wandb: 🚀 View run prime-sweep-3 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/pzbef99p
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_092347-pzbef99p/logs
+wandb: Agent Starting Run: ndimevsj with config:
+wandb: 	epochs: 130
+wandb: 	lr: 0.014377460347606452
+wandb: 	numSampledCCs: 5
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_092532-ndimevsj
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run electric-sweep-4
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/ndimevsj
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.007 MB uploadedwandb: | 0.005 MB of 0.007 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14087
+wandb:    train_ari 0.15861
+wandb:   train_loss 78.98974
+wandb: 
+wandb: 🚀 View run electric-sweep-4 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/ndimevsj
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_092532-ndimevsj/logs
+wandb: Agent Starting Run: 4w3g48qt with config:
+wandb: 	epochs: 60
+wandb: 	lr: 0.012222094550776542
+wandb: 	numSampledCCs: 13
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: - Waiting for wandb.init()...wandb: \ Waiting for wandb.init()...wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_092826-4w3g48qt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run bright-sweep-5
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/4w3g48qt
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.014 MB uploadedwandb: | 0.005 MB of 0.014 MB uploadedwandb: / 0.014 MB of 0.014 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.16565
+wandb:    train_ari 0.20363
+wandb:   train_loss 128.2084
+wandb: 
+wandb: 🚀 View run bright-sweep-5 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/4w3g48qt
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_092826-4w3g48qt/logs
+wandb: Agent Starting Run: yl9is1hk with config:
+wandb: 	epochs: 110
+wandb: 	lr: 0.04504257098685489
+wandb: 	numSampledCCs: 12
+wandb: 	pretrain_epochs: 90
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_093024-yl9is1hk
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run olive-sweep-6
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/yl9is1hk
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.08929
+wandb:    train_ari 0.1982
+wandb:   train_loss 108.25658
+wandb: 
+wandb: 🚀 View run olive-sweep-6 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/yl9is1hk
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_093024-yl9is1hk/logs
+wandb: Agent Starting Run: 281b71k5 with config:
+wandb: 	epochs: 110
+wandb: 	lr: 0.008346652650470151
+wandb: 	numSampledCCs: 17
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_093413-281b71k5
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run deft-sweep-7
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/281b71k5
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.007 MB uploadedwandb: | 0.005 MB of 0.007 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14087
+wandb:    train_ari 0.14762
+wandb:   train_loss 153.32272
+wandb: 
+wandb: 🚀 View run deft-sweep-7 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/281b71k5
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_093413-281b71k5/logs
+wandb: Agent Starting Run: um3ekljo with config:
+wandb: 	epochs: 100
+wandb: 	lr: 0.000617817930357663
+wandb: 	numSampledCCs: 16
+wandb: 	pretrain_epochs: 80
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_093720-um3ekljo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run summer-sweep-8
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/um3ekljo
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss ██▇▆▅▃▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.16719
+wandb:    train_ari 0.16719
+wandb:   train_loss 244.80049
+wandb: 
+wandb: 🚀 View run summer-sweep-8 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/um3ekljo
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_093720-um3ekljo/logs
+wandb: Agent Starting Run: rxrhop90 with config:
+wandb: 	epochs: 110
+wandb: 	lr: 0.0001804239867931584
+wandb: 	numSampledCCs: 6
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_094059-rxrhop90
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sleek-sweep-9
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/rxrhop90
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▆▄▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.14762
+wandb:   train_loss 4376.48291
+wandb: 
+wandb: 🚀 View run sleek-sweep-9 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/rxrhop90
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_094059-rxrhop90/logs
+wandb: Agent Starting Run: zifnahqn with config:
+wandb: 	epochs: 80
+wandb: 	lr: 0.0007787988219985149
+wandb: 	numSampledCCs: 12
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_094335-zifnahqn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run devoted-sweep-10
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/zifnahqn
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.007 MB uploadedwandb: | 0.005 MB of 0.007 MB uploadedwandb: / 0.014 MB of 0.014 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▅▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14762
+wandb:    train_ari 0.14944
+wandb:   train_loss 3686.15269
+wandb: 
+wandb: 🚀 View run devoted-sweep-10 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/zifnahqn
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_094335-zifnahqn/logs
+wandb: Agent Starting Run: 39c0oyiy with config:
+wandb: 	epochs: 70
+wandb: 	lr: 0.0004871498961852152
+wandb: 	numSampledCCs: 9
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_094542-39c0oyiy
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run helpful-sweep-11
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/39c0oyiy
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.014 MB of 0.014 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▅▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.15861
+wandb:   train_loss 4008.88013
+wandb: 
+wandb: 🚀 View run helpful-sweep-11 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/39c0oyiy
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_094542-39c0oyiy/logs
+wandb: Agent Starting Run: mz9v7yte with config:
+wandb: 	epochs: 70
+wandb: 	lr: 0.0013385847782945456
+wandb: 	numSampledCCs: 10
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_094734-mz9v7yte
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run vague-sweep-12
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/mz9v7yte
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.014 MB of 0.014 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▅▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15717
+wandb:    train_ari 0.14944
+wandb:   train_loss 280.35256
+wandb: 
+wandb: 🚀 View run vague-sweep-12 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/mz9v7yte
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_094734-mz9v7yte/logs
+wandb: Agent Starting Run: 8ruk05ii with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.06256412011138042
+wandb: 	numSampledCCs: 15
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_094946-8ruk05ii
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run whole-sweep-13
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/8ruk05ii
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.04934
+wandb:    train_ari 0.05651
+wandb:   train_loss 120.44462
+wandb: 
+wandb: 🚀 View run whole-sweep-13 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/8ruk05ii
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_094946-8ruk05ii/logs
+wandb: Agent Starting Run: 3pyqfcui with config:
+wandb: 	epochs: 90
+wandb: 	lr: 0.000100116952856722
+wandb: 	numSampledCCs: 4
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_095425-3pyqfcui
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run happy-sweep-14
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/3pyqfcui
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.014 MB uploadedwandb: | 0.005 MB of 0.014 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▆▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.13891
+wandb:    train_ari 0.13891
+wandb:   train_loss 4690.78972
+wandb: 
+wandb: 🚀 View run happy-sweep-14 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/3pyqfcui
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_095425-3pyqfcui/logs
+wandb: Agent Starting Run: 8kivbnp5 with config:
+wandb: 	epochs: 110
+wandb: 	lr: 0.05632774755983663
+wandb: 	numSampledCCs: 13
+wandb: 	pretrain_epochs: 90
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_095638-8kivbnp5
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run stilted-sweep-15
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/8kivbnp5
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.1108
+wandb:    train_ari 0.19432
+wandb:   train_loss 97.50443
+wandb: 
+wandb: 🚀 View run stilted-sweep-15 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/8kivbnp5
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_095638-8kivbnp5/logs
+wandb: Agent Starting Run: o78c4nyy with config:
+wandb: 	epochs: 160
+wandb: 	lr: 0.00020465601791596228
+wandb: 	numSampledCCs: 14
+wandb: 	pretrain_epochs: 70
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_100030-o78c4nyy
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run olive-sweep-16
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/o78c4nyy
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▇▆▄▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.15861
+wandb:   train_loss 3721.17796
+wandb: 
+wandb: 🚀 View run olive-sweep-16 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/o78c4nyy
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_100030-o78c4nyy/logs
+wandb: Agent Starting Run: y658u5mw with config:
+wandb: 	epochs: 150
+wandb: 	lr: 0.08264218958257402
+wandb: 	numSampledCCs: 5
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_100456-y658u5mw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fresh-sweep-17
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/y658u5mw
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.00324
+wandb:    train_ari -0.00306
+wandb:   train_loss 83.61051
+wandb: 
+wandb: 🚀 View run fresh-sweep-17 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/y658u5mw
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_100456-y658u5mw/logs
+wandb: Agent Starting Run: paf531j6 with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.029217593413898672
+wandb: 	numSampledCCs: 14
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_100807-paf531j6
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run solar-sweep-18
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/paf531j6
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.1108
+wandb:    train_ari 0.02791
+wandb:   train_loss 114.76488
+wandb: 
+wandb: 🚀 View run solar-sweep-18 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/paf531j6
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_100807-paf531j6/logs
+wandb: Agent Starting Run: 6bf7kx50 with config:
+wandb: 	epochs: 90
+wandb: 	lr: 0.0005230141791265145
+wandb: 	numSampledCCs: 12
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_101246-6bf7kx50
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run denim-sweep-19
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/6bf7kx50
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▆▄▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15653
+wandb:    train_ari 0.15821
+wandb:   train_loss 3147.17542
+wandb: 
+wandb: 🚀 View run denim-sweep-19 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/6bf7kx50
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_101246-6bf7kx50/logs
+wandb: Agent Starting Run: otgnell1 with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.00035186729460920434
+wandb: 	numSampledCCs: 17
+wandb: 	pretrain_epochs: 70
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_101524-otgnell1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run hearty-sweep-20
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/otgnell1
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss ██▇▆▅▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14762
+wandb:    train_ari 0.15821
+wandb:   train_loss 2793.88933
+wandb: 
+wandb: 🚀 View run hearty-sweep-20 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/otgnell1
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_101524-otgnell1/logs
+wandb: Agent Starting Run: kru0zekl with config:
+wandb: 	epochs: 190
+wandb: 	lr: 0.00033400084818383555
+wandb: 	numSampledCCs: 9
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_102030-kru0zekl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run helpful-sweep-21
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/kru0zekl
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▆▅▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.13891
+wandb:    train_ari 0.16719
+wandb:   train_loss 3490.41138
+wandb: 
+wandb: 🚀 View run helpful-sweep-21 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/kru0zekl
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_102030-kru0zekl/logs
+wandb: Agent Starting Run: ybjub1pg with config:
+wandb: 	epochs: 130
+wandb: 	lr: 0.0002094137834068208
+wandb: 	numSampledCCs: 9
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_102455-ybjub1pg
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run northern-sweep-22
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/ybjub1pg
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.013 MB uploadedwandb: | 0.005 MB of 0.013 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▆▄▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.15861
+wandb:   train_loss 4138.90988
+wandb: 
+wandb: 🚀 View run northern-sweep-22 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/ybjub1pg
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_102455-ybjub1pg/logs
+wandb: Agent Starting Run: 82bj89k0 with config:
+wandb: 	epochs: 60
+wandb: 	lr: 0.0010841630109991683
+wandb: 	numSampledCCs: 12
+wandb: 	pretrain_epochs: 90
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_102758-82bj89k0
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run graceful-sweep-23
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/82bj89k0
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.007 MB uploadedwandb: \ 0.005 MB of 0.007 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▆▄▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15821
+wandb:    train_ari 0.16719
+wandb:   train_loss 105.42286
+wandb: 
+wandb: 🚀 View run graceful-sweep-23 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/82bj89k0
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_102758-82bj89k0/logs
+wandb: Agent Starting Run: vyqpthpl with config:
+wandb: 	epochs: 60
+wandb: 	lr: 0.01466879782040896
+wandb: 	numSampledCCs: 11
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_103055-vyqpthpl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run youthful-sweep-24
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/vyqpthpl
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.014 MB of 0.014 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15717
+wandb:    train_ari 0.18498
+wandb:   train_loss 120.34496
+wandb: 
+wandb: 🚀 View run youthful-sweep-24 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/vyqpthpl
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_103055-vyqpthpl/logs
+wandb: Agent Starting Run: op2ooxrb with config:
+wandb: 	epochs: 60
+wandb: 	lr: 0.04332011808351895
+wandb: 	numSampledCCs: 11
+wandb: 	pretrain_epochs: 70
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_103302-op2ooxrb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run lively-sweep-25
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/op2ooxrb
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.12823
+wandb:    train_ari -0.00071
+wandb:   train_loss 113.43524
+wandb: 
+wandb: 🚀 View run lively-sweep-25 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/op2ooxrb
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_103302-op2ooxrb/logs
+wandb: Agent Starting Run: rs9scwjs with config:
+wandb: 	epochs: 130
+wandb: 	lr: 0.013443801465647965
+wandb: 	numSampledCCs: 13
+wandb: 	pretrain_epochs: 90
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_103529-rs9scwjs
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fragrant-sweep-26
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/rs9scwjs
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14087
+wandb:    train_ari 0.21424
+wandb:   train_loss 104.58734
+wandb: 
+wandb: 🚀 View run fragrant-sweep-26 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/rs9scwjs
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_103529-rs9scwjs/logs
+wandb: Agent Starting Run: vuuo4e5c with config:
+wandb: 	epochs: 70
+wandb: 	lr: 0.07458940240373596
+wandb: 	numSampledCCs: 8
+wandb: 	pretrain_epochs: 80
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_103938-vuuo4e5c
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run crimson-sweep-27
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/vuuo4e5c
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.1982
+wandb:    train_ari -0.00185
+wandb:   train_loss 67.12058
+wandb: 
+wandb: 🚀 View run crimson-sweep-27 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/vuuo4e5c
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_103938-vuuo4e5c/logs
+wandb: Agent Starting Run: 91qbtbov with config:
+wandb: 	epochs: 150
+wandb: 	lr: 0.01851772566326262
+wandb: 	numSampledCCs: 11
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_104221-91qbtbov
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run curious-sweep-28
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/91qbtbov
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.013 MB uploadedwandb: | 0.005 MB of 0.013 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15717
+wandb:    train_ari 0.13891
+wandb:   train_loss 176.55023
+wandb: 
+wandb: 🚀 View run curious-sweep-28 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/91qbtbov
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_104221-91qbtbov/logs
+wandb: Agent Starting Run: 2djvl1fs with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.014965945855919156
+wandb: 	numSampledCCs: 13
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_104539-2djvl1fs
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run winter-sweep-29
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/2djvl1fs
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14087
+wandb:    train_ari 0.15501
+wandb:   train_loss 120.8204
+wandb: 
+wandb: 🚀 View run winter-sweep-29 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/2djvl1fs
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_104539-2djvl1fs/logs
+wandb: Agent Starting Run: jq518r42 with config:
+wandb: 	epochs: 170
+wandb: 	lr: 0.0007032073277950644
+wandb: 	numSampledCCs: 8
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_105002-jq518r42
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run eager-sweep-30
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/jq518r42
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▅▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14762
+wandb:    train_ari 0.14944
+wandb:   train_loss 3306.98366
+wandb: 
+wandb: 🚀 View run eager-sweep-30 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/jq518r42
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_105002-jq518r42/logs
+wandb: Agent Starting Run: s9vcg28e with config:
+wandb: 	epochs: 130
+wandb: 	lr: 0.024429409127024414
+wandb: 	numSampledCCs: 11
+wandb: 	pretrain_epochs: 80
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_105341-s9vcg28e
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sleek-sweep-31
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/s9vcg28e
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14944
+wandb:    train_ari 0.25713
+wandb:   train_loss 112.52921
+wandb: 
+wandb: 🚀 View run sleek-sweep-31 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/s9vcg28e
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_105341-s9vcg28e/logs
+wandb: Agent Starting Run: m8bedcv1 with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.00013833888865770786
+wandb: 	numSampledCCs: 13
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_105734-m8bedcv1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sweepy-sweep-32
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/m8bedcv1
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▆▄▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.14988
+wandb:   train_loss 4041.25471
+wandb: 
+wandb: 🚀 View run sweepy-sweep-32 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/m8bedcv1
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_105734-m8bedcv1/logs
+wandb: Agent Starting Run: okuk3msp with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.0003977602494913826
+wandb: 	numSampledCCs: 4
+wandb: 	pretrain_epochs: 70
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_110208-okuk3msp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run electric-sweep-33
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/okuk3msp
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.006 MB uploadedwandb: \ 0.005 MB of 0.006 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▇▆▅▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15717
+wandb:    train_ari 0.16719
+wandb:   train_loss 3192.90987
+wandb: 
+wandb: 🚀 View run electric-sweep-33 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/okuk3msp
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_110208-okuk3msp/logs
+wandb: Agent Starting Run: 5fjnmnxt with config:
+wandb: 	epochs: 180
+wandb: 	lr: 0.00010594393186598126
+wandb: 	numSampledCCs: 17
+wandb: 	pretrain_epochs: 30
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_110612-5fjnmnxt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run icy-sweep-34
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/5fjnmnxt
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▅▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.17198
+wandb:    train_ari 0.14762
+wandb:   train_loss 4171.99068
+wandb: 
+wandb: 🚀 View run icy-sweep-34 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/5fjnmnxt
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_110612-5fjnmnxt/logs
+wandb: Agent Starting Run: n0lr1yl4 with config:
+wandb: 	epochs: 150
+wandb: 	lr: 0.022149448649193104
+wandb: 	numSampledCCs: 4
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_111031-n0lr1yl4
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run northern-sweep-35
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/n0lr1yl4
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.006 MB uploadedwandb: | 0.005 MB of 0.006 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▃▂▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15821
+wandb:    train_ari -0.00306
+wandb:   train_loss 107.44927
+wandb: 
+wandb: 🚀 View run northern-sweep-35 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/n0lr1yl4
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_111031-n0lr1yl4/logs
+wandb: Agent Starting Run: um3qnbbx with config:
+wandb: 	epochs: 160
+wandb: 	lr: 0.005990111136711928
+wandb: 	numSampledCCs: 6
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_111354-um3qnbbx
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run laced-sweep-36
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/um3qnbbx
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▂▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.14944
+wandb:    train_ari 0.19419
+wandb:   train_loss 53.23742
+wandb: 
+wandb: 🚀 View run laced-sweep-36 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/um3qnbbx
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_111354-um3qnbbx/logs
+wandb: Agent Starting Run: colh9u3o with config:
+wandb: 	epochs: 190
+wandb: 	lr: 0.00021482971663215535
+wandb: 	numSampledCCs: 7
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_111737-colh9u3o
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run laced-sweep-37
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/colh9u3o
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▇▆▅▃▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.13891
+wandb:    train_ari 0.1123
+wandb:   train_loss 4050.73298
+wandb: 
+wandb: 🚀 View run laced-sweep-37 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/colh9u3o
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_111737-colh9u3o/logs
+wandb: Agent Starting Run: tjr9j7ep with config:
+wandb: 	epochs: 130
+wandb: 	lr: 0.00324589966566235
+wandb: 	numSampledCCs: 4
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_112152-tjr9j7ep
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run expert-sweep-38
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/tjr9j7ep
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.007 MB uploadedwandb: | 0.005 MB of 0.007 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▅▂▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.16719
+wandb:    train_ari 0.14944
+wandb:   train_loss 192.27749
+wandb: 
+wandb: 🚀 View run expert-sweep-38 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/tjr9j7ep
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_112152-tjr9j7ep/logs
+wandb: Agent Starting Run: 174fgn3t with config:
+wandb: 	epochs: 100
+wandb: 	lr: 0.0054511096658586
+wandb: 	numSampledCCs: 14
+wandb: 	pretrain_epochs: 40
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_112444-174fgn3t
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run dulcet-sweep-39
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/174fgn3t
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.005 MB uploadedwandb: | 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.15653
+wandb:    train_ari 0.16719
+wandb:   train_loss 184.43845
+wandb: 
+wandb: 🚀 View run dulcet-sweep-39 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/174fgn3t
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_112444-174fgn3t/logs
+wandb: Agent Starting Run: 20i8ewru with config:
+wandb: 	epochs: 120
+wandb: 	lr: 0.00416125251837755
+wandb: 	numSampledCCs: 6
+wandb: 	pretrain_epochs: 50
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_112731-20i8ewru
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run still-sweep-40
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/20i8ewru
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)
+wandb: - 0.005 MB of 0.005 MB uploadedwandb: \ 0.005 MB of 0.015 MB uploadedwandb: | 0.005 MB of 0.015 MB uploadedwandb: / 0.015 MB of 0.015 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb: pretrain_ari ▁
+wandb:    train_ari ▁
+wandb:   train_loss █▃▁▁▁
+wandb: 
+wandb: Run summary:
+wandb: pretrain_ari 0.16565
+wandb:    train_ari 0.16719
+wandb:   train_loss 53.9201
+wandb: 
+wandb: 🚀 View run still-sweep-40 at: https://wandb.ai/icl-learning/hyperparameter-sweep/runs/20i8ewru
+wandb: ⭐️ View project at: https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20240621_112731-20i8ewru/logs
+wandb: Agent Starting Run: kgvon719 with config:
+wandb: 	epochs: 190
+wandb: 	lr: 0.001573021006583755
+wandb: 	numSampledCCs: 7
+wandb: 	pretrain_epochs: 60
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.2.1) or chardet (3.0.4) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+wandb: WARNING Ignored wandb.init() arg project when running a sweep.
+wandb: wandb version 0.17.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.17.0
+wandb: Run data is saved locally in /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240621_113027-kgvon719
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sunny-sweep-41
+wandb: ⭐️ View project at https://wandb.ai/icl-learning/hyperparameter-sweep
+wandb: 🧹 View sweep at https://wandb.ai/icl-learning/hyperparameter-sweep/sweeps/z7ltz4lg
+wandb: 🚀 View run at https://wandb.ai/icl-learning/hyperparameter-sweep/runs/kgvon719
+/home/users/yz705/.local/lib/python3.10/site-packages/sklearn/cluster/_kmeans.py:1416: FutureWarning: The default value of `n_init` will change from 10 to 'auto' in 1.4. Set the value of `n_init` explicitly to suppress the warning
+  super()._check_params_vs_input(X, default_n_init=10)

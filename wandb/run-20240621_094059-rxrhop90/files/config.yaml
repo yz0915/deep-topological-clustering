@@ -1,0 +1,56 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    python_version: 3.10.12
+    cli_version: 0.17.0
+    framework: huggingface
+    huggingface_version: 4.35.0
+    is_jupyter_run: false
+    is_kaggle_kernel: true
+    start_time: 1718977259
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      - 12
+      - 30
+      - 49
+      - 53
+      - 55
+      - 77
+      2:
+      - 1
+      - 5
+      - 11
+      - 12
+      - 30
+      - 49
+      - 53
+      - 55
+      - 77
+      3:
+      - 2
+      - 23
+      - 37
+      4: 3.10.12
+      5: 0.17.0
+      6: 4.35.0
+      8:
+      - 2
+      - 5
+      13: linux-x86_64
+epochs:
+  desc: null
+  value: 110
+lr:
+  desc: null
+  value: 0.0001804239867931584
+numSampledCCs:
+  desc: null
+  value: 6
+pretrain_epochs:
+  desc: null
+  value: 40

@@ -1,0 +1,241 @@
+2024-06-20 23:55:08,748 INFO    StreamThr :195818 [internal.py:wandb_internal():85] W&B internal server running at pid: 195818, started at: 2024-06-20 23:55:08.745821
+2024-06-20 23:55:08,752 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status
+2024-06-20 23:55:08,767 INFO    WriterThread:195818 [datastore.py:open_for_write():87] open: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/run-fkp1a6cs.wandb
+2024-06-20 23:55:08,768 DEBUG   SenderThread:195818 [sender.py:send():378] send: header
+2024-06-20 23:55:08,794 DEBUG   SenderThread:195818 [sender.py:send():378] send: run
+2024-06-20 23:55:09,063 INFO    SenderThread:195818 [dir_watcher.py:__init__():211] watching files in: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files
+2024-06-20 23:55:09,063 INFO    SenderThread:195818 [sender.py:_start_run_threads():1123] run started: fkp1a6cs with start time 1718942108.750078
+2024-06-20 23:55:09,074 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: check_version
+2024-06-20 23:55:09,074 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: check_version
+2024-06-20 23:55:09,254 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: run_start
+2024-06-20 23:55:09,288 DEBUG   HandlerThread:195818 [system_info.py:__init__():26] System info init
+2024-06-20 23:55:09,288 DEBUG   HandlerThread:195818 [system_info.py:__init__():41] System info init done
+2024-06-20 23:55:09,288 INFO    HandlerThread:195818 [system_monitor.py:start():194] Starting system monitor
+2024-06-20 23:55:09,288 INFO    SystemMonitor:195818 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-06-20 23:55:09,288 INFO    HandlerThread:195818 [system_monitor.py:probe():214] Collecting system info
+2024-06-20 23:55:09,299 INFO    SystemMonitor:195818 [interfaces.py:start():188] Started cpu monitoring
+2024-06-20 23:55:09,300 INFO    SystemMonitor:195818 [interfaces.py:start():188] Started disk monitoring
+2024-06-20 23:55:09,301 INFO    SystemMonitor:195818 [interfaces.py:start():188] Started gpu monitoring
+2024-06-20 23:55:09,301 INFO    SystemMonitor:195818 [interfaces.py:start():188] Started memory monitoring
+2024-06-20 23:55:09,302 INFO    SystemMonitor:195818 [interfaces.py:start():188] Started network monitoring
+2024-06-20 23:55:09,304 DEBUG   HandlerThread:195818 [system_info.py:probe():150] Probing system
+2024-06-20 23:55:09,310 DEBUG   HandlerThread:195818 [system_info.py:_probe_git():135] Probing git
+2024-06-20 23:55:09,323 DEBUG   HandlerThread:195818 [system_info.py:_probe_git():143] Probing git done
+2024-06-20 23:55:09,324 DEBUG   HandlerThread:195818 [system_info.py:probe():198] Probing system done
+2024-06-20 23:55:09,324 DEBUG   HandlerThread:195818 [system_monitor.py:probe():223] {'os': 'Linux-5.15.0-112-generic-x86_64-with-glibc2.35', 'python': '3.10.12', 'heartbeatAt': '2024-06-21T03:55:09.304438', 'startedAt': '2024-06-21T03:55:08.718444', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/usr/project/xtmp/yz705/deep-topological-clustering/./graph_autoencoder.py', 'codePathLocal': 'graph_autoencoder.py', 'codePath': 'graph_autoencoder.py', 'git': {'remote': 'git@github.com:Yanzheng0915/deep-topological-clustering.git', 'commit': '3d4a77696ea9ef907a1fbdc661514451aff9bda7'}, 'email': 'ricozhu2003@gmail.com', 'root': '/usr/project/xtmp/yz705/deep-topological-clustering', 'host': 'linux58', 'username': 'yz705', 'executable': '/bin/python3', 'cpu_count': 24, 'cpu_count_logical': 24, 'cpu_freq': {'current': 2.7271250000000014, 'min': 1200.0, 'max': 3700.0}, 'cpu_freq_per_core': [{'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 3.116, 'min': 1200.0, 'max': 3700.0}, {'current': 3.116, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 3.116, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 3.116, 'min': 1200.0, 'max': 3700.0}, {'current': 1.687, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}, {'current': 2.7, 'min': 1200.0, 'max': 3700.0}], 'disk': {'/': {'total': 878.6589317321777, 'used': 70.86316299438477}}, 'gpu': 'NVIDIA GeForce RTX 2080 Ti', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 2080 Ti', 'memory_total': 11811160064}], 'memory': {'total': 754.529224395752}}
+2024-06-20 23:55:09,324 INFO    HandlerThread:195818 [system_monitor.py:probe():224] Finished collecting system info
+2024-06-20 23:55:09,324 INFO    HandlerThread:195818 [system_monitor.py:probe():227] Publishing system info
+2024-06-20 23:55:09,325 INFO    HandlerThread:195818 [system_monitor.py:probe():229] Finished publishing system info
+2024-06-20 23:55:09,332 DEBUG   SenderThread:195818 [sender.py:send():378] send: files
+2024-06-20 23:55:09,332 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-metadata.json with policy now
+2024-06-20 23:55:09,724 INFO    wandb-upload_0:195818 [upload_job.py:push():130] Uploaded file /tmp/tmpe5orbqagwandb/vq1gt1qg-wandb-metadata.json
+2024-06-20 23:55:09,812 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: python_packages
+2024-06-20 23:55:09,812 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: python_packages
+2024-06-20 23:55:09,813 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-20 23:55:09,814 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: stop_status
+2024-06-20 23:55:09,987 DEBUG   SenderThread:195818 [sender.py:send():378] send: telemetry
+2024-06-20 23:55:10,067 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_created():271] file/dir created: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/requirements.txt
+2024-06-20 23:55:10,068 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_created():271] file/dir created: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-metadata.json
+2024-06-20 23:55:11,066 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_created():271] file/dir created: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:13,064 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-20 23:55:13,065 DEBUG   SenderThread:195818 [sender.py:send():378] send: history
+2024-06-20 23:55:13,066 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: summary_record
+2024-06-20 23:55:13,067 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:55:13,068 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:13,068 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_created():271] file/dir created: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:55:14,067 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:14,070 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:16,074 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:19,068 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:20,421 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-20 23:55:20,421 DEBUG   SenderThread:195818 [sender.py:send():378] send: history
+2024-06-20 23:55:20,421 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: summary_record
+2024-06-20 23:55:20,424 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:55:21,077 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:55:22,079 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:24,426 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:24,814 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-20 23:55:24,815 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: stop_status
+2024-06-20 23:55:28,802 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-20 23:55:28,802 DEBUG   SenderThread:195818 [sender.py:send():378] send: history
+2024-06-20 23:55:28,803 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: summary_record
+2024-06-20 23:55:28,807 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:55:29,087 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:55:29,808 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:32,089 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:34,809 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:36,243 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-20 23:55:36,243 DEBUG   SenderThread:195818 [sender.py:send():378] send: history
+2024-06-20 23:55:36,243 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: summary_record
+2024-06-20 23:55:36,245 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:55:37,094 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:55:38,095 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:39,814 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-20 23:55:39,814 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: stop_status
+2024-06-20 23:55:39,890 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:40,096 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/config.yaml
+2024-06-20 23:55:43,633 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-20 23:55:43,633 DEBUG   SenderThread:195818 [sender.py:send():378] send: history
+2024-06-20 23:55:43,633 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: summary_record
+2024-06-20 23:55:43,635 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:55:44,098 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:55:45,636 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:46,100 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:51,343 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:55:52,106 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:53,107 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:54,108 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:55:54,814 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-20 23:55:54,814 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: stop_status
+2024-06-20 23:55:56,896 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:02,116 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:02,563 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:07,927 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:09,302 DEBUG   SystemMonitor:195818 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-06-20 23:56:09,303 DEBUG   SenderThread:195818 [sender.py:send():378] send: stats
+2024-06-20 23:56:09,814 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-20 23:56:09,814 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: stop_status
+2024-06-20 23:56:10,129 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:13,922 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:16,133 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:19,487 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:24,140 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:24,815 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-20 23:56:24,815 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: stop_status
+2024-06-20 23:56:24,909 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:29,418 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: partial_history
+2024-06-20 23:56:29,418 DEBUG   SenderThread:195818 [sender.py:send():378] send: history
+2024-06-20 23:56:29,419 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: summary_record
+2024-06-20 23:56:29,421 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:56:29,425 DEBUG   SenderThread:195818 [sender.py:send():378] send: telemetry
+2024-06-20 23:56:29,426 DEBUG   SenderThread:195818 [sender.py:send():378] send: exit
+2024-06-20 23:56:29,426 INFO    SenderThread:195818 [sender.py:send_exit():585] handling exit code: 1
+2024-06-20 23:56:29,427 INFO    SenderThread:195818 [sender.py:send_exit():587] handling runtime: 80
+2024-06-20 23:56:29,428 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:56:29,428 INFO    SenderThread:195818 [sender.py:send_exit():593] send defer
+2024-06-20 23:56:29,428 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,428 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 0
+2024-06-20 23:56:29,428 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,428 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 0
+2024-06-20 23:56:29,428 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 1
+2024-06-20 23:56:29,428 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,428 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 1
+2024-06-20 23:56:29,428 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,428 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 1
+2024-06-20 23:56:29,428 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 2
+2024-06-20 23:56:29,428 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,428 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 2
+2024-06-20 23:56:29,428 INFO    HandlerThread:195818 [system_monitor.py:finish():203] Stopping system monitor
+2024-06-20 23:56:29,429 DEBUG   SystemMonitor:195818 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-06-20 23:56:29,429 DEBUG   SystemMonitor:195818 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-06-20 23:56:29,438 INFO    HandlerThread:195818 [interfaces.py:finish():200] Joined cpu monitor
+2024-06-20 23:56:29,438 INFO    HandlerThread:195818 [interfaces.py:finish():200] Joined disk monitor
+2024-06-20 23:56:29,482 INFO    HandlerThread:195818 [interfaces.py:finish():200] Joined gpu monitor
+2024-06-20 23:56:29,482 INFO    HandlerThread:195818 [interfaces.py:finish():200] Joined memory monitor
+2024-06-20 23:56:29,482 INFO    HandlerThread:195818 [interfaces.py:finish():200] Joined network monitor
+2024-06-20 23:56:29,483 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,483 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 2
+2024-06-20 23:56:29,483 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 3
+2024-06-20 23:56:29,483 DEBUG   SenderThread:195818 [sender.py:send():378] send: stats
+2024-06-20 23:56:29,483 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,483 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 3
+2024-06-20 23:56:29,483 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,483 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 3
+2024-06-20 23:56:29,483 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 4
+2024-06-20 23:56:29,483 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,483 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 4
+2024-06-20 23:56:29,483 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,483 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 4
+2024-06-20 23:56:29,483 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 5
+2024-06-20 23:56:29,484 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,484 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 5
+2024-06-20 23:56:29,484 DEBUG   SenderThread:195818 [sender.py:send():378] send: summary
+2024-06-20 23:56:29,485 INFO    SenderThread:195818 [sender.py:_save_file():1389] saving file wandb-summary.json with policy end
+2024-06-20 23:56:29,485 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,485 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 5
+2024-06-20 23:56:29,485 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 6
+2024-06-20 23:56:29,485 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,485 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 6
+2024-06-20 23:56:29,485 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,485 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 6
+2024-06-20 23:56:29,489 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: status_report
+2024-06-20 23:56:29,575 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 7
+2024-06-20 23:56:29,576 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:29,576 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 7
+2024-06-20 23:56:29,576 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:29,576 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 7
+2024-06-20 23:56:30,145 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:56:30,146 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/config.yaml
+2024-06-20 23:56:30,428 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-20 23:56:31,147 INFO    Thread-12 :195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:31,284 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 8
+2024-06-20 23:56:31,284 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: poll_exit
+2024-06-20 23:56:31,284 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:31,284 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 8
+2024-06-20 23:56:31,285 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:31,285 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 8
+2024-06-20 23:56:31,285 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 9
+2024-06-20 23:56:31,286 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:31,286 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 9
+2024-06-20 23:56:31,286 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:31,286 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 9
+2024-06-20 23:56:31,286 INFO    SenderThread:195818 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-06-20 23:56:31,428 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-20 23:56:32,148 INFO    SenderThread:195818 [dir_watcher.py:_on_file_modified():288] file/dir modified: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:32,149 INFO    SenderThread:195818 [dir_watcher.py:finish():388] scan: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files
+2024-06-20 23:56:32,150 INFO    SenderThread:195818 [dir_watcher.py:finish():402] scan save: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log output.log
+2024-06-20 23:56:32,150 INFO    SenderThread:195818 [dir_watcher.py:finish():402] scan save: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-metadata.json wandb-metadata.json
+2024-06-20 23:56:32,154 INFO    SenderThread:195818 [dir_watcher.py:finish():402] scan save: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/requirements.txt requirements.txt
+2024-06-20 23:56:32,155 INFO    SenderThread:195818 [dir_watcher.py:finish():402] scan save: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json wandb-summary.json
+2024-06-20 23:56:32,155 INFO    SenderThread:195818 [dir_watcher.py:finish():402] scan save: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/config.yaml config.yaml
+2024-06-20 23:56:32,156 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 10
+2024-06-20 23:56:32,156 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: poll_exit
+2024-06-20 23:56:32,156 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:32,156 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 10
+2024-06-20 23:56:32,157 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:32,157 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 10
+2024-06-20 23:56:32,157 INFO    SenderThread:195818 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-20 23:56:32,366 INFO    wandb-upload_0:195818 [upload_job.py:push():130] Uploaded file /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/output.log
+2024-06-20 23:56:32,429 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-20 23:56:32,439 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: poll_exit
+2024-06-20 23:56:32,546 INFO    wandb-upload_2:195818 [upload_job.py:push():130] Uploaded file /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/wandb-summary.json
+2024-06-20 23:56:32,684 INFO    wandb-upload_1:195818 [upload_job.py:push():130] Uploaded file /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/requirements.txt
+2024-06-20 23:56:32,693 INFO    wandb-upload_3:195818 [upload_job.py:push():130] Uploaded file /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/files/config.yaml
+2024-06-20 23:56:32,893 INFO    Thread-11 (_thread_body):195818 [sender.py:transition_state():613] send defer: 11
+2024-06-20 23:56:32,894 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:32,894 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 11
+2024-06-20 23:56:32,894 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:32,894 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 11
+2024-06-20 23:56:32,894 INFO    SenderThread:195818 [file_pusher.py:join():175] waiting for file pusher
+2024-06-20 23:56:32,895 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 12
+2024-06-20 23:56:32,895 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:32,895 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 12
+2024-06-20 23:56:32,896 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:32,896 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 12
+2024-06-20 23:56:32,896 INFO    SenderThread:195818 [file_stream.py:finish():601] file stream finish called
+2024-06-20 23:56:33,112 INFO    SenderThread:195818 [file_stream.py:finish():605] file stream finish is done
+2024-06-20 23:56:33,112 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 13
+2024-06-20 23:56:33,113 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:33,113 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 13
+2024-06-20 23:56:33,113 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:33,113 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 13
+2024-06-20 23:56:33,113 INFO    SenderThread:195818 [sender.py:transition_state():613] send defer: 14
+2024-06-20 23:56:33,113 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: defer
+2024-06-20 23:56:33,113 INFO    HandlerThread:195818 [handler.py:handle_request_defer():184] handle defer: 14
+2024-06-20 23:56:33,114 DEBUG   SenderThread:195818 [sender.py:send():378] send: final
+2024-06-20 23:56:33,114 DEBUG   SenderThread:195818 [sender.py:send():378] send: footer
+2024-06-20 23:56:33,114 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: defer
+2024-06-20 23:56:33,114 INFO    SenderThread:195818 [sender.py:send_request_defer():609] handle sender defer: 14
+2024-06-20 23:56:33,115 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: poll_exit
+2024-06-20 23:56:33,116 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: poll_exit
+2024-06-20 23:56:33,117 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-20 23:56:33,118 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: server_info
+2024-06-20 23:56:33,118 DEBUG   SenderThread:195818 [sender.py:send_request():405] send_request: server_info
+2024-06-20 23:56:33,159 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: get_summary
+2024-06-20 23:56:33,159 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: sampled_history
+2024-06-20 23:56:33,203 DEBUG   HandlerThread:195818 [handler.py:handle_request():158] handle_request: shutdown
+2024-06-20 23:56:33,203 INFO    HandlerThread:195818 [handler.py:finish():882] shutting down handler
+2024-06-20 23:56:34,119 INFO    WriterThread:195818 [datastore.py:close():296] close: /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_235508-fkp1a6cs/run-fkp1a6cs.wandb
+2024-06-20 23:56:34,174 INFO    SenderThread:195818 [sender.py:finish():1545] shutting down sender
+2024-06-20 23:56:34,175 INFO    SenderThread:195818 [file_pusher.py:finish():169] shutting down file pusher
+2024-06-20 23:56:34,175 INFO    SenderThread:195818 [file_pusher.py:join():175] waiting for file pusher

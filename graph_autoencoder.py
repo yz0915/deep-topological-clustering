@@ -172,6 +172,7 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, l
         optimizer.zero_grad() # Reset gradients after update
 
         if epoch % 10 == 0:
+            wandb.log({"train_loss": total_loss / len(dataset)})
             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
     return encoder, decoder, final_embeddings
@@ -261,7 +262,7 @@ def train(dataset, hyperparameters, num_clusters=2):
     wandb.log({"train_ari": train_ari})
 
     # return pre_cluster_labels, cluster_labels
-    return {"ari": train_ari}
+    return pre_cluster_labels, cluster_labels
 
 
 #############################################
@@ -375,7 +376,7 @@ def load_mutag_data():
         # We can avoid division by zero by setting the average to zero where degree is zero
         avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
 
-       # Retrieve and update node features
+        # Retrieve and update node features
         node_features = data.x
         node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
 
@@ -455,7 +456,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
     }
 
     sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-    wandb.agent(sweep_id, function=one_tune_instance, count=100)
+    wandb.agent(sweep_id, function=one_tune_instance, count=10000)
 
     # Load the MUTAG dataset
     # train_loader, adj_matrices, labels_true = load_mutag_data()
