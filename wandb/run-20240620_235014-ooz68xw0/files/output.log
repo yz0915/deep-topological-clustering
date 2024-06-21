@@ -1,0 +1,7 @@
+PRETRAINING
+Epoch 0, Average Loss: 4264.514100392659
+Epoch 10, Average Loss: 4241.785031636556
+Epoch 20, Average Loss: 4216.895215352376
+Epoch 30, Average Loss: 4189.902538299561
+Epoch 40, Average Loss: 4159.802083333333
+[34m[1mwandb[39m[22m: Ctrl + C detected. Stopping sweep.

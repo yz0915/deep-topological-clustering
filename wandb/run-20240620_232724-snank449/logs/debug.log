@@ -1,0 +1,37 @@
+2024-06-20 23:27:24,899 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Current SDK version is 0.17.0
+2024-06-20 23:27:24,899 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Configure stats pid to 4142688
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Loading settings from /home/users/yz705/.config/wandb/settings
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Loading settings from /usr/project/xtmp/yz705/deep-topological-clustering/wandb/settings
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Loading settings from environment variables: {'project': 'hyperparameter-sweep', 'entity': 'icl-learning', 'root_dir': '/usr/project/xtmp/yz705/deep-topological-clustering', 'sweep_id': '0ep6awe2', 'run_id': 'snank449', 'sweep_param_path': '/usr/project/xtmp/yz705/deep-topological-clustering/wandb/sweep-0ep6awe2/config-snank449.yaml'}
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-06-20 23:27:24,900 WARNING Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Could not save program above cwd: /usr/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': None, 'program_abspath': '/usr/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py', 'program': '/usr/xtmp/yz705/deep-topological-clustering/graph_autoencoder.py'}
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:_log_setup():520] Logging user logs to /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_232724-snank449/logs/debug.log
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:_log_setup():521] Logging internal logs to /usr/project/xtmp/yz705/deep-topological-clustering/wandb/run-20240620_232724-snank449/logs/debug-internal.log
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():560] calling init triggers
+2024-06-20 23:27:24,900 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():567] wandb.init called with sweep_config: {'epochs': 110, 'lr': 1.9694503158397425e-05, 'new_adj_dim': 10, 'numSampledCCs': 13, 'numSampledCycles': 27, 'pretrain_epochs': 60}
+config: {}
+2024-06-20 23:27:24,901 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():610] starting backend
+2024-06-20 23:27:24,901 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():614] setting up manager
+2024-06-20 23:27:24,914 INFO    Thread-2 (_run_job):4142688 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-06-20 23:27:24,917 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():622] backend started and connected
+2024-06-20 23:27:24,936 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_config_callback():1376] config_cb None None {'epochs': 110, 'lr': 1.9694503158397425e-05, 'new_adj_dim': 10, 'numSampledCCs': 13, 'numSampledCycles': 27, 'pretrain_epochs': 60}
+2024-06-20 23:27:24,936 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():711] updated telemetry
+2024-06-20 23:27:24,947 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():744] communicating run to backend with 90.0 second timeout
+2024-06-20 23:27:25,261 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_on_init():2396] communicating current version
+2024-06-20 23:27:25,426 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_on_init():2405] got version response upgrade_message: "wandb version 0.17.2 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2024-06-20 23:27:25,427 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():795] starting run threads in backend
+2024-06-20 23:27:25,917 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_console_start():2374] atexit reg
+2024-06-20 23:27:25,917 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_redirect():2229] redirect: wrap_raw
+2024-06-20 23:27:25,917 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_redirect():2294] Wrapping output streams.
+2024-06-20 23:27:25,917 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_redirect():2319] Redirects installed.
+2024-06-20 23:27:25,919 INFO    Thread-2 (_run_job):4142688 [wandb_init.py:init():838] run started, returning control to user process
+2024-06-20 23:27:26,411 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_finish():2103] finishing run icl-learning/hyperparameter-sweep/snank449
+2024-06-20 23:27:26,411 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_atexit_cleanup():2343] got exitcode: 1
+2024-06-20 23:27:26,411 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_restore():2326] restore
+2024-06-20 23:27:26,411 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_restore():2332] restore done
+2024-06-20 23:27:30,188 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_footer_history_summary_info():3994] rendering history
+2024-06-20 23:27:30,188 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_footer_history_summary_info():4026] rendering summary
+2024-06-20 23:27:30,203 INFO    Thread-2 (_run_job):4142688 [wandb_run.py:_footer_sync_info():3953] logging synced files

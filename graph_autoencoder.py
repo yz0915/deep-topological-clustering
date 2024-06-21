@@ -113,7 +113,7 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, l
     train_loader, adj_matrices, labels_true = dataset
 
     encoder = GNN().to(device)
-    decoder = MLP(5, new_adj_dim**2).to(device)
+    decoder = MLP(5, numSampledCCs+numSampledCycles).to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
     criterion = torch.nn.MSELoss()
@@ -132,29 +132,32 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, l
 
             x = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
-            ori_mst = torch.take(x, ori_mst_index).to(device)
-            ori_nonmst = torch.take(x, ori_nonmst_index).to(device)
+            ori_mst_index.to(device)
+            ori_nonmst_index.to(device)
+
+            ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
+            ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
 
             encoded = encoder(data.x, data.edge_index, data.batch)
             
             if epoch == epochs-1:
-                final_embeddings.append(torch.squeeze(encoded).detach().numpy())
+                final_embeddings.append(torch.squeeze(encoded).detach().cpu().numpy())
 
             decoded = decoder(encoded)
 
             # Reconstruct the adjacency matrix from the top triangle
-            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32)
-            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1)
+            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
+            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1).to(device)
             adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
             adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
 
-            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().numpy()
+            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().cpu().numpy()
             new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
+            new_mst_index.to(device)
+            new_nonmst_index.to(device)
 
-            new_mst = torch.take(decoded, new_mst_index).to(device)
-            new_nonmst = torch.take(decoded, new_nonmst_index).to(device)
-            new_mst = torch.take(adj_matrix_reconstructed, new_mst_index)
-            new_nonmst = torch.take(adj_matrix_reconstructed, new_nonmst_index)
+            new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
+            new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -177,7 +180,9 @@ def train(dataset, hyperparameters, num_clusters=2):
 
     # train_loader, adj_matrices = dataset
     train_loader, adj_matrices, labels_true = dataset
-    epochs, pretrain_epochs, new_adj_dim, learning_rate, numSampledCCs, numSampledCycles = hyperparameters
+    epochs, pretrain_epochs, learning_rate, numSampledCCs = hyperparameters
+    numSampledCycles = ((numSampledCCs+1) * numSampledCCs) // 2 - numSampledCCs
+    new_adj_dim = numSampledCCs + numSampledCycles
 
     encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, epochs=pretrain_epochs, lr=learning_rate)
 
@@ -206,8 +211,10 @@ def train(dataset, hyperparameters, num_clusters=2):
 
             x = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
-            ori_mst = torch.take(x, ori_mst_index).to(device)
-            ori_nonmst = torch.take(x, ori_nonmst_index).to(device)
+            ori_mst_index.to(device)
+            ori_nonmst_index.to(device)
+            ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
+            ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
 
             encoded = encoder(data.x, data.edge_index, data.batch)
             embeddings.append(encoded)
@@ -215,18 +222,18 @@ def train(dataset, hyperparameters, num_clusters=2):
             decoded = decoder(encoded)
 
             # Reconstruct the adjacency matrix from the top triangle
-            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32)
-            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1)
+            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
+            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1).to(device)
             adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
             adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
 
-            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().numpy()
+            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().cpu().numpy()
             new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
+            new_mst_index.to(device)
+            new_nonmst_index.to(device)
 
-            new_mst = torch.take(decoded, new_mst_index).to(device)
-            new_nonmst = torch.take(decoded, new_nonmst_index).to(device)
-            new_mst = torch.take(adj_matrix_reconstructed, new_mst_index)
-            new_nonmst = torch.take(adj_matrix_reconstructed, new_nonmst_index)
+            new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
+            new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -247,7 +254,7 @@ def train(dataset, hyperparameters, num_clusters=2):
     
     # Stack tensors vertically
     embeddings = torch.cat([e.detach() for e in embeddings], dim=0)
-    kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(embeddings.numpy())
+    kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(embeddings.cpu().numpy())
     cluster_labels = kmeans_model.labels_
 
     train_ari = adjusted_rand_score(labels_true, cluster_labels)
@@ -384,23 +391,21 @@ def load_mutag_data():
         # # ensures only connected nodes have their dot products as weights
         weighted_adj = adj * dot_product_matrix
 
-        adjacency_matrices.append(weighted_adj.numpy())
+        adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())
 
     return dataset, adjacency_matrices, labels
 
 def one_tune_instance():
 
-    wandb.init(project="hyperparameter-sweep")
+    wandb.init(project="hyperparameter-sweep-top-clustering")
     
     epochs = wandb.config.epochs
     pretrain_epochs = wandb.config.pretrain_epochs
-    new_adj_dim = wandb.config.new_adj_dim
     learning_rate = wandb.config.lr
     numSampledCCs = wandb.config.numSampledCCs
-    numSampledCycles = wandb.config.numSampledCycles
 
-    hyperparameters = (epochs, pretrain_epochs, new_adj_dim, learning_rate, numSampledCCs, numSampledCycles)
+    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs)
 
     np.random.seed(0)
     random.seed(0)
@@ -435,13 +440,10 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         },
         'parameters': {
             'lr': {
-                'max': 1e-1, 'min': 1e-5, 'distribution': 'log_uniform_values'
+                'max': 1e-1, 'min': 1e-4, 'distribution': 'log_uniform_values'
             },
             'epochs': {
                 'values': list(range(50, 200, 10))
-            },
-            'new_adj_dim': {
-                'values': list(range(5, 15))
             },
             'pretrain_epochs': {
                 'values': list(range(30, 100, 10))
@@ -449,9 +451,6 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
             'numSampledCCs': {
                 'values': list(range(4, 18))
             },
-            'numSampledCycles': {
-                'values': list(range(6, 60))
-            }
         }
     }
 
