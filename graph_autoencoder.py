@@ -362,6 +362,24 @@ def convert_index(indices, old_dim, new_dim):
     new_indices = indices % new_total_elements
     return new_indices
 
+# Perform 2-hop graph convolution
+def convolve_features(X, A):
+
+    # Calculate 2-hop adjacency matrix
+    A_2hop = np.dot(A, A).squeeze()
+
+    # Add self-loops to retain current information
+    A_with_self_loops = A_2hop + np.eye(A.shape[0])
+
+    # Normalize adjacency matrix by row sums
+    row_sums = A_with_self_loops.sum(axis=1).squeeze()
+    D_inv = np.diag(1 / row_sums)
+    A_normalized = np.dot(D_inv, A_with_self_loops)
+
+    # Perform message passing to update node features
+    X_updated = np.dot(A_normalized, X)
+    return X_updated
+
 def load_mutag_data():
     dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
     adjacency_matrices = []
@@ -385,7 +403,9 @@ def load_mutag_data():
 
         # Retrieve and update node features
         node_features = data.x
-        node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
+        # node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
+        convolved = torch.tensor(convolve_features(node_features, adj))
+        node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
 
         # print(node_features)
 
