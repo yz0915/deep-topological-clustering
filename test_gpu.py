@@ -17,6 +17,7 @@ from matplotlib import pyplot as plt
 from torch_geometric.nn import GCNConv, global_mean_pool
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, silhouette_score
 from sklearn.cluster import KMeans
+from scipy.linalg import eigh
 
 from torch_geometric.datasets import TUDataset
 from torch_geometric.utils import to_dense_adj
@@ -107,7 +108,7 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, lr=1e-4):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs=80, lr=1e-4):
 
     print("PRETRAINING")
 
@@ -165,7 +166,7 @@ def pretrain(dataset, new_adj_dim, numSampledCCs, numSampledCycles, epochs=80, l
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
             # Sum the losses
-            loss = loss_mst + loss_nonmst
+            loss = alpha*loss_mst + alpha*loss_nonmst
             loss.backward()  # Backpropagate errors immediately
             total_loss += loss.item()
 
@@ -182,16 +183,15 @@ def train(dataset, hyperparameters, num_clusters=2):
 
     # train_loader, adj_matrices = dataset
     train_loader, adj_matrices, labels_true = dataset
-    epochs, pretrain_epochs, learning_rate, numSampledCCs = hyperparameters
+    epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta = hyperparameters
     numSampledCycles = ((numSampledCCs+1) * numSampledCCs) // 2 - numSampledCCs
-    new_adj_dim = numSampledCCs + numSampledCycles
 
-    encoder, decoder, pretrained_embeddings = pretrain(dataset, new_adj_dim, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, epochs=pretrain_epochs, lr=learning_rate)
+    encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, alpha=alpha, epochs=pretrain_epochs, lr=learning_rate)
 
     # Run k-means++ to get initial cluster distribution
-    kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++").fit(pretrained_embeddings)
+    kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++", random_state=0).fit(pretrained_embeddings)
     pre_cluster_labels = kmeans_model.labels_
-    deep_k_means = GraphKMeans(60, 60, num_clusters, 0.1, kmeans_model.cluster_centers_).to(device)
+    deep_k_means = GraphKMeans(60, 60, num_clusters, beta, kmeans_model.cluster_centers_).to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()) + list(deep_k_means.parameters()), lr=learning_rate)
     criterion = torch.nn.MSELoss()
@@ -241,7 +241,7 @@ def train(dataset, hyperparameters, num_clusters=2):
             loss_mst = criterion(new_mst, ori_mst)
             loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            loss = loss + 0.25*loss_mst + 0.25*loss_nonmst
+            loss = loss + alpha*loss_mst + alpha*loss_nonmst
 
         loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
         loss = loss + loss_k_means
@@ -360,24 +360,6 @@ def convert_index(indices, old_dim, new_dim):
     new_indices = indices % new_total_elements
     return new_indices
 
-# Perform 2-hop graph convolution
-def convolve_features(X, A):
-
-    # Calculate 2-hop adjacency matrix
-    A_2hop = np.dot(A, A).squeeze()
-
-    # Add self-loops to retain current information
-    A_with_self_loops = A_2hop + np.eye(A.shape[0])
-
-    # Normalize adjacency matrix by row sums
-    row_sums = A_with_self_loops.sum(axis=1).squeeze()
-    D_inv = np.diag(1 / row_sums)
-    A_normalized = np.dot(D_inv, A_with_self_loops)
-
-    # Perform message passing to update node features
-    X_updated = np.dot(A_normalized, X)
-    return X_updated
-
 def load_mutag_data():
     dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
     adjacency_matrices = []
@@ -395,10 +377,13 @@ def load_mutag_data():
         # We can avoid division by zero by setting the average to zero where degree is zero
         avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
 
+        # Compute Eigen Features
+        eigvals, eigvecs = eigh(adj.cpu().numpy())
+        eigvecs_features = torch.tensor(eigvecs, dtype=torch.float32)
+
         # Retrieve and update node features
         node_features = data.x
-        convolved = torch.tensor(convolve_features(node_features, adj))
-        node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
+        node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
 
         # print(node_features)
 
@@ -410,7 +395,10 @@ def load_mutag_data():
         # diff_matrix = node_features_squared + node_features_squared.t() - 2 * torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        weighted_adj = adj * dot_product_matrix
+        # weighted_adj = adj * (dot_product_matrix + eigvecs_features)
+        weighted_adj = dot_product_matrix + eigvecs_features
+
+
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())
@@ -423,12 +411,16 @@ def one_tune_instance():
     pretrain_epochs = 80
     learning_rate = 0.05904
     numSampledCCs = 5
+    alpha = 0.25
+    beta = 0.1
 
-    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs)
+    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta)
 
     np.random.seed(0)
     random.seed(0)
     torch.manual_seed(0)
+    torch.cuda.manual_seed(0)
+    # torch.cuda.manual_seed_all(0)
 
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
