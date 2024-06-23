@@ -27,3 +27,10 @@ config: {}
 2024-06-21 11:30:29,071 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_redirect():2294] Wrapping output streams.
 2024-06-21 11:30:29,071 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_redirect():2319] Redirects installed.
 2024-06-21 11:30:29,072 INFO    Thread-122 (_run_job):2922882 [wandb_init.py:init():838] run started, returning control to user process
+2024-06-21 11:34:33,541 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_finish():2103] finishing run icl-learning/hyperparameter-sweep/kgvon719
+2024-06-21 11:34:33,541 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_atexit_cleanup():2343] got exitcode: 0
+2024-06-21 11:34:33,542 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_restore():2326] restore
+2024-06-21 11:34:33,542 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_restore():2332] restore done
+2024-06-21 11:34:38,698 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_footer_history_summary_info():3994] rendering history
+2024-06-21 11:34:38,699 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_footer_history_summary_info():4026] rendering summary
+2024-06-21 11:34:38,717 INFO    Thread-122 (_run_job):2922882 [wandb_run.py:_footer_sync_info():3953] logging synced files
