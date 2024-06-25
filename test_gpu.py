@@ -26,19 +26,23 @@ from torch_geometric.utils import to_dense_adj
 device = torch.device("cpu")
 
 class GNN(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, feature_space_GNN, out_channels_GNN):
         super(GNN, self).__init__()
-        self.conv_1 = GCNConv(7, 64)
+        self.conv_1 = GCNConv(7, feature_space_GNN)
         self.activ_1 = nn.ReLU()
-        self.conv_2 = GCNConv(64, 32)
+        self.dropout_1 = nn.Dropout(0.5)
+        self.conv_2 = GCNConv(feature_space_GNN, feature_space_GNN)
         self.activ_2 = nn.ReLU()
-        self.linear = nn.Linear(32, 5)
+        self.dropout_2 = nn.Dropout(0.5)
+        self.linear = nn.Linear(feature_space_GNN, out_channels_GNN)
 
     def forward(self, x, edge_index, batch):
         x = self.conv_1(x, edge_index)
         x = self.activ_1(x)
+        x = self.dropout_1(x)
         x = self.conv_2(x, edge_index)
         x = self.activ_2(x)
+        x = self.dropout_2(x)
         x = self.linear(x)
 
         x = global_mean_pool(x, batch)  # batch is the index of the batch to which the nodes belong
@@ -46,14 +50,16 @@ class GNN(torch.nn.Module):
 
 
 class MLP(nn.Module):
-    def __init__(self, input_dim, output_dim):
+    def __init__(self, input_dim, output_dim, feature_space_MLP):
         super(MLP, self).__init__()
         self.layers = nn.Sequential(
-            nn.Linear(input_dim, 128),
+            nn.Linear(input_dim, feature_space_MLP),
             nn.ReLU(),
-            nn.Linear(128, 128),
+            nn.Dropout(0.5),
+            nn.Linear(feature_space_MLP, feature_space_MLP),
             nn.ReLU(),
-            nn.Linear(128, output_dim)
+            nn.Dropout(0.5),
+            nn.Linear(feature_space_MLP, output_dim)
         )
 
     def forward(self, x):
@@ -108,14 +114,14 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs=80, lr=1e-4):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP):
 
     print("PRETRAINING")
 
     train_loader, adj_matrices, labels_true = dataset
 
-    encoder = GNN().to(device)
-    decoder = MLP(5, numSampledCCs+numSampledCycles).to(device)
+    encoder = GNN(feature_space_GNN, out_channels_GNN).to(device)
+    decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
     criterion = torch.nn.MSELoss()
@@ -183,10 +189,11 @@ def train(dataset, hyperparameters, num_clusters=2):
 
     # train_loader, adj_matrices = dataset
     train_loader, adj_matrices, labels_true = dataset
-    epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta = hyperparameters
+    epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP = hyperparameters
     numSampledCycles = ((numSampledCCs+1) * numSampledCCs) // 2 - numSampledCCs
 
-    encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, alpha=alpha, epochs=pretrain_epochs, lr=learning_rate)
+    encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, alpha=alpha, epochs=pretrain_epochs, lr=learning_rate, feature_space_GNN=feature_space_GNN, out_channels_GNN=out_channels_GNN, feature_space_MLP=feature_space_MLP)
+
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++", random_state=0).fit(pretrained_embeddings)
@@ -360,6 +367,24 @@ def convert_index(indices, old_dim, new_dim):
     new_indices = indices % new_total_elements
     return new_indices
 
+# Perform 2-hop graph convolution
+def convolve_features(X, A):
+
+    # Calculate 2-hop adjacency matrix
+    A_2hop = np.dot(A, A).squeeze()
+
+    # Add self-loops to retain current information
+    A_with_self_loops = A_2hop + np.eye(A.shape[0])
+
+    # Normalize adjacency matrix by row sums
+    row_sums = A_with_self_loops.sum(axis=1).squeeze()
+    D_inv = np.diag(1 / row_sums)
+    A_normalized = np.dot(D_inv, A_with_self_loops)
+
+    # Perform message passing to update node features
+    X_updated = np.dot(A_normalized, X)
+    return X_updated
+
 def load_mutag_data():
     dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
     adjacency_matrices = []
@@ -383,7 +408,9 @@ def load_mutag_data():
 
         # Retrieve and update node features
         node_features = data.x
-        node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
+        # node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
+        convolved = torch.tensor(convolve_features(node_features, adj))
+        node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
 
         # print(node_features)
 
@@ -407,14 +434,17 @@ def load_mutag_data():
 
 def one_tune_instance():
     
-    epochs = 160
-    pretrain_epochs = 80
-    learning_rate = 0.05904
-    numSampledCCs = 5
-    alpha = 0.25
-    beta = 0.1
+    epochs = 80
+    pretrain_epochs = 30
+    learning_rate = 0.02991
+    numSampledCCs = 7
+    alpha = 0.7
+    beta = 0.2
+    feature_space_GNN = 128
+    out_channels_GNN = 4
+    feature_space_MLP = 512
 
-    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta)
+    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP)
 
     np.random.seed(0)
     random.seed(0)
