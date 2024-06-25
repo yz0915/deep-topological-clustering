@@ -25,28 +25,24 @@ from torch_geometric.utils import to_dense_adj
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class GNN(torch.nn.Module):
-    
     def __init__(self, feature_space_GNN, out_channels_GNN):
         super(GNN, self).__init__()
-        self.conv_1 = GCNConv(7, feature_space_GNN)
-        self.activ_1 = nn.ReLU()
-        self.dropout_1 = nn.Dropout(0.5)
-        self.conv_2 = GCNConv(feature_space_GNN, feature_space_GNN)
-        self.activ_2 = nn.ReLU()
-        self.dropout_2 = nn.Dropout(0.5)
-        self.linear = nn.Linear(feature_space_GNN, out_channels_GNN)
+        self.conv1 = GCNConv(7, feature_space_GNN)
+        self.dropout1 = nn.Dropout(0.5)
+        self.conv2 = GCNConv(feature_space_GNN, feature_space_GNN)
+        self.dropout2 = nn.Dropout(0.5)
+        self.conv3 = GCNConv(feature_space_GNN, out_channels_GNN)
 
     def forward(self, x, edge_index, batch):
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = self.dropout1(x)
 
-        x = self.conv_1(x, edge_index)
-        x = self.activ_1(x)
-        x = self.dropout_1(x)
+        x = self.conv2(x, edge_index)
+        x = F.relu(x)
+        x = self.dropout2(x)
 
-        x = self.conv_2(x, edge_index)
-        x = self.activ_2(x)
-        x = self.dropout_2(x)
-        
-        x = self.linear(x)
+        x = self.conv3(x, edge_index)
 
         x_pooled = global_mean_pool(x, batch)
         return x, x_pooled
