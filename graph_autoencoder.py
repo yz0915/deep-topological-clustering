@@ -48,8 +48,8 @@ class GNN(torch.nn.Module):
         
         x = self.linear(x)
 
-        x = global_mean_pool(x, batch)
-        return x
+        x_pooled = global_mean_pool(x, batch)
+        return x, x_pooled
 
 # MLP decoder
 class MLP(nn.Module):
@@ -127,15 +127,17 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=False):
 
     print("PRETRAINING")
 
     train_loader, adj_matrices, labels_true = dataset
 
     encoder = GNN(feature_space_GNN, out_channels_GNN).to(device)
-    # decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
-    decoder = DenseInnerProductDecoder().to(device)
+    if MLP_DECODER:
+        decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
+    else:
+        decoder = DenseInnerProductDecoder().to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
     criterion = torch.nn.MSELoss()
@@ -160,26 +162,42 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
             ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
             ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
 
-            encoded = encoder(data.x, data.edge_index, data.batch)
+            encoded, encoded_pooled = encoder(data.x, data.edge_index, data.batch)
             
             if epoch == epochs-1:
-                final_embeddings.append(torch.squeeze(encoded).detach().cpu().numpy())
+                final_embeddings.append(torch.squeeze(encoded_pooled).detach().cpu().numpy())
 
-            decoded = decoder(encoded)
+            if not MLP_DECODER:
 
-            # Reconstruct the adjacency matrix from the top triangle
-            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
-            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1).to(device)
-            adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
-            adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
+                adj = decoder(encoded)
+                adj_n = adj.detach().cpu().numpy()
 
-            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().cpu().numpy()
-            new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
-            new_mst_index.to(device)
-            new_nonmst_index.to(device)
+                new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
+            
+                new_mst_index.to(device)
+                new_nonmst_index.to(device)
 
-            new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
-            new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
+                new_mst = torch.take(adj.to(device), new_mst_index.to(device))
+                new_nonmst = torch.take(adj.to(device), new_nonmst_index.to(device))
+
+            else:
+
+                decoded = decoder(encoded_pooled)
+
+                # Reconstruct the adjacency matrix from the top triangle
+                adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
+                upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1).to(device)
+                adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
+                adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
+
+                adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().cpu().numpy()
+                new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
+            
+                new_mst_index.to(device)
+                new_nonmst_index.to(device)
+
+                new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
+                new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
@@ -198,7 +216,7 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
 
     return encoder, decoder, final_embeddings
 
-def train(dataset, hyperparameters, num_clusters=2):
+def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
 
     # train_loader, adj_matrices = dataset
     train_loader, adj_matrices, labels_true = dataset
@@ -206,7 +224,14 @@ def train(dataset, hyperparameters, num_clusters=2):
     numSampledCycles = ((numSampledCCs+1) * numSampledCCs) // 2 - numSampledCCs
     # new_adj_dim = numSampledCCs + numSampledCycles
 
-    encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs, numSampledCycles=numSampledCycles, alpha=alpha, epochs=pretrain_epochs, lr=learning_rate, feature_space_GNN=feature_space_GNN, out_channels_GNN=out_channels_GNN, feature_space_MLP=feature_space_MLP)
+    encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs,
+                                                       numSampledCycles=numSampledCycles,
+                                                       alpha=alpha, epochs=pretrain_epochs,
+                                                       lr=learning_rate,
+                                                       feature_space_GNN=feature_space_GNN,
+                                                       out_channels_GNN=out_channels_GNN,
+                                                       feature_space_MLP=feature_space_MLP,
+                                                       MLP_DECODER=MLP_DECODER)
 
     # Run k-means++ to get initial cluster distribution
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++", random_state=0).fit(pretrained_embeddings)
@@ -238,24 +263,40 @@ def train(dataset, hyperparameters, num_clusters=2):
             ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
             ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
 
-            encoded = encoder(data.x, data.edge_index, data.batch)
-            embeddings.append(encoded)
+            encoded, encoded_pooled = encoder(data.x, data.edge_index, data.batch)
+            embeddings.append(encoded_pooled)
             
-            decoded = decoder(encoded)
+            if not MLP_DECODER:
 
-            # Reconstruct the adjacency matrix from the top triangle
-            adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
-            upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1).to(device)
-            adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
-            adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
+                adj = decoder(encoded)
+                adj_n = adj.detach().cpu().numpy()
 
-            adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().cpu().numpy()
-            new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
-            new_mst_index.to(device)
-            new_nonmst_index.to(device)
+                new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
+            
+                new_mst_index.to(device)
+                new_nonmst_index.to(device)
 
-            new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
-            new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
+                new_mst = torch.take(adj.to(device), new_mst_index.to(device))
+                new_nonmst = torch.take(adj.to(device), new_nonmst_index.to(device))
+
+            else:
+
+                decoded = decoder(encoded_pooled)
+
+                # Reconstruct the adjacency matrix from the top triangle
+                adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
+                upper_indices = torch.triu_indices(numSampledCCs+1, numSampledCCs+1, offset=1).to(device)
+                adj_matrix_reconstructed[upper_indices[0], upper_indices[1]] = decoded
+                adj_matrix_reconstructed = adj_matrix_reconstructed + adj_matrix_reconstructed.t()
+
+                adj_matrix_reconstructed_n = adj_matrix_reconstructed.detach().cpu().numpy()
+                new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_matrix_reconstructed_n, numSampledCCs, numSampledCycles)
+            
+                new_mst_index.to(device)
+                new_nonmst_index.to(device)
+
+                new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
+                new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
 
             # Compute MSE losses
             loss_mst = criterion(new_mst, ori_mst)
