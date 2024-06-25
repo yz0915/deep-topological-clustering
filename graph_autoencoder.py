@@ -22,12 +22,13 @@ from scipy.linalg import eigh
 from torch_geometric.datasets import TUDataset
 from torch_geometric.utils import to_dense_adj
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = torch.device("cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-class GNN(torch.nn.Module):
+class Encoder(torch.nn.Module):
+
     def __init__(self):
-        super(GNN, self).__init__()
+
+        super(Encoder, self).__init__()
         self.conv_1 = GCNConv(7, 64)
         self.activ_1 = nn.ReLU()
         self.conv_2 = GCNConv(64, 32)
@@ -35,16 +36,15 @@ class GNN(torch.nn.Module):
         self.linear = nn.Linear(32, 5)
 
     def forward(self, x, edge_index, batch):
-        x = self.conv_1(x, edge_index)
-        x = self.activ_1(x)
-        x = self.conv_2(x, edge_index)
-        x = self.activ_2(x)
+
+        x = self.activ_1(self.conv_1(x, edge_index))
+        x = self.activ_2(self.conv_2(x, edge_index))
         x = self.linear(x)
 
-        x = global_mean_pool(x, batch)  # batch is the index of the batch to which the nodes belong
+        x = global_mean_pool(x, batch)
         return x
 
-
+# MLP decoder
 class MLP(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(MLP, self).__init__()
@@ -58,7 +58,17 @@ class MLP(nn.Module):
 
     def forward(self, x):
         return self.layers(x)
-    
+
+# Inner Product decoder
+class DenseInnerProductDecoder(nn.Module):
+
+    def __init__(self):
+        super(DenseInnerProductDecoder, self).__init__()
+
+    # z is a num_nodes x d_embed tensor representing the encoded node embeddings
+    def forward(self, z, sigmoid=True):
+        adj = torch.matmul(z, z.t())
+        return torch.sigmoid(adj) if sigmoid else adj
     
 class GraphKMeans(nn.Module):
 
@@ -114,7 +124,7 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr=1e-4):
 
     train_loader, adj_matrices, labels_true = dataset
 
-    encoder = GNN().to(device)
+    encoder = Encoder().to(device)
     decoder = MLP(5, numSampledCCs+numSampledCycles).to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
