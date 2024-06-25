@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import networkx as nx
-import ray
+
 import wandb
 
 from scipy.sparse import csr_matrix
@@ -134,7 +134,8 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
     train_loader, adj_matrices, labels_true = dataset
 
     encoder = GNN(feature_space_GNN, out_channels_GNN).to(device)
-    decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
+    # decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
+    decoder = DenseInnerProductDecoder().to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
     criterion = torch.nn.MSELoss()
@@ -193,7 +194,6 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
         optimizer.zero_grad() # Reset gradients after update
 
         if epoch % 10 == 0:
-            wandb.log({"pretrain_loss": total_loss / len(dataset)})
             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
 
     return encoder, decoder, final_embeddings
@@ -272,7 +272,6 @@ def train(dataset, hyperparameters, num_clusters=2):
         optimizer.zero_grad() # Reset gradients after update
 
         if epoch % 10 == 0:
-            wandb.log({"train_loss": total_loss / len(dataset)})
             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
     
     # Stack tensors vertically
@@ -281,10 +280,8 @@ def train(dataset, hyperparameters, num_clusters=2):
     cluster_labels = kmeans_model.labels_
 
     train_ari = adjusted_rand_score(labels_true, cluster_labels)
-    wandb.log({"train_ari": train_ari})
 
-    # return pre_cluster_labels, cluster_labels
-    return pre_cluster_labels, cluster_labels
+    return pre_cluster_labels, cluster_labels, train_ari
 
 
 #############################################
@@ -427,10 +424,6 @@ def load_mutag_data():
         # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
-        # # Compute the square of the difference between node features
-        # node_features_squared = torch.sum(node_features ** 2, dim=1, keepdim=True)
-        # diff_matrix = node_features_squared + node_features_squared.t() - 2 * torch.mm(node_features, node_features.t())
-
         # # ensures only connected nodes have their dot products as weights
         weighted_adj = adj * (dot_product_matrix + eigvecs_features)
 
@@ -463,56 +456,89 @@ def one_tune_instance():
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
     # Pretraining
-    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+    pretrain_labels_pred, train_labels_pred, train_ari = train((train_loader, adj_matrices, labels_true), hyperparameters)
     pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
 
     wandb.log({"pretrain_ari": pretrain_ari})
     print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
 
+    wandb.log({"train_ari": train_ari})
+
 def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
-    # np.random.seed(0)
-    # random.seed(0)
-    # torch.manual_seed(0)
 
-    sweep_config = {
-        'method': 'random',  # or 'grid' or 'bayes'
-        'metric': {
-            'name': 'train_ari',
-            'goal': 'maximize'
-        },
-        'parameters': {
-            'lr': {
-                'max': 1e-1, 'min': 1e-4, 'distribution': 'log_uniform_values'
+    TUNE_HYPERPARAMETERS = False
+
+    if TUNE_HYPERPARAMETERS:
+        sweep_config = {
+            'method': 'random',  # or 'grid' or 'bayes'
+            'metric': {
+                'name': 'train_ari',
+                'goal': 'maximize'
             },
-            'epochs': {
-                'values': list(range(50, 200, 10))
-            },
-            'pretrain_epochs': {
-                'values': list(range(30, 100, 10))
-            },
-            'numSampledCCs': {
-                'values': list(range(4, 20))
-            },
-            'alpha': {
-                'values': torch.arange(0.1, 1, 0.1).tolist()
-            },
-            'beta': {
-                'values': torch.arange(0.1, 1, 0.1).tolist()
-            },
-            'feature_space_GNN': {
-                'values': [32, 64, 128]
-            },
-            'out_channels_GNN': {
-                'values': [3, 4, 5]
-            },
-            'feature_space_MLP': {
-                'values': [128, 256, 512]
-            },
+            'parameters': {
+                'lr': {
+                    'max': 1e-1, 'min': 1e-4, 'distribution': 'log_uniform_values'
+                },
+                'epochs': {
+                    'values': list(range(50, 200, 10))
+                },
+                'pretrain_epochs': {
+                    'values': list(range(30, 100, 10))
+                },
+                'numSampledCCs': {
+                    'values': list(range(4, 20))
+                },
+                'alpha': {
+                    'values': torch.arange(0.1, 1, 0.1).tolist()
+                },
+                'beta': {
+                    'values': torch.arange(0.1, 1, 0.1).tolist()
+                },
+                'feature_space_GNN': {
+                    'values': [32, 64, 128]
+                },
+                'out_channels_GNN': {
+                    'values': [3, 4, 5]
+                },
+                'feature_space_MLP': {
+                    'values': [128, 256, 512]
+                },
+            }
         }
-    }
 
-    sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-    wandb.agent(sweep_id, function=one_tune_instance, count=300)
+        sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
+        wandb.agent(sweep_id, function=one_tune_instance, count=300)
+
+    else:
+
+        print("NOT TUNING PARAMS")
+
+        # Manually set here per run:
+        epochs, pretrain_epochs = 100, 50
+        learning_rate = 0.01
+        numSampledCCs = 8
+
+        alpha, beta = 0.5, 0.5
+        feature_space_GNN, out_channels_GNN, feature_space_MLP = 32, 3, 128
+
+        hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP)
+
+        np.random.seed(0)
+        random.seed(0)
+        torch.manual_seed(0)
+        torch.cuda.manual_seed(0)
+
+        train_loader, adj_matrices, labels_true = load_mutag_data()
+
+        # Pretraining
+        pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+        
+        # Get ari prints
+        pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
+        print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")  
+
+        train_ari = adjusted_rand_score(labels_true, train_labels_pred)
+        print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")  
 
 if __name__ == '__main__':
     main()
