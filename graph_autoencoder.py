@@ -290,7 +290,6 @@ def train(dataset, hyperparameters, num_clusters=2):
 #############################################
 ################### Demo ####################
 #############################################
-    return pre_cluster_labels, cluster_labels
 
 def random_modular_graph(d, c, p, mu, sigma):
     """Simulated modular network.
@@ -340,7 +339,6 @@ def adj2pers(adj):
     G = nx.from_numpy_array(adj)
     T = nx.maximum_spanning_tree(G)
     MSTedges = T.edges(data=True) # compute maximum spanning tree (MST)
-    # print(MSTedges)
 
     # Convert 2D edge indices to 1D and sort by weight
     MSTindices = [i * n + j for i, j, _ in sorted(MSTedges, key=lambda x: G[x[0]][x[1]]['weight'])]
@@ -426,8 +424,6 @@ def load_mutag_data():
         convolved = torch.tensor(convolve_features(node_features, adj))
         node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
 
-        # print(node_features)
-
         # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
@@ -473,13 +469,6 @@ def one_tune_instance():
     wandb.log({"pretrain_ari": pretrain_ari})
     print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
 
-    # # Fine-tuning
-    # train_ari = adjusted_rand_score(labels_true, train_labels_pred)
-    # print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")  
-
-    # wandb.log({"train_ari": train_ari})
-
-
 def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
     # np.random.seed(0)
     # random.seed(0)
@@ -524,20 +513,6 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
 
     sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
     wandb.agent(sweep_id, function=one_tune_instance, count=300)
-
-    # Load the MUTAG dataset
-    # train_loader, adj_matrices, labels_true = load_mutag_data()
-
-    # data = (train_loader, adj_matrices, labels_true)
-
-    # # Pretraining
-    # pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices), new_adj_dim = 10)
-    # pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
-    # print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
-
-    # # Fine-tuning
-    # train_ari = adjusted_rand_score(labels_true, train_labels_pred)
-    # print(f"Adjusted Rand Index after Fine-tuning: {train_ari}")  
 
 if __name__ == '__main__':
     main()
