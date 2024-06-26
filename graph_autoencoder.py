@@ -47,6 +47,34 @@ class GNN(torch.nn.Module):
         x_pooled = global_mean_pool(x, batch)
         return x, x_pooled
 
+class VAE(nn.Module):
+    def __init__(self, hidden_dim1, hidden_dim2):
+        super(VAE, self).__init__()
+        self.conv1 = GCNConv(7, hidden_dim1)
+        self.dropout1 = nn.Dropout(0.5)
+        self.conv2 = GCNConv(hidden_dim1, hidden_dim2)
+        self.dropout2 = nn.Dropout(0.5)
+        self.conv3 = GCNConv(hidden_dim1, hidden_dim2)
+        self.dropout3 = nn.Dropout(0.5)
+
+    def encode(self, x, edge_index, batch):
+        hidden1 = self.conv1(x, edge_index).relu()
+
+        x_pooled = global_mean_pool(x, batch)
+
+        mu, logvar = self.conv2(hidden1, edge_index).relu(), self.conv3(hidden1, edge_index).relu()
+        return x_pooled, mu, logvar
+
+    def reparameterize(self, mu, logvar):
+        std = torch.exp(logvar)
+        eps = torch.randn_like(std)
+        return eps.mul(std).add_(mu)
+
+    def forward(self, x, edge_index, batch):
+        x_pooled, mu, logvar = self.encode(x, edge_index, batch)
+        z = self.reparameterize(mu, logvar)
+        return z, x_pooled, mu, logvar
+
 # MLP decoder
 class MLP(nn.Module):
     def __init__(self, input_dim, output_dim, feature_space_MLP):
@@ -123,16 +151,17 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=False):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=True):
 
     print("PRETRAINING")
 
     train_loader, adj_matrices, labels_true = dataset
 
-    encoder = GNN(feature_space_GNN, out_channels_GNN).to(device)
     if MLP_DECODER:
+        encoder = GNN(feature_space_GNN, out_channels_GNN).to(device)
         decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
     else:
+        encoder = VAE(feature_space_GNN, out_channels_GNN).to(device)
         decoder = DenseInnerProductDecoder().to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
@@ -144,6 +173,7 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
 
         encoder.train()
         decoder.train()
+        optimizer.zero_grad()
         total_loss = 0
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
@@ -158,14 +188,14 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
             ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
             ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
 
-            encoded, encoded_pooled = encoder(data.x, data.edge_index, data.batch)
-            
-            if epoch == epochs-1:
-                final_embeddings.append(torch.squeeze(encoded_pooled).detach().cpu().numpy())
-
             if not MLP_DECODER:
 
-                adj = decoder(encoded)
+                z, encoded_pooled, mu, logvar = encoder(data.x, data.edge_index, data.batch)
+            
+                if epoch == epochs-1:
+                    final_embeddings.append(torch.squeeze(encoded_pooled).detach().cpu().numpy())
+
+                adj = decoder(z)
                 adj_n = adj.detach().cpu().numpy()
 
                 new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
@@ -176,9 +206,25 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
                 new_mst = torch.take(adj.to(device), new_mst_index.to(device))
                 new_nonmst = torch.take(adj.to(device), new_nonmst_index.to(device))
 
+                # Compute MSE losses
+                loss_mst = criterion(new_mst, ori_mst)
+                loss_nonmst = criterion(new_nonmst, ori_nonmst)
+
+                loss_kl = kl_loss(mu, logvar)
+
+                # Sum the losses
+                loss = alpha*loss_mst + alpha*loss_nonmst + loss_kl
+                loss.backward()  # Backpropagate errors immediately
+                total_loss += loss.item()
+
             else:
 
-                decoded = decoder(encoded_pooled)
+                x, x_pooled = encoder(data.x, data.edge_index, data.batch)
+            
+                if epoch == epochs-1:
+                    final_embeddings.append(torch.squeeze(x_pooled).detach().cpu().numpy())
+
+                decoded = decoder(x_pooled)
 
                 # Reconstruct the adjacency matrix from the top triangle
                 adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
@@ -195,17 +241,16 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
                 new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
                 new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
 
-            # Compute MSE losses
-            loss_mst = criterion(new_mst, ori_mst)
-            loss_nonmst = criterion(new_nonmst, ori_nonmst)
+                # Compute MSE losses
+                loss_mst = criterion(new_mst, ori_mst)
+                loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            # Sum the losses
-            loss = alpha*loss_mst + alpha*loss_nonmst
-            loss.backward()  # Backpropagate errors immediately
-            total_loss += loss.item()
+                # Sum the losses
+                loss = alpha*loss_mst + alpha*loss_nonmst
+                loss.backward()  # Backpropagate errors immediately
+                total_loss += loss.item()
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
-        optimizer.zero_grad() # Reset gradients after update
 
         if epoch % 10 == 0:
             print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
@@ -320,52 +365,23 @@ def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
 
     return pre_cluster_labels, cluster_labels, train_ari
 
+def kl_loss(mu, logstd):
+    # print("mu shape", mu.shape)
+    # print("logstd shape", logstd.shape)
 
-#############################################
-################### Demo ####################
-#############################################
+    return -0.5 * torch.mean(
+        torch.sum(1 + 2 * logstd - mu.pow(2) - logstd.exp()**2, dim=1))
 
-def random_modular_graph(d, c, p, mu, sigma):
-    """Simulated modular network.
-    
-        Args:
-            d: Number of nodes.
-            c: Number of clusters/modules.
-            p: Probability of attachment within module.
-            mu, sigma: Used for random edge weights.
-            
-        Returns:
-            Adjacency matrix.
-    """
-    adj = np.zeros((d, d))  # adjacency matrix
-    for i in range(1, d + 1):
-        for j in range(i + 1, d + 1):
-            module_i = math.ceil(c * i / d)
-            module_j = math.ceil(c * j / d)
+def loss_function(preds, labels, mu, logvar, n_nodes, norm, pos_weight):
+    cost = norm * F.binary_cross_entropy_with_logits(preds, labels, pos_weight=pos_weight)
 
-            # Within module
-            if module_i == module_j:
-                if random.uniform(0, 1) <= p:
-                    w = np.random.normal(mu, sigma)
-                    adj[i - 1][j - 1] = max(w, 0)
-                else:
-                    w = np.random.normal(0, sigma)
-                    adj[i - 1][j - 1] = max(w, 0)
-
-            # Between modules
-            else:
-                if random.uniform(0, 1) <= 1 - p:
-                    w = np.random.normal(mu, sigma)
-                    adj[i - 1][j - 1] = max(w, 0)
-                else:
-                    w = np.random.normal(0, sigma)
-                    adj[i - 1][j - 1] = max(w, 0)
-    return adj
-
-
-def purity_score(labels_true, labels_pred):
-    mtx = contingency_matrix(labels_true, labels_pred)
-    return np.sum(np.amax(mtx, axis=0)) / np.sum(mtx)
+    # see Appendix B from VAE paper:
+    # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
+    # https://arxiv.org/abs/1312.6114
+    # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
+    KLD = -0.5 / n_nodes * torch.mean(torch.sum(
+        1 + 2 * logvar - mu.pow(2) - logvar.exp().pow(2), 1))
+    return cost + KLD
 
 def adj2pers(adj):
     n = len(adj)
@@ -404,14 +420,6 @@ def _compute_birth_death_sets(adj, numSampledCCs=9, numSampledCycles=36):
     npCCs = np.array(ccs)
     npCycles = np.array(cycles)
     return torch.from_numpy(npCCs[ccVec]), torch.from_numpy(npCycles[cycleVec])
-
-def convert_index(indices, old_dim, new_dim):
-    new_total_elements = new_dim ** 2
-
-    # Map each index in the larger dimension to the smaller dimension
-    # Using modulo to ensure all indices fit within the new dimension
-    new_indices = indices % new_total_elements
-    return new_indices
 
 # Perform 2-hop graph convolution
 def convolve_features(X, A):
@@ -556,7 +564,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         numSampledCCs = 8
 
         alpha, beta = 0.5, 0.5
-        feature_space_GNN, out_channels_GNN, feature_space_MLP = 32, 3, 128
+        feature_space_GNN, out_channels_GNN, feature_space_MLP = 16, 3, 128
 
         hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP)
 
