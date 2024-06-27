@@ -7,6 +7,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import networkx as nx
+import scipy.sparse as sp
 
 import wandb
 
@@ -25,9 +26,9 @@ from torch_geometric.utils import to_dense_adj
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class GNN(torch.nn.Module):
-    def __init__(self, feature_space_GNN, out_channels_GNN):
+    def __init__(self, feat_dim, feature_space_GNN, out_channels_GNN):
         super(GNN, self).__init__()
-        self.conv1 = GCNConv(7, feature_space_GNN)
+        self.conv1 = GCNConv(feat_dim, feature_space_GNN)
         self.dropout1 = nn.Dropout(0.5)
         self.conv2 = GCNConv(feature_space_GNN, feature_space_GNN)
         self.dropout2 = nn.Dropout(0.5)
@@ -48,32 +49,31 @@ class GNN(torch.nn.Module):
         return x, x_pooled
 
 class VAE(nn.Module):
-    def __init__(self, hidden_dim1, hidden_dim2):
+    def __init__(self, feat_dim, hidden_dim1):
         super(VAE, self).__init__()
-        self.conv1 = GCNConv(7, hidden_dim1)
+        self.conv1 = GCNConv(feat_dim, hidden_dim1)
         self.dropout1 = nn.Dropout(0.5)
-        self.conv2 = GCNConv(hidden_dim1, hidden_dim2)
+        self.conv2 = GCNConv(feat_dim, hidden_dim1)
         self.dropout2 = nn.Dropout(0.5)
-        self.conv3 = GCNConv(hidden_dim1, hidden_dim2)
-        self.dropout3 = nn.Dropout(0.5)
 
-    def encode(self, x, edge_index, batch):
-        hidden1 = self.conv1(x, edge_index).relu()
+    def encode(self, x, adj, batch):
+        mu = self.conv1(x, adj).relu()
+        mu_pooled = global_mean_pool(mu, batch)
 
-        x_pooled = global_mean_pool(x, batch)
+        logvar = self.conv2(x, adj).relu()
+        logvar_pooled = global_mean_pool(logvar, batch)
 
-        mu, logvar = self.conv2(hidden1, edge_index).relu(), self.conv3(hidden1, edge_index).relu()
-        return x_pooled, mu, logvar
+        return mu_pooled, logvar_pooled
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(logvar)
         eps = torch.randn_like(std)
         return eps.mul(std).add_(mu)
 
-    def forward(self, x, edge_index, batch):
-        x_pooled, mu, logvar = self.encode(x, edge_index, batch)
-        z = self.reparameterize(mu, logvar)
-        return z, x_pooled, mu, logvar
+    def forward(self, x, adj, batch):
+        mu_pooled, logvar_pooled = self.encode(x, adj, batch)
+        z_pooled = self.reparameterize(mu_pooled, logvar_pooled)
+        return z_pooled, mu_pooled, logvar_pooled
 
 # MLP decoder
 class MLP(nn.Module):
@@ -100,7 +100,7 @@ class DenseInnerProductDecoder(nn.Module):
 
     # z is a num_nodes x d_embed tensor representing the encoded node embeddings
     def forward(self, z, sigmoid=True):
-        adj = torch.matmul(z, z.t())
+        adj = torch.matmul(z.t(), z)
         return torch.sigmoid(adj) if sigmoid else adj
     
 class GraphKMeans(nn.Module):
@@ -151,17 +151,21 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=True):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=False):
 
     print("PRETRAINING")
 
-    train_loader, adj_matrices, labels_true = dataset
+    train_loader, adj_matrices = dataset
+
+    feat_dim = train_loader.num_features
+
+    max_nodes = max(data.num_nodes for data in train_loader)
 
     if MLP_DECODER:
-        encoder = GNN(feature_space_GNN, out_channels_GNN).to(device)
+        encoder = GNN(feat_dim, feature_space_GNN, out_channels_GNN).to(device)
         decoder = MLP(out_channels_GNN, numSampledCCs+numSampledCycles, feature_space_MLP).to(device)
     else:
-        encoder = VAE(feature_space_GNN, out_channels_GNN).to(device)
+        encoder = VAE(feat_dim, max_nodes).to(device)
         decoder = DenseInnerProductDecoder().to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
@@ -174,48 +178,51 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
         encoder.train()
         decoder.train()
         optimizer.zero_grad()
-        total_loss = 0
+        cur_loss = 0
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
 
             data = data.to(device)
 
-            x = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
-            ori_mst_index.to(device)
-            ori_nonmst_index.to(device)
-
-            ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
-            ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
+            ori_adj = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
+            ori_mst = torch.take(ori_adj.to(device), ori_mst_index.to(device))
+            ori_nonmst = torch.take(ori_adj.to(device), ori_nonmst_index.to(device))
 
             if not MLP_DECODER:
 
-                z, encoded_pooled, mu, logvar = encoder(data.x, data.edge_index, data.batch)
+                adj_norm = preprocess_graph(adj_matrix)
+                z_pooled, mu_pooled, logvar_pooled = encoder(data.x, adj_norm, data.batch)
+
+                embedding = mu_pooled.add_(logvar_pooled)
             
                 if epoch == epochs-1:
-                    final_embeddings.append(torch.squeeze(encoded_pooled).detach().cpu().numpy())
+                    final_embeddings.append(torch.squeeze(z_pooled).detach().cpu().numpy())
 
-                adj = decoder(z)
-                adj_n = adj.detach().cpu().numpy()
+                recons_adj = decoder(z_pooled)
+                n_nodes = data.num_nodes
+                reshape_adj = recons_adj.to(device).view(-1)[:n_nodes**2]
+                reshape_adj = reshape_adj.view(n_nodes, n_nodes)
 
-                new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
-            
-                new_mst_index.to(device)
-                new_nonmst_index.to(device)
+                # adj_n = reshape_adj.detach().cpu().numpy()
 
-                new_mst = torch.take(adj.to(device), new_mst_index.to(device))
-                new_nonmst = torch.take(adj.to(device), new_nonmst_index.to(device))
+                # new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
 
-                # Compute MSE losses
-                loss_mst = criterion(new_mst, ori_mst)
-                loss_nonmst = criterion(new_nonmst, ori_nonmst)
+                # new_mst = torch.take(reshape_adj.to(device), new_mst_index.to(device))
+                # new_nonmst = torch.take(reshape_adj.to(device), new_nonmst_index.to(device))
 
-                loss_kl = kl_loss(mu, logvar)
+                # # Compute MSE losses
+                # loss_mst = criterion(new_mst, ori_mst)
+                # loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-                # Sum the losses
-                loss = alpha*loss_mst + alpha*loss_nonmst + loss_kl
-                loss.backward()  # Backpropagate errors immediately
-                total_loss += loss.item()
+                loss_mse = criterion(reshape_adj, torch.sigmoid(ori_adj))
+                loss_kl = kl_loss(mu_pooled, logvar_pooled, n_nodes)
+
+                # loss = alpha*loss_mst + alpha*loss_nonmst + loss_kl
+                loss = loss_mse + loss_kl
+
+                loss.backward()
+                cur_loss += loss.item()
 
             else:
 
@@ -248,19 +255,21 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
                 # Sum the losses
                 loss = alpha*loss_mst + alpha*loss_nonmst
                 loss.backward()  # Backpropagate errors immediately
-                total_loss += loss.item()
+                cur_loss += loss.item()
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
 
         if epoch % 10 == 0:
-            print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+            # wandb.log({"pretrain_loss": cur_loss / len(dataset)})
+            # print(f"Epoch {epoch}, Average Loss: {cur_loss / len(train_loader)}")
+            print(f"Epoch {epoch}, Loss: {cur_loss}")
 
     return encoder, decoder, final_embeddings
 
 def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
 
-    # train_loader, adj_matrices = dataset
-    train_loader, adj_matrices, labels_true = dataset
+    train_loader, adj_matrices = dataset
+
     epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP = hyperparameters
     numSampledCycles = ((numSampledCCs+1) * numSampledCCs) // 2 - numSampledCCs
     # new_adj_dim = numSampledCCs + numSampledCycles
@@ -286,43 +295,60 @@ def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
     embeddings = []
 
     for epoch in range(epochs):
-        loss = 0
 
-        total_loss = 0
+        loss = 0
+        cur_loss = 0
+        optimizer.zero_grad()
         deep_k_means.train()
 
-        embeddings = []  # List to store embeddings
+        embeddings = []
 
         for data, adj_matrix in zip(train_loader, adj_matrices):
 
             data = data.to(device)
 
-            x = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
             ori_mst_index, ori_nonmst_index = _compute_birth_death_sets(adj_matrix, numSampledCCs, numSampledCycles)
-            ori_mst_index.to(device)
-            ori_nonmst_index.to(device)
-            ori_mst = torch.take(x.to(device), ori_mst_index.to(device))
-            ori_nonmst = torch.take(x.to(device), ori_nonmst_index.to(device))
-
-            encoded, encoded_pooled = encoder(data.x, data.edge_index, data.batch)
-            embeddings.append(encoded_pooled)
+            ori_adj = torch.tensor(adj_matrix, dtype=torch.float32).to(device)
+            ori_mst = torch.take(ori_adj.to(device), ori_mst_index.to(device))
+            ori_nonmst = torch.take(ori_adj.to(device), ori_nonmst_index.to(device))
             
             if not MLP_DECODER:
+                
+                adj_norm = preprocess_graph(adj_matrix)
+                z_pooled, mu_pooled, logvar_pooled = encoder(data.x, adj_norm, data.batch)
 
-                adj = decoder(encoded)
-                adj_n = adj.detach().cpu().numpy()
+                embedding = mu_pooled.add_(logvar_pooled)
 
-                new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
-            
-                new_mst_index.to(device)
-                new_nonmst_index.to(device)
+                embeddings.append(z_pooled)
 
-                new_mst = torch.take(adj.to(device), new_mst_index.to(device))
-                new_nonmst = torch.take(adj.to(device), new_nonmst_index.to(device))
+                recons_adj = decoder(z_pooled)
+                n_nodes = data.num_nodes
+                reshape_adj = recons_adj.to(device).view(-1)[:n_nodes**2]
+                reshape_adj = reshape_adj.view(n_nodes, n_nodes)
+
+                # adj_n = reshape_adj.detach().cpu().numpy()
+
+                # new_mst_index, new_nonmst_index = _compute_birth_death_sets(adj_n, numSampledCCs, numSampledCycles)
+
+                # new_mst = torch.take(reshape_adj.to(device), new_mst_index.to(device))
+                # new_nonmst = torch.take(reshape_adj.to(device), new_nonmst_index.to(device))
+
+                # # Compute MSE losses
+                # loss_mst = criterion(new_mst, ori_mst)
+                # loss_nonmst = criterion(new_nonmst, ori_nonmst)
+
+                loss_mse = criterion(reshape_adj, torch.sigmoid(ori_adj))
+                loss_kl = kl_loss(mu_pooled, logvar_pooled, n_nodes)
+
+                # loss += alpha*loss_mst + alpha*loss_nonmst + loss_kl
+                loss += loss_mse + loss_kl
 
             else:
+                
+                x, x_pooled = encoder(data.x, data.edge_index, data.batch)
+                embeddings.append(x_pooled)
 
-                decoded = decoder(encoded_pooled)
+                decoded = decoder(x_pooled)
 
                 # Reconstruct the adjacency matrix from the top triangle
                 adj_matrix_reconstructed = torch.zeros((numSampledCCs+1, numSampledCCs+1), dtype=torch.float32).to(device)
@@ -339,49 +365,55 @@ def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
                 new_mst = torch.take(adj_matrix_reconstructed.to(device), new_mst_index.to(device))
                 new_nonmst = torch.take(adj_matrix_reconstructed.to(device), new_nonmst_index.to(device))
 
-            # Compute MSE losses
-            loss_mst = criterion(new_mst, ori_mst)
-            loss_nonmst = criterion(new_nonmst, ori_nonmst)
+                # Compute MSE losses
+                loss_mst = criterion(new_mst, ori_mst)
+                loss_nonmst = criterion(new_nonmst, ori_nonmst)
 
-            loss = loss + alpha*loss_mst + alpha*loss_nonmst
+                loss += alpha*loss_mst + alpha*loss_nonmst
 
         loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
-        loss = loss + loss_k_means
+        loss += loss_k_means
+        print(loss_k_means.item())
         loss.backward()  # Backpropagate errors immediately
-        total_loss += loss.item()
+        cur_loss = loss.item()
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
-        optimizer.zero_grad() # Reset gradients after update
 
         if epoch % 10 == 0:
-            print(f"Epoch {epoch}, Average Loss: {total_loss / len(dataset)}")
+            # wandb.log({"train_loss": cur_loss / len(dataset)})
+            # print(f"Epoch {epoch}, Average Loss: {cur_loss / len(train_loader)}")
+            print(f"Epoch {epoch}, Loss: {cur_loss}")
     
     # Stack tensors vertically
     embeddings = torch.cat([e.detach() for e in embeddings], dim=0)
     kmeans_model = KMeans(n_clusters=num_clusters, init="k-means++", random_state=0).fit(embeddings.cpu().numpy())
     cluster_labels = kmeans_model.labels_
 
-    train_ari = adjusted_rand_score(labels_true, cluster_labels)
+    return pre_cluster_labels, cluster_labels
 
-    return pre_cluster_labels, cluster_labels, train_ari
+def kl_loss(mu, logstd, n_nodes):
+    return -0.5 / n_nodes * torch.mean(
+        torch.sum(1 + 2 * logstd - mu.pow(2) - logstd.exp().pow(2), dim=1))
 
-def kl_loss(mu, logstd):
-    # print("mu shape", mu.shape)
-    # print("logstd shape", logstd.shape)
+def preprocess_graph(adj):
+    adj = sp.coo_matrix(adj)
+    adj_ = adj + sp.eye(adj.shape[0])
+    rowsum = np.array(adj_.sum(1))
+    degree_mat_inv_sqrt = sp.diags(np.power(rowsum, -0.5).flatten())
+    adj_normalized = adj_.dot(degree_mat_inv_sqrt).transpose().dot(degree_mat_inv_sqrt).tocoo()
+    # return sparse_to_tuple(adj_normalized)
+    tensor = sparse_mx_to_torch_sparse_tensor(adj_normalized)
+    return tensor.to(device)
 
-    return -0.5 * torch.mean(
-        torch.sum(1 + 2 * logstd - mu.pow(2) - logstd.exp()**2, dim=1))
 
-def loss_function(preds, labels, mu, logvar, n_nodes, norm, pos_weight):
-    cost = norm * F.binary_cross_entropy_with_logits(preds, labels, pos_weight=pos_weight)
-
-    # see Appendix B from VAE paper:
-    # Kingma and Welling. Auto-Encoding Variational Bayes. ICLR, 2014
-    # https://arxiv.org/abs/1312.6114
-    # 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
-    KLD = -0.5 / n_nodes * torch.mean(torch.sum(
-        1 + 2 * logvar - mu.pow(2) - logvar.exp().pow(2), 1))
-    return cost + KLD
+def sparse_mx_to_torch_sparse_tensor(sparse_mx):
+    """Convert a scipy sparse matrix to a torch sparse tensor."""
+    sparse_mx = sparse_mx.tocoo().astype(np.float32)
+    indices = torch.from_numpy(
+        np.vstack((sparse_mx.row, sparse_mx.col)).astype(np.int64))
+    values = torch.from_numpy(sparse_mx.data)
+    shape = torch.Size(sparse_mx.shape)
+    return torch.sparse.FloatTensor(indices, values, shape)
 
 def adj2pers(adj):
     n = len(adj)
@@ -471,6 +503,7 @@ def load_mutag_data():
 
         # # ensures only connected nodes have their dot products as weights
         weighted_adj = adj * (dot_product_matrix + eigvecs_features)
+        # weighted_adj = adj * dot_product_matrix
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())
@@ -501,12 +534,12 @@ def one_tune_instance():
     train_loader, adj_matrices, labels_true = load_mutag_data()
 
     # Pretraining
-    pretrain_labels_pred, train_labels_pred, train_ari = train((train_loader, adj_matrices, labels_true), hyperparameters)
+    pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices), hyperparameters)
+
     pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
-
     wandb.log({"pretrain_ari": pretrain_ari})
-    print(f"Adjusted Rand Index after Pretraining: {pretrain_ari}")
 
+    train_ari = adjusted_rand_score(labels_true, train_labels_pred)
     wandb.log({"train_ari": train_ari})
 
 def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
@@ -540,31 +573,31 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                     'values': torch.arange(0.1, 1, 0.1).tolist()
                 },
                 'feature_space_GNN': {
-                    'values': [32, 64, 128]
+                    'values': [16, 32, 64]
                 },
                 'out_channels_GNN': {
                     'values': [3, 4, 5]
                 },
                 'feature_space_MLP': {
-                    'values': [128, 256, 512]
+                    'values': [128, 256]
                 },
             }
         }
 
         sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-        wandb.agent(sweep_id, function=one_tune_instance, count=300)
+        wandb.agent(sweep_id, function=one_tune_instance, count=50)
 
     else:
 
         print("NOT TUNING PARAMS")
 
         # Manually set here per run:
-        epochs, pretrain_epochs = 100, 50
+        epochs, pretrain_epochs = 30, 30
         learning_rate = 0.01
-        numSampledCCs = 8
+        numSampledCCs = 12
 
-        alpha, beta = 0.5, 0.5
-        feature_space_GNN, out_channels_GNN, feature_space_MLP = 16, 3, 128
+        alpha, beta = 0.5, 0.1
+        feature_space_GNN, out_channels_GNN, feature_space_MLP = 16, 5, 128
 
         hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP)
 
@@ -576,7 +609,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         train_loader, adj_matrices, labels_true = load_mutag_data()
 
         # Pretraining
-        pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices, labels_true), hyperparameters)
+        pretrain_labels_pred, train_labels_pred = train((train_loader, adj_matrices), hyperparameters)
         
         # Get ari prints
         pretrain_ari = adjusted_rand_score(labels_true, pretrain_labels_pred)
