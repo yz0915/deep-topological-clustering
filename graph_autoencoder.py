@@ -191,10 +191,12 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
 
             if not MLP_DECODER:
 
-                adj_norm = preprocess_graph(adj_matrix)
-                z_pooled, mu_pooled, logvar_pooled = encoder(data.x, adj_norm, data.batch)
+                # adj_norm = preprocess_graph(adj_matrix)
 
-                embedding = mu_pooled.add_(logvar_pooled)
+                # print("adj_norm", adj_norm)
+                # print("data.edge_index", data.edge_index)
+
+                z_pooled, mu_pooled, logvar_pooled = encoder(data.x, data.edge_index, data.batch)
             
                 if epoch == epochs-1:
                     final_embeddings.append(torch.squeeze(z_pooled).detach().cpu().numpy())
@@ -259,8 +261,8 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
 
+        wandb.log({"pretrain_loss": cur_loss})
         if epoch % 10 == 0:
-            # wandb.log({"pretrain_loss": cur_loss / len(dataset)})
             # print(f"Epoch {epoch}, Average Loss: {cur_loss / len(train_loader)}")
             print(f"Epoch {epoch}, Loss: {cur_loss}")
 
@@ -314,10 +316,8 @@ def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
             
             if not MLP_DECODER:
                 
-                adj_norm = preprocess_graph(adj_matrix)
-                z_pooled, mu_pooled, logvar_pooled = encoder(data.x, adj_norm, data.batch)
-
-                embedding = mu_pooled.add_(logvar_pooled)
+                # adj_norm = preprocess_graph(adj_matrix)
+                z_pooled, mu_pooled, logvar_pooled = encoder(data.x, data.edge_index, data.batch)
 
                 embeddings.append(z_pooled)
 
@@ -379,9 +379,9 @@ def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
 
+        wandb.log({"k_means_loss": loss_k_means.item()})
+        wandb.log({"train_loss": cur_loss})
         if epoch % 10 == 0:
-            # wandb.log({"train_loss": cur_loss / len(dataset)})
-            # print(f"Epoch {epoch}, Average Loss: {cur_loss / len(train_loader)}")
             print(f"Epoch {epoch}, Loss: {cur_loss}")
     
     # Stack tensors vertically
@@ -544,7 +544,7 @@ def one_tune_instance():
 
 def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
 
-    TUNE_HYPERPARAMETERS = False
+    TUNE_HYPERPARAMETERS = True
 
     if TUNE_HYPERPARAMETERS:
         sweep_config = {
@@ -558,10 +558,10 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                     'max': 1e-1, 'min': 1e-4, 'distribution': 'log_uniform_values'
                 },
                 'epochs': {
-                    'values': list(range(50, 200, 10))
+                    'values': list(range(50, 100, 10))
                 },
                 'pretrain_epochs': {
-                    'values': list(range(30, 100, 10))
+                    'values': list(range(30, 50, 10))
                 },
                 'numSampledCCs': {
                     'values': list(range(4, 20))
@@ -570,7 +570,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                     'values': torch.arange(0.1, 1, 0.1).tolist()
                 },
                 'beta': {
-                    'values': torch.arange(0.1, 1, 0.1).tolist()
+                    'values': torch.arange(1000, 2000, 100).tolist()
                 },
                 'feature_space_GNN': {
                     'values': [16, 32, 64]
