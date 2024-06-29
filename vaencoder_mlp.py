@@ -115,7 +115,7 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, latent_space_VAE, WASS_LOSS):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, gamma, epochs, lr, latent_space_VAE, WASS_LOSS):
 
     print("PRETRAINING")
 
@@ -181,7 +181,7 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, latent
                 n_nodes = data.num_nodes
                 loss_kl = kl_loss(mu_pooled, logvar_pooled, n_nodes)
 
-                loss = alpha*loss_mst + alpha*loss_nonmst + loss_kl
+                loss = alpha * loss_mst + alpha * loss_nonmst + gamma * loss_kl
 
                 loss.backward()
                 cur_loss += loss.item()
@@ -209,7 +209,7 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, latent
                 loss_mse = criterion(reshape_adj, ori_adj)
                 loss_kl = kl_loss(mu_pooled, logvar_pooled, n_nodes)
 
-                loss = loss_mse + loss_kl
+                loss = alpha * loss_mse + gamma * loss_kl
 
                 loss.backward()
                 cur_loss += loss.item()
@@ -229,13 +229,14 @@ def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
 
     max_nodes = max(data.num_nodes for data in train_loader)
 
-    epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, latent_space_VAE = hyperparameters
+    epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, gamma, latent_space_VAE = hyperparameters
     numSampledCycles = ((numSampledCCs+1) * numSampledCCs) // 2 - numSampledCCs
     # new_adj_dim = numSampledCCs + numSampledCycles
 
     encoder, decoder, pretrained_embeddings = pretrain(dataset, numSampledCCs=numSampledCCs,
                                                        numSampledCycles=numSampledCycles,
-                                                       alpha=alpha, epochs=pretrain_epochs,
+                                                       alpha=alpha, gamma=gamma,
+                                                       epochs=pretrain_epochs,
                                                        lr=learning_rate,
                                                        latent_space_VAE = latent_space_VAE,
                                                        WASS_LOSS=WASS_LOSS)
@@ -297,7 +298,7 @@ def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
                 n_nodes = data.num_nodes
                 loss_kl = kl_loss(mu_pooled, logvar_pooled, n_nodes)
 
-                loss += alpha * loss_mst + alpha * loss_nonmst + loss_kl
+                loss += alpha * loss_mst + alpha * loss_nonmst + gamma * loss_kl
 
             else:
                 
@@ -321,7 +322,7 @@ def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
                 loss_mse = criterion(reshape_adj, ori_adj)
                 loss_kl = kl_loss(mu_pooled, logvar_pooled, n_nodes)
 
-                loss += loss_mse + loss_kl
+                loss += alpha * loss_mse + gamma * loss_kl
 
         loss_k_means = deep_k_means(torch.stack(embeddings), 0.5)
         loss += loss_k_means
@@ -344,7 +345,7 @@ def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
     return pre_cluster_labels, cluster_labels
 
 def kl_loss(mu, logstd, n_nodes):
-    return -0.5 / n_nodes * 1000 * torch.mean(
+    return -0.5 / n_nodes * torch.mean(
         torch.sum(1 + 2 * logstd - mu.pow(2) - logstd.exp().pow(2), dim=1))
 
 def preprocess_graph(adj):
@@ -472,9 +473,10 @@ def one_tune_instance():
     numSampledCCs = wandb.config.numSampledCCs
     alpha = wandb.config.alpha
     beta = wandb.config.beta
+    gamma = wandb.config.gamma
     latent_space_VAE = wandb.config.latent_space_VAE
 
-    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, latent_space_VAE)
+    hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, gamma, latent_space_VAE)
 
     np.random.seed(0)
     random.seed(0)
@@ -508,19 +510,22 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                     'max': 1e-1, 'min': 1e-4, 'distribution': 'log_uniform_values'
                 },
                 'epochs': {
-                    'values': list(range(50, 100, 10))
+                    'values': list(range(50, 200, 10))
                 },
                 'pretrain_epochs': {
-                    'values': list(range(30, 50, 10))
+                    'values': list(range(30, 100, 10))
                 },
                 'numSampledCCs': {
                     'values': list(range(4, 20))
                 },
                 'alpha': {
-                    'values': torch.arange(0.1, 1, 0.1).tolist()
+                    'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
                 },
                 'beta': {
-                    'values': torch.arange(1000, 2000, 100).tolist()
+                    'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
+                },
+                'gamma': {
+                    'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
                 },
                 'latent_space_VAE': {
                     'values': [3, 4, 5, 6]
@@ -540,10 +545,10 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         learning_rate = 0.01
         numSampledCCs = 12
 
-        alpha, beta = 0.5, 1000
+        alpha, beta, gamma = 0.5, 1000, 1000
         latent_space_VAE = 5
 
-        hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, latent_space_VAE)
+        hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, gamma, latent_space_VAE)
 
         np.random.seed(0)
         random.seed(0)

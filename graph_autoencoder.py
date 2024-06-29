@@ -151,7 +151,7 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=False):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, feature_space_GNN, out_channels_GNN, feature_space_MLP, MLP_DECODER=True):
 
     print("PRETRAINING")
 
@@ -227,8 +227,9 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
                 cur_loss += loss.item()
 
             else:
-
-                x, x_pooled = encoder(data.x, data.edge_index, data.batch)
+                
+                adj_norm = preprocess_graph(adj_matrix)
+                x, x_pooled = encoder(data.x, adj_norm, data.batch)
             
                 if epoch == epochs-1:
                     final_embeddings.append(torch.squeeze(x_pooled).detach().cpu().numpy())
@@ -268,7 +269,7 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, epochs, lr, featur
 
     return encoder, decoder, final_embeddings
 
-def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
+def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=True):
 
     train_loader, adj_matrices = dataset
 
@@ -345,7 +346,8 @@ def train(dataset, hyperparameters, num_clusters=2, MLP_DECODER=False):
 
             else:
                 
-                x, x_pooled = encoder(data.x, data.edge_index, data.batch)
+                adj_norm = preprocess_graph(adj_matrix)
+                x, x_pooled = encoder(data.x, adj_norm, data.batch)
                 embeddings.append(x_pooled)
 
                 decoded = decoder(x_pooled)
@@ -561,16 +563,16 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                     'values': list(range(50, 100, 10))
                 },
                 'pretrain_epochs': {
-                    'values': list(range(30, 50, 10))
+                    'values': list(range(40, 60, 10))
                 },
                 'numSampledCCs': {
-                    'values': list(range(4, 20))
+                    'values': list(range(5, 20))
                 },
                 'alpha': {
-                    'values': torch.arange(0.1, 1, 0.1).tolist()
+                    'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
                 },
                 'beta': {
-                    'values': torch.arange(1000, 2000, 100).tolist()
+                    'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
                 },
                 'feature_space_GNN': {
                     'values': [16, 32, 64]
