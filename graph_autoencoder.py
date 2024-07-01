@@ -425,19 +425,21 @@ def adj2pers(adj):
     MSTedges = T.edges(data=True) # compute maximum spanning tree (MST)
 
     # Convert 2D edge indices to 1D and sort by weight
-    MSTindices = [i * n + j for i, j, _ in sorted(MSTedges, key=lambda x: G[x[0]][x[1]]['weight'])]
+    MSTindices = [i * n + j for i, j, _ in sorted(MSTedges, key=lambda x: x[2]['weight'])]
 
-    # ccs = sorted([cc[2]['weight'] for cc in MSTedges], reverse=True) # sort all weights in MST
     G.remove_edges_from(MSTedges) # remove MST from the original graph
     nonMSTedges = G.edges(data=True) # find the remaining edges (nonMST) as cycles
 
-    nonMSTindices = [i * n + j for i, j, _ in sorted(nonMSTedges, key=lambda x: G[x[0]][x[1]]['weight'])]
+    nonMSTindices = [i * n + j for i, j, _ in sorted(nonMSTedges, key=lambda x: x[2]['weight'])]
 
-    # cycles = sorted([cycle[2]['weight'] for cycle in nonMSTedges], reverse=True) # sort all weights in nonMST
-    numTotalEdges = (len(adj) * (len(adj) - 1)) / 2
-    numZeroEdges = numTotalEdges - len(MSTindices) - len(nonMSTindices)
-    if numZeroEdges != 0:
-        nonMSTindices.extend(int(numZeroEdges) * [0]) # extend 0-valued edges
+    total_edges = n * (n - 1) // 2
+    all_possible_indices = set(range(total_edges))
+    non_zero_weight_indices = set(MSTindices + nonMSTindices)
+    zero_weight_indices = list(all_possible_indices - non_zero_weight_indices)
+
+    # Include zero-weight indices in the nonMSTindices list
+    nonMSTindices = zero_weight_indices + nonMSTindices
+
     return MSTindices, nonMSTindices
 
 def _compute_birth_death_sets(adj, numSampledCCs=9, numSampledCycles=36):
@@ -474,7 +476,7 @@ def convolve_features(X, A):
     return X_updated
 
 def load_mutag_data():
-    dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
+    dataset = TUDataset(root='/tmp/PROTEINS', name='PROTEINS')
     adjacency_matrices = []
     labels = []
     
@@ -587,7 +589,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         }
 
         sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-        wandb.agent(sweep_id, function=one_tune_instance, count=50)
+        wandb.agent(sweep_id, function=one_tune_instance, count=100)
 
     else:
 
