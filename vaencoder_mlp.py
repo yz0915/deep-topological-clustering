@@ -457,8 +457,9 @@ def load_mutag_data():
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        weighted_adj = adj * (dot_product_matrix + eigvecs_features)
+        # weighted_adj = adj * (dot_product_matrix + eigvecs_features)
         # weighted_adj = adj * dot_product_matrix
+        weighted_adj = adj * dot_product_matrix
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())
@@ -496,7 +497,7 @@ def one_tune_instance():
     train_ari = adjusted_rand_score(labels_true, train_labels_pred)
     wandb.log({"train_ari": train_ari})
 
-def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
+def main():
 
     TUNE_HYPERPARAMETERS = True
 
@@ -536,7 +537,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         }
 
         sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-        wandb.agent(sweep_id, function=one_tune_instance, count=50)
+        wandb.agent(sweep_id, function=one_tune_instance, count=100)
 
     else:
 

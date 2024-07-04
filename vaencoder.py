@@ -365,7 +365,7 @@ def adj2pers(adj):
 
     return MSTindices, nonMSTindices
 
-def _compute_birth_death_sets(adj, numSampledCCs=9, numSampledCycles=36):
+def _compute_birth_death_sets(adj, numSampledCCs, numSampledCycles):
     ccs, cycles = adj2pers(adj)
 
     # sorted births of ccs as a feature vector
@@ -429,8 +429,9 @@ def load_mutag_data():
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        weighted_adj = adj * (dot_product_matrix + eigvecs_features)
+        # weighted_adj = adj * (dot_product_matrix + eigvecs_features)
         # weighted_adj = adj * dot_product_matrix
+        weighted_adj = adj * dot_product_matrix
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())

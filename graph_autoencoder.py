@@ -442,7 +442,7 @@ def adj2pers(adj):
 
     return MSTindices, nonMSTindices
 
-def _compute_birth_death_sets(adj, numSampledCCs=9, numSampledCycles=36):
+def _compute_birth_death_sets(adj, numSampledCCs, numSampledCycles):
     ccs, cycles = adj2pers(adj)
 
     # sorted births of ccs as a feature vector
@@ -476,7 +476,7 @@ def convolve_features(X, A):
     return X_updated
 
 def load_mutag_data():
-    dataset = TUDataset(root='/tmp/PROTEINS', name='PROTEINS')
+    dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
     adjacency_matrices = []
     labels = []
     
@@ -506,8 +506,8 @@ def load_mutag_data():
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        weighted_adj = adj * (dot_product_matrix + eigvecs_features)
-        # weighted_adj = adj * dot_product_matrix
+        weighted_adj = dot_product_matrix
+        # weighted_adj = dot_product_matrix + eigvecs_features
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())
@@ -522,11 +522,17 @@ def one_tune_instance():
     pretrain_epochs = wandb.config.pretrain_epochs
     learning_rate = wandb.config.lr
     numSampledCCs = wandb.config.numSampledCCs
+    # numSampledCCs = 17
     alpha = wandb.config.alpha
+    # alpha = 0.00001
     beta = wandb.config.beta
+    # beta = 100
     feature_space_GNN = wandb.config.feature_space_GNN
+    # feature_space_GNN = 32
     out_channels_GNN = wandb.config.out_channels_GNN
+    # out_channels_GNN = 5
     feature_space_MLP = wandb.config.feature_space_MLP
+    # feature_space_MLP = 256
 
     hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, feature_space_GNN, out_channels_GNN, feature_space_MLP)
 
@@ -589,7 +595,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
         }
 
         sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-        wandb.agent(sweep_id, function=one_tune_instance, count=100)
+        wandb.agent(sweep_id, function=one_tune_instance, count=200)
 
     else:
 
