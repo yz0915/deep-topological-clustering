@@ -21,7 +21,7 @@ from sklearn.cluster import KMeans
 from scipy.linalg import eigh
 
 from torch_geometric.datasets import TUDataset
-from torch_geometric.utils import to_dense_adj
+from torch_geometric.utils import to_dense_adj, degree
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -66,6 +66,27 @@ class MLP(nn.Module):
 
     def forward(self, x):
         return self.layers(x)
+
+class AutoregressiveDecoder(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim, num_steps):
+        super(AutoregressiveDecoder, self).__init__()
+        self.num_steps = num_steps  # Number of steps to generate (e.g., number of nodes or edges)
+        self.rnn = nn.GRU(input_dim, hidden_dim, batch_first=True)
+        self.output_layer = nn.Linear(hidden_dim, output_dim)
+        self.hidden_dim = hidden_dim
+
+    def forward(self, z):
+        # Start with initial input, could be the latent vector repeated or transformed
+        x = z.unsqueeze(1).repeat(1, self.num_steps, 1)  # Shape: [batch_size, num_steps, input_dim]
+        
+        # Initialize hidden state, optionally could be a function of z
+        h0 = torch.zeros(1, z.size(0), self.hidden_dim, device=z.device)
+        
+        # Autoregressively generate outputs
+        outputs, _ = self.rnn(x, h0)
+        stepwise_outputs = self.output_layer(outputs)
+        
+        return stepwise_outputs
     
 class GraphKMeans(nn.Module):
 
@@ -115,7 +136,7 @@ class GraphKMeans(nn.Module):
     def f_dist(self, x, y):
         return torch.sum((x - y) ** 2, dim=1)
 
-def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, gamma, epochs, lr, latent_space_VAE, WASS_LOSS):
+def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, gamma, epochs, lr, latent_space_VAE, WASS_LOSS, Autoregressive=True):
 
     print("PRETRAINING")
 
@@ -131,6 +152,14 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, gamma, epochs, lr,
     else:
         output_dim = max_nodes * (max_nodes - 1) // 2
         decoder = MLP(latent_space_VAE, output_dim).to(device)
+
+    if Autoregressive:
+        # Adjust dimensions according to your specific use case
+        input_dim = latent_space_VAE  # Dimension of the latent space
+        hidden_dim = 32  # Hidden dimension of the RNN
+        output_dim = 1  # Dimension of output at each step, adjust based on your graph structure
+        num_steps = max_nodes * (max_nodes - 1) // 2  # Number of nodes or edges to predict, define based on your graph's characteristics
+        decoder = AutoregressiveDecoder(input_dim, hidden_dim, output_dim, num_steps).to(device)
 
     optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=lr)
     criterion = torch.nn.MSELoss()
@@ -199,7 +228,8 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, gamma, epochs, lr,
                 # Reconstruct the adjacency matrix from the top triangle
                 max_matrix = torch.zeros((max_nodes, max_nodes), dtype=torch.float32).to(device)
                 upper_indices = torch.triu_indices(max_nodes, max_nodes, offset=1).to(device)
-                max_matrix[upper_indices[0], upper_indices[1]] = z_pooled
+                # max_matrix[upper_indices[0], upper_indices[1]] = z_pooled
+                max_matrix[upper_indices[0], upper_indices[1]] = z_pooled.squeeze()
                 max_matrix = max_matrix + max_matrix.t()
 
                 n_nodes = data.num_nodes
@@ -216,14 +246,14 @@ def pretrain(dataset, numSampledCCs, numSampledCycles, alpha, gamma, epochs, lr,
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
 
-        wandb.log({"pretrain_loss": cur_loss})
+        # wandb.log({"pretrain_loss": cur_loss})
         if epoch % 10 == 0:
             # print(f"Epoch {epoch}, Average Loss: {cur_loss / len(train_loader)}")
             print(f"Epoch {epoch}, Loss: {cur_loss}")
 
     return encoder, decoder, final_embeddings
 
-def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
+def train(dataset, hyperparameters, num_clusters=6, WASS_LOSS=False):
 
     train_loader, adj_matrices = dataset
 
@@ -312,7 +342,8 @@ def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
                 # Reconstruct the adjacency matrix from the top triangle
                 max_matrix = torch.zeros((max_nodes, max_nodes), dtype=torch.float32).to(device)
                 upper_indices = torch.triu_indices(max_nodes, max_nodes, offset=1).to(device)
-                max_matrix[upper_indices[0], upper_indices[1]] = z_pooled
+                # max_matrix[upper_indices[0], upper_indices[1]] = z_pooled
+                max_matrix[upper_indices[0], upper_indices[1]] = z_pooled.squeeze()
                 max_matrix = max_matrix + max_matrix.t()
 
                 n_nodes = data.num_nodes
@@ -332,8 +363,8 @@ def train(dataset, hyperparameters, num_clusters=2, WASS_LOSS=True):
 
         optimizer.step()  # Update parameters(Apply gradient updates) once for the entire batch
 
-        wandb.log({"k_means_loss": loss_k_means.item()})
-        wandb.log({"train_loss": cur_loss})
+        # wandb.log({"k_means_loss": loss_k_means.item()})
+        # wandb.log({"train_loss": cur_loss})
         if epoch % 10 == 0:
             print(f"Epoch {epoch}, Loss: {cur_loss}")
     
@@ -348,15 +379,35 @@ def kl_loss(mu, logstd, n_nodes):
     return -0.5 / n_nodes * torch.mean(
         torch.sum(1 + 2 * logstd - mu.pow(2) - logstd.exp().pow(2), dim=1))
 
+# def preprocess_graph(adj):
+#     adj = sp.coo_matrix(adj)
+#     adj_ = adj + sp.eye(adj.shape[0])
+#     rowsum = np.array(adj_.sum(1))
+#     degree_mat_inv_sqrt = sp.diags(np.power(rowsum, -0.5).flatten())
+#     adj_normalized = adj_.dot(degree_mat_inv_sqrt).transpose().dot(degree_mat_inv_sqrt).tocoo()
+#     # return sparse_to_tuple(adj_normalized)
+#     tensor = sparse_mx_to_torch_sparse_tensor(adj_normalized)
+#     return tensor.to(device)
+
+# modified
 def preprocess_graph(adj):
     adj = sp.coo_matrix(adj)
-    adj_ = adj + sp.eye(adj.shape[0])
+    median_weight = np.median(adj.data)
+    adj_ = adj + sp.eye(adj.shape[0]) * median_weight
     rowsum = np.array(adj_.sum(1))
-    degree_mat_inv_sqrt = sp.diags(np.power(rowsum, -0.5).flatten())
+    average_row = np.mean(rowsum)
+    row_normalized = rowsum / average_row
+    degree_mat_inv_sqrt = sp.diags(np.power(row_normalized, -0.5).flatten())
     adj_normalized = adj_.dot(degree_mat_inv_sqrt).transpose().dot(degree_mat_inv_sqrt).tocoo()
     # return sparse_to_tuple(adj_normalized)
     tensor = sparse_mx_to_torch_sparse_tensor(adj_normalized)
     return tensor.to(device)
+
+# def preprocess_graph(adj):
+#     adj = sp.coo_matrix(adj)
+    
+#     tensor = sparse_mx_to_torch_sparse_tensor(adj)
+#     return tensor.to(device)
 
 
 def sparse_mx_to_torch_sparse_tensor(sparse_mx):
@@ -427,7 +478,7 @@ def convolve_features(X, A):
     return X_updated
 
 def load_mutag_data():
-    dataset = TUDataset(root='/tmp/PROTEINS', name='PROTEINS')
+    dataset = TUDataset(root='/tmp/ENZYMES', name='ENZYMES')
     adjacency_matrices = []
     labels = []
     
@@ -436,30 +487,44 @@ def load_mutag_data():
         adj = to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0]
         
         # Compute the degree of each node
-        degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+        # degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+        deg = degree(data.edge_index[0], dtype=torch.float, num_nodes=data.num_nodes).view(-1, 1)
+
+        # Gather degrees of one-hop neighbors for each node
+        neighbors_deg = [deg[data.edge_index[0][data.edge_index[1] == i]].view(-1) for i in range(data.num_nodes)]
+
+        # Calculate min, max, mean, std of degrees of neighbors
+        min_deg = torch.stack([d.min() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        max_deg = torch.stack([d.max() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        mean_deg = torch.stack([d.mean() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        # Ensures there are at least two data points for std dev calculation
+        std_deg = torch.stack([d.std(unbiased=False) if len(d) > 1 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+       
+
+        # Concatenate degree profile features with original node features
+        degree_features = torch.cat([deg, min_deg, max_deg, mean_deg, std_deg], dim=1)
 
         # Compute the average weight of connected edges for each node
         # Assuming initially all weights are 1 (as in a binary adjacency matrix), the sum of weights is the degree
         # We can avoid division by zero by setting the average to zero where degree is zero
-        avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
+        avg_weights = torch.where(deg > 0, deg / deg, torch.zeros_like(deg))
 
         # Compute Eigen Features
         eigvals, eigvecs = eigh(adj.cpu().numpy())
         eigvecs_features = torch.tensor(eigvecs, dtype=torch.float32)
 
-        # Retrieve and update node features
-        node_features = data.x
         # node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
-        convolved = torch.tensor(convolve_features(node_features, adj))
-        node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
+        convolved = torch.tensor(convolve_features(data.x, adj))
+        node_features = torch.cat([data.x, deg, convolved, degree_features], dim=1)
 
         # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        # weighted_adj = adj * (dot_product_matrix + eigvecs_features)
-        # weighted_adj = adj * dot_product_matrix
         weighted_adj = adj * dot_product_matrix
+        # weighted_adj = dot_product_matrix
+        # print(weighted_adj)
+        # weighted_adj = dot_product_matrix + eigvecs_features
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())
@@ -475,9 +540,13 @@ def one_tune_instance():
     learning_rate = wandb.config.lr
     numSampledCCs = wandb.config.numSampledCCs
     alpha = wandb.config.alpha
+    # alpha = 100
     beta = wandb.config.beta
+    # beta = 1
     gamma = wandb.config.gamma
-    latent_space_VAE = wandb.config.latent_space_VAE
+    # gamma = 1
+    # latent_space_VAE = wandb.config.latent_space_VAE
+    latent_space_VAE = 4
 
     hyperparameters = (epochs, pretrain_epochs, learning_rate, numSampledCCs, alpha, beta, gamma, latent_space_VAE)
 
@@ -499,7 +568,7 @@ def one_tune_instance():
 
 def main():
 
-    TUNE_HYPERPARAMETERS = True
+    TUNE_HYPERPARAMETERS = False
 
     if TUNE_HYPERPARAMETERS:
         sweep_config = {
@@ -530,14 +599,14 @@ def main():
                 'gamma': {
                     'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
                 },
-                'latent_space_VAE': {
-                    'values': [3, 4, 5, 6]
-                },
+                # 'latent_space_VAE': {
+                #     'values': [3, 4, 5, 6]
+                # },
             }
         }
 
         sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-        wandb.agent(sweep_id, function=one_tune_instance, count=100)
+        wandb.agent(sweep_id, function=one_tune_instance, count=60)
 
     else:
 

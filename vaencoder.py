@@ -21,7 +21,7 @@ from sklearn.cluster import KMeans
 from scipy.linalg import eigh
 
 from torch_geometric.datasets import TUDataset
-from torch_geometric.utils import to_dense_adj
+from torch_geometric.utils import to_dense_adj, degree
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -320,11 +320,25 @@ def kl_loss(mu, logstd, n_nodes):
     return -0.5 / n_nodes * torch.mean(
         torch.sum(1 + 2 * logstd - mu.pow(2) - logstd.exp().pow(2), dim=1))
 
+# def preprocess_graph(adj):
+#     adj = sp.coo_matrix(adj)
+#     adj_ = adj + sp.eye(adj.shape[0])
+#     rowsum = np.array(adj_.sum(1))
+#     degree_mat_inv_sqrt = sp.diags(np.power(rowsum, -0.5).flatten())
+#     adj_normalized = adj_.dot(degree_mat_inv_sqrt).transpose().dot(degree_mat_inv_sqrt).tocoo()
+#     # return sparse_to_tuple(adj_normalized)
+#     tensor = sparse_mx_to_torch_sparse_tensor(adj_normalized)
+#     return tensor.to(device)
+
+# modified
 def preprocess_graph(adj):
     adj = sp.coo_matrix(adj)
-    adj_ = adj + sp.eye(adj.shape[0])
+    median_weight = np.median(adj.data)
+    adj_ = adj + sp.eye(adj.shape[0]) * median_weight
     rowsum = np.array(adj_.sum(1))
-    degree_mat_inv_sqrt = sp.diags(np.power(rowsum, -0.5).flatten())
+    average_row = np.mean(rowsum)
+    row_normalized = rowsum / average_row
+    degree_mat_inv_sqrt = sp.diags(np.power(row_normalized, -0.5).flatten())
     adj_normalized = adj_.dot(degree_mat_inv_sqrt).transpose().dot(degree_mat_inv_sqrt).tocoo()
     # return sparse_to_tuple(adj_normalized)
     tensor = sparse_mx_to_torch_sparse_tensor(adj_normalized)
@@ -399,7 +413,7 @@ def convolve_features(X, A):
     return X_updated
 
 def load_mutag_data():
-    dataset = TUDataset(root='/tmp/PROTEINS', name='PROTEINS')
+    dataset = TUDataset(root='/tmp/MUTAG', name='MUTAG')
     adjacency_matrices = []
     labels = []
     
@@ -408,30 +422,44 @@ def load_mutag_data():
         adj = to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0]
         
         # Compute the degree of each node
-        degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+        # degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+        deg = degree(data.edge_index[0], dtype=torch.float, num_nodes=data.num_nodes).view(-1, 1)
+
+        # Gather degrees of one-hop neighbors for each node
+        neighbors_deg = [deg[data.edge_index[0][data.edge_index[1] == i]].view(-1) for i in range(data.num_nodes)]
+
+        # Calculate min, max, mean, std of degrees of neighbors
+        min_deg = torch.stack([d.min() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        max_deg = torch.stack([d.max() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        mean_deg = torch.stack([d.mean() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        # Ensures there are at least two data points for std dev calculation
+        std_deg = torch.stack([d.std(unbiased=False) if len(d) > 1 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+       
+
+        # Concatenate degree profile features with original node features
+        degree_features = torch.cat([deg, min_deg, max_deg, mean_deg, std_deg], dim=1)
 
         # Compute the average weight of connected edges for each node
         # Assuming initially all weights are 1 (as in a binary adjacency matrix), the sum of weights is the degree
         # We can avoid division by zero by setting the average to zero where degree is zero
-        avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
+        avg_weights = torch.where(deg > 0, deg / deg, torch.zeros_like(deg))
 
         # Compute Eigen Features
         eigvals, eigvecs = eigh(adj.cpu().numpy())
         eigvecs_features = torch.tensor(eigvecs, dtype=torch.float32)
 
-        # Retrieve and update node features
-        node_features = data.x
         # node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
-        convolved = torch.tensor(convolve_features(node_features, adj))
-        node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
+        convolved = torch.tensor(convolve_features(data.x, adj))
+        node_features = torch.cat([data.x, deg, convolved, degree_features], dim=1)
 
         # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        # weighted_adj = adj * (dot_product_matrix + eigvecs_features)
-        # weighted_adj = adj * dot_product_matrix
         weighted_adj = adj * dot_product_matrix
+        # weighted_adj = dot_product_matrix
+        # print(weighted_adj)
+        # weighted_adj = dot_product_matrix + eigvecs_features
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
         labels.append(data.y.item())

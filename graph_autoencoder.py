@@ -21,7 +21,7 @@ from sklearn.cluster import KMeans
 from scipy.linalg import eigh
 
 from torch_geometric.datasets import TUDataset
-from torch_geometric.utils import to_dense_adj
+from torch_geometric.utils import to_dense_adj, degree
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -485,28 +485,43 @@ def load_mutag_data():
         adj = to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0]
         
         # Compute the degree of each node
-        degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+        # degrees = adj.sum(dim=1).unsqueeze(1)  # Sum over columns to get the degree
+        deg = degree(data.edge_index[0], dtype=torch.float, num_nodes=data.num_nodes).view(-1, 1)
+
+        # Gather degrees of one-hop neighbors for each node
+        neighbors_deg = [deg[data.edge_index[0][data.edge_index[1] == i]].view(-1) for i in range(data.num_nodes)]
+
+        # Calculate min, max, mean, std of degrees of neighbors
+        min_deg = torch.stack([d.min() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        max_deg = torch.stack([d.max() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        mean_deg = torch.stack([d.mean() if len(d) > 0 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+        # Ensures there are at least two data points for std dev calculation
+        std_deg = torch.stack([d.std(unbiased=False) if len(d) > 1 else torch.tensor(0.) for d in neighbors_deg]).view(-1, 1)
+       
+
+        # Concatenate degree profile features with original node features
+        degree_features = torch.cat([deg, min_deg, max_deg, mean_deg, std_deg], dim=1)
 
         # Compute the average weight of connected edges for each node
         # Assuming initially all weights are 1 (as in a binary adjacency matrix), the sum of weights is the degree
         # We can avoid division by zero by setting the average to zero where degree is zero
-        avg_weights = torch.where(degrees > 0, degrees / degrees, torch.zeros_like(degrees))
+        avg_weights = torch.where(deg > 0, deg / deg, torch.zeros_like(deg))
 
         # Compute Eigen Features
         eigvals, eigvecs = eigh(adj.cpu().numpy())
         eigvecs_features = torch.tensor(eigvecs, dtype=torch.float32)
 
-        # Retrieve and update node features
-        node_features = data.x
         # node_features = torch.cat([node_features, degrees, avg_weights], dim=1)
-        convolved = torch.tensor(convolve_features(node_features, adj))
-        node_features = torch.cat([node_features, degrees, avg_weights, convolved], dim=1)
+        convolved = torch.tensor(convolve_features(data.x, adj))
+        node_features = torch.cat([data.x, deg, convolved, degree_features], dim=1)
 
         # dot product between nodes
         dot_product_matrix = torch.mm(node_features, node_features.t())
 
         # # ensures only connected nodes have their dot products as weights
-        weighted_adj = dot_product_matrix
+        weighted_adj = adj * dot_product_matrix
+        # weighted_adj = dot_product_matrix
+        # print(weighted_adj)
         # weighted_adj = dot_product_matrix + eigvecs_features
 
         adjacency_matrices.append(weighted_adj.cpu().numpy())
@@ -529,8 +544,8 @@ def one_tune_instance():
     # beta = 100
     feature_space_GNN = wandb.config.feature_space_GNN
     # feature_space_GNN = 32
-    out_channels_GNN = wandb.config.out_channels_GNN
-    # out_channels_GNN = 5
+    # out_channels_GNN = wandb.config.out_channels_GNN
+    out_channels_GNN = 4
     feature_space_MLP = wandb.config.feature_space_MLP
     # feature_space_MLP = 256
 
@@ -552,7 +567,7 @@ def one_tune_instance():
     train_ari = adjusted_rand_score(labels_true, train_labels_pred)
     wandb.log({"train_ari": train_ari})
 
-def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
+def main():
 
     TUNE_HYPERPARAMETERS = True
 
@@ -574,7 +589,7 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                     'values': list(range(40, 60, 10))
                 },
                 'numSampledCCs': {
-                    'values': list(range(5, 20))
+                    'values': list(range(10, 25))
                 },
                 'alpha': {
                     'values': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000]
@@ -585,17 +600,17 @@ def main(num_samples=50, max_num_epochs=200, gpus_per_trial=1):
                 'feature_space_GNN': {
                     'values': [16, 32, 64]
                 },
-                'out_channels_GNN': {
-                    'values': [3, 4, 5]
-                },
+                # 'out_channels_GNN': {
+                #     'values': [3, 4, 5]
+                # },
                 'feature_space_MLP': {
-                    'values': [128, 256]
+                    'values': [128, 256, 512]
                 },
             }
         }
 
         sweep_id = wandb.sweep(sweep=sweep_config, project='hyperparameter-sweep')
-        wandb.agent(sweep_id, function=one_tune_instance, count=200)
+        wandb.agent(sweep_id, function=one_tune_instance, count=60)
 
     else:
 
